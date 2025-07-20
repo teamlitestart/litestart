@@ -5,20 +5,20 @@ const HowItWorks = () => {
   const steps = [
     {
       icon: Search,
-      title: "Submit Your Project",
-      description: "Post your project requirements and let our AI analyze the skills needed for success.",
+      title: "Find Real Startup Projects",
+      description: "Browse and discover exciting, real-world projects from innovative startups looking for student talent.",
       color: "blue"
     },
     {
       icon: Users,
       title: "Get Matched Instantly",
-      description: "Our AI matches you with the perfect student talent based on skills, experience, and availability.",
+      description: "Our AI matches you with the perfect project based on your skills, interests, and availability. No more endless searching!",
       color: "teal"
     },
     {
       icon: CheckCircle,
-      title: "Receive High-Quality Work",
-      description: "Collaborate with elite students and receive exceptional deliverables within your timeline.",
+      title: "Build, Launch, and Get Paid",
+      description: "Collaborate with founders, gain hands-on experience, and get paid for your work. Boost your resume and make an impact!",
       color: "orange"
     }
   ];
@@ -37,7 +37,7 @@ const HowItWorks = () => {
             How LaunchLink Works
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Get connected with top student talent in three simple steps
+            Land real experience, earn money, and launch your career in three simple steps
           </p>
         </div>
 

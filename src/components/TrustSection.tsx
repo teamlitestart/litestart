@@ -43,7 +43,7 @@ const TrustSection = () => {
             Trusted by Founders & Students
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Join hundreds of successful collaborations between startups and elite student talent
+            See how LaunchLink is helping students and startups build the future—together.
           </p>
         </div>
 
@@ -73,8 +73,11 @@ const TrustSection = () => {
 
         <div className="text-center">
           <h3 className="text-xl font-semibold text-gray-900 mb-8">
-            Partnered with Top Universities
+            Proudly Partnered with Top Universities
           </h3>
+          <p className="text-gray-600 mb-6 max-w-xl mx-auto">
+            Our student talent comes from the world’s best institutions. Join a network of ambitious students and innovative founders.
+          </p>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
             {partners.map((partner, index) => (
               <div key={index} className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-300">

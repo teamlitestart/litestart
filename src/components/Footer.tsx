@@ -3,9 +3,10 @@ import { ArrowRight, Users, Briefcase, Mail, Twitter, Linkedin } from 'lucide-re
 
 interface FooterProps {
   onJoinAsStudent: () => void;
+  onJoinAsStartup: () => void;
 }
 
-const Footer: React.FC<FooterProps> = ({ onJoinAsStudent }) => {
+const Footer: React.FC<FooterProps> = ({ onJoinAsStudent, onJoinAsStartup }) => {
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,7 +20,10 @@ const Footer: React.FC<FooterProps> = ({ onJoinAsStudent }) => {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2">
+            <button 
+              onClick={onJoinAsStartup}
+              className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2"
+            >
               <Briefcase className="w-5 h-5" />
               <span>Post Your First Project</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />

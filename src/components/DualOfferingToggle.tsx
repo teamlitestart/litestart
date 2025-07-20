@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Code, Megaphone, ArrowRight } from 'lucide-react';
 
-const DualOfferingToggle = () => {
+interface DualOfferingToggleProps {
+  onJoinAsStudent: () => void;
+  onJoinAsStartup: () => void;
+}
+
+const DualOfferingToggle: React.FC<DualOfferingToggleProps> = ({ onJoinAsStudent, onJoinAsStartup }) => {
   const [activeTab, setActiveTab] = useState('talent');
 
   const offerings = {
@@ -123,6 +128,26 @@ const DualOfferingToggle = () => {
                 </button>
               </div>
             ))}
+          </div>
+
+          {/* Call to Action */}
+          <div className="text-center mt-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={onJoinAsStartup}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center justify-center space-x-2"
+              >
+                <span>Post Your Project</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <button
+                onClick={onJoinAsStudent}
+                className="border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center justify-center space-x-2"
+              >
+                <span>Join as Student</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
