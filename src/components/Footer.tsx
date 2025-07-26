@@ -42,7 +42,7 @@ const Footer: React.FC<FooterProps> = ({ onJoinAsStudent, onJoinAsStartup }) => 
         {/* Footer Links */}
         <div className="py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold mb-4">LaunchLink</h3>
+            <h3 className="text-2xl font-bold mb-4">Project 1</h3>
             <p className="text-gray-400 mb-6 max-w-md">
               The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
             </p>
@@ -83,7 +83,7 @@ const Footer: React.FC<FooterProps> = ({ onJoinAsStudent, onJoinAsStartup }) => 
         {/* Bottom Bar */}
         <div className="py-6 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2025 LaunchLink. All rights reserved.
+            © 2025 Project 1. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-300">Privacy Policy</a>

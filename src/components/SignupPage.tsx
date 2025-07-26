@@ -40,14 +40,45 @@ const howItWorks = [
 const SignupPage: React.FC = () => {
   const [form, setForm] = useState({ name: '', email: '' });
   const [submitted, setSubmitted] = useState(false);
+  const [userType, setUserType] = useState<'startup' | 'student'>('startup');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError('');
+    
+    try {
+      const response = await fetch('http://localhost:3001/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          userType: userType
+        }),
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Signup failed');
+      }
+      
+      setSubmitted(true);
+      setForm({ name: '', email: '' }); // Reset form
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,16 +86,63 @@ const SignupPage: React.FC = () => {
       {/* Hero Section */}
       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-12 pb-8">
         <div className="max-w-2xl w-full text-center mb-10">
-          <img src="/vite.svg" alt="LaunchLink Logo" className="mx-auto mb-4 w-16 h-16" />
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">LaunchLink</h1>
+                  <img src="/vite.svg" alt="Project 1 Logo" className="mx-auto mb-4 w-16 h-16" />
+        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Project 1</h1>
           <p className="text-xl md:text-2xl text-gray-700 mb-6">
             The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
           </p>
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-auto mb-6">
             <h2 className="text-2xl font-semibold mb-2 text-gray-900">Launching Soon!</h2>
             <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
+            
+            {/* User Type Selection */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-3">I am a:</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setUserType('startup')}
+                  className={`py-3 px-4 rounded-lg border-2 font-medium transition-all duration-200 ${
+                    userType === 'startup'
+                      ? 'border-blue-600 bg-blue-50 text-blue-700'
+                      : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  🚀 Startup
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUserType('student')}
+                  className={`py-3 px-4 rounded-lg border-2 font-medium transition-all duration-200 ${
+                    userType === 'student'
+                      ? 'border-blue-600 bg-blue-50 text-blue-700'
+                      : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400'
+                  }`}
+                >
+                  👨‍🎓 Student
+                </button>
+              </div>
+            </div>
             {submitted ? (
-              <div className="text-green-600 text-xl font-semibold py-8">Thank you for signing up! We'll be in touch soon.</div>
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="text-green-600 text-xl font-semibold mb-2">Check Your Email!</h3>
+                <p className="text-gray-600 mb-4">
+                  Thank you for signing up as a {userType === 'startup' ? 'startup' : 'student'}! 
+                  We've sent a verification email to your inbox.
+                </p>
+                <p className="text-sm text-gray-500">
+                  Please click the verification link in your email to complete your registration.
+                </p>
+              </div>
+            ) : error ? (
+              <div className="text-red-600 text-lg font-semibold py-4 bg-red-50 rounded-lg px-4">
+                {error}
+              </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
@@ -91,9 +169,14 @@ const SignupPage: React.FC = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md"
+                  disabled={loading}
+                  className={`w-full font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md ${
+                    loading 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  }`}
                 >
-                  Notify Me
+                  {loading ? 'Signing up...' : `Notify Me as ${userType === 'startup' ? 'Startup' : 'Student'}`}
                 </button>
               </form>
             )}
@@ -102,7 +185,7 @@ const SignupPage: React.FC = () => {
 
         {/* Features Section */}
         <div className="max-w-4xl mx-auto w-full mb-12">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Why LaunchLink?</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Why Project 1?</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature) => (
               <div key={feature.title} className="bg-white rounded-xl shadow p-6 text-left">
@@ -132,10 +215,10 @@ const SignupPage: React.FC = () => {
       <footer className="bg-gray-900 text-white py-8 mt-auto">
         <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
-            <span className="font-bold text-lg">LaunchLink</span> &copy; {new Date().getFullYear()}
+            <span className="font-bold text-lg">Project 1</span> &copy; {new Date().getFullYear()}
           </div>
           <div className="flex space-x-6">
-            <a href="mailto:info@launchlink.com" className="text-gray-400 hover:text-white transition-colors duration-300">Contact</a>
+            <a href="mailto:info@project1.com" className="text-gray-400 hover:text-white transition-colors duration-300">Contact</a>
             <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy Policy</a>
             <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Terms</a>
           </div>

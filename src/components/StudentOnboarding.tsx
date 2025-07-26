@@ -278,7 +278,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose }
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Join LaunchLink</h2>
+              <h2 className="text-3xl font-bold text-gray-900">Join Project 1</h2>
               <p className="text-gray-600 mt-1">Step {currentStep} of {totalSteps}</p>
             </div>
             <button

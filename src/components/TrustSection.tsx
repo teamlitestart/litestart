@@ -4,14 +4,14 @@ import { Quote, Star } from 'lucide-react';
 const TrustSection = () => {
   const testimonials = [
     {
-      quote: "LaunchLink connected us with incredible student talent that delivered our MVP in record time. The quality exceeded our expectations.",
+              quote: "Project 1 connected us with incredible student talent that delivered our MVP in record time. The quality exceeded our expectations.",
       author: "Sarah Chen",
       role: "Co-founder, TechFlow",
       university: "Stanford Graduate",
       rating: 5
     },
     {
-      quote: "As a student, LaunchLink has been game-changing. I've worked on real startup projects and built invaluable experience while earning great money.",
+              quote: "As a student, Project 1 has been game-changing. I've worked on real startup projects and built invaluable experience while earning great money.",
       author: "Marcus Rodriguez", 
       role: "Computer Science Student",
       university: "MIT",
@@ -43,7 +43,7 @@ const TrustSection = () => {
             Trusted by Founders & Students
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            See how LaunchLink is helping students and startups build the future—together.
+            See how Project 1 is helping students and startups build the future—together.
           </p>
         </div>
 

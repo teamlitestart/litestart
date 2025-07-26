@@ -9,6 +9,8 @@ import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import StudentOnboarding from './components/StudentOnboarding';
 import StartupOnboarding from './components/StartupOnboarding';
+import AdminPanel from './components/AdminPanel';
+import EmailVerification from './components/EmailVerification';
 
 function MainSite() {
   const [isStudentOnboardingOpen, setIsStudentOnboardingOpen] = useState(false);
@@ -39,6 +41,8 @@ function App() {
       <Routes>
         <Route path="/" element={<SignupPage />} />
         <Route path="/preview" element={<MainSite />} />
+        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/verify-email" element={<EmailVerification />} />
       </Routes>
     </BrowserRouter>
   );
