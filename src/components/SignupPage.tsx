@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import VenturoFeatures from './VenturoFeatures';
+import Header from './Header';
+import Footer from './Footer';
 
 const features = [
   {
@@ -37,12 +40,94 @@ const howItWorks = [
   }
 ];
 
+// 3D tilt effect hook
+function useTilt(ref: React.RefObject<HTMLElement>) {
+  React.useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    let rect: DOMRect;
+    let mouseX = 0;
+    let mouseY = 0;
+    let isTouch = false;
+
+    function handleMouseMove(e: MouseEvent) {
+      if (isTouch) return;
+      rect = node.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+      const x = (mouseX / rect.width) * 2 - 1;
+      const y = (mouseY / rect.height) * 2 - 1;
+      node.style.transform = `rotateY(${x * 10}deg) rotateX(${-y * 10}deg) scale(1.04)`;
+      node.style.boxShadow = `${-x * 10}px ${-y * 10}px 32px 0 rgba(0,0,0,0.10)`;
+    }
+    function handleMouseLeave() {
+      node.style.transform = '';
+      node.style.boxShadow = '';
+    }
+    function handleTouchStart() {
+      isTouch = true;
+      node.style.transform = '';
+      node.style.boxShadow = '';
+    }
+    node.addEventListener('mousemove', handleMouseMove);
+    node.addEventListener('mouseleave', handleMouseLeave);
+    node.addEventListener('touchstart', handleTouchStart);
+    return () => {
+      node.removeEventListener('mousemove', handleMouseMove);
+      node.removeEventListener('mouseleave', handleMouseLeave);
+      node.removeEventListener('touchstart', handleTouchStart);
+    };
+  }, [ref]);
+}
+
 const SignupPage: React.FC = () => {
   const [form, setForm] = useState({ name: '', email: '' });
   const [submitted, setSubmitted] = useState(false);
   const [userType, setUserType] = useState<'startup' | 'student'>('startup');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [benefitView, setBenefitView] = useState<'student' | 'startup'>('student');
+  const formRef = useRef<HTMLDivElement>(null);
+  const [bgPos, setBgPos] = useState({ x: 50, y: 50 });
+  const [mouseSpeed, setMouseSpeed] = useState(0);
+  const lastMousePos = useRef({ x: 0, y: 0 });
+  const lastMouseTime = useRef(Date.now());
+
+  // Mouse move handler for background
+  React.useEffect(() => {
+    function handleMouseMove(e: MouseEvent) {
+      if (window.innerWidth < 768) return; // Only on desktop
+      
+      const now = Date.now();
+      const timeDiff = now - lastMouseTime.current;
+      const dx = e.clientX - lastMousePos.current.x;
+      const dy = e.clientY - lastMousePos.current.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const speed = distance / timeDiff; // pixels per millisecond
+      
+      // Update mouse speed (with some smoothing)
+      setMouseSpeed(prev => prev * 0.8 + speed * 0.2);
+      
+      const x = (e.clientX / window.innerWidth) * 100;
+      const y = (e.clientY / window.innerHeight) * 100;
+      setBgPos({ x, y });
+      
+      lastMousePos.current = { x: e.clientX, y: e.clientY };
+      lastMouseTime.current = now;
+    }
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Toggle and CTA button refs
+  const studentToggleRef = useRef<HTMLButtonElement>(null);
+  const startupToggleRef = useRef<HTMLButtonElement>(null);
+  const studentCtaRef = useRef<HTMLButtonElement>(null);
+  const startupCtaRef = useRef<HTMLButtonElement>(null);
+  useTilt(studentToggleRef);
+  useTilt(startupToggleRef);
+  useTilt(studentCtaRef);
+  useTilt(startupCtaRef);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -81,48 +166,35 @@ const SignupPage: React.FC = () => {
     }
   };
 
+  const scrollToForm = () => {
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-teal-100 flex flex-col">
-      {/* Hero Section */}
-      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-12 pb-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-teal-100 flex flex-col relative overflow-hidden">
+      <Header />
+      {/* Dynamic Mouse-Responsive Background */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: 'none',
+          background: `radial-gradient(400px at ${bgPos.x}% ${bgPos.y}%, rgba(56,189,248,${Math.min(mouseSpeed * 0.1, 0.35)}) 0%, transparent 100%)`,
+          transition: 'background 0.18s cubic-bezier(.4,1,.7,1)',
+        }}
+      />
+      {/* Main Content */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 pt-12 pb-8" ref={formRef}>
         <div className="max-w-2xl w-full text-center mb-10">
-                  <img src="/vite.svg" alt="Project 1 Logo" className="mx-auto mb-4 w-16 h-16" />
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Project 1</h1>
-          <p className="text-xl md:text-2xl text-gray-700 mb-6">
-            The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
-          </p>
+          <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Venturo</h1>
           <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-auto mb-6">
             <h2 className="text-2xl font-semibold mb-2 text-gray-900">Launching Soon!</h2>
             <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
-            
-            {/* User Type Selection */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-3">I am a:</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setUserType('startup')}
-                  className={`py-3 px-4 rounded-lg border-2 font-medium transition-all duration-200 ${
-                    userType === 'startup'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  🚀 Startup
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setUserType('student')}
-                  className={`py-3 px-4 rounded-lg border-2 font-medium transition-all duration-200 ${
-                    userType === 'student'
-                      ? 'border-blue-600 bg-blue-50 text-blue-700'
-                      : 'border-gray-300 bg-white text-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  👨‍🎓 Student
-                </button>
-              </div>
-            </div>
             {submitted ? (
               <div className="text-center py-8">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -167,6 +239,30 @@ const SignupPage: React.FC = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
                   />
                 </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setUserType('student')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
+                      userType === 'student'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    👩‍🎓 Student
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserType('startup')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
+                      userType === 'startup'
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-teal-600 border-teal-600 hover:bg-teal-50'
+                    }`}
+                  >
+                    🧑‍💻 Startup
+                  </button>
+                </div>
                 <button
                   type="submit"
                   disabled={loading}
@@ -183,47 +279,113 @@ const SignupPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Features Section */}
-        <div className="max-w-4xl mx-auto w-full mb-12">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Why Project 1?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {features.map((feature) => (
-              <div key={feature.title} className="bg-white rounded-xl shadow p-6 text-left">
-                <h4 className="text-lg font-semibold text-blue-700 mb-2">{feature.title}</h4>
-                <p className="text-gray-600">{feature.description}</p>
-              </div>
-            ))}
+        {/* Benefits Toggle */}
+        <div className="max-w-2xl w-full mx-auto mb-6 flex justify-center">
+          <div className="inline-flex rounded-lg shadow overflow-hidden border border-gray-200 bg-white">
+            <button
+              ref={studentToggleRef}
+              className={`px-6 py-3 font-semibold text-lg transition-all duration-200 focus:outline-none ${benefitView === 'student' ? 'bg-blue-600 text-white' : 'text-blue-700 hover:bg-blue-50'}`}
+              onClick={() => setBenefitView('student')}
+            >
+              👩‍🎓 For Students
+            </button>
+            <button
+              ref={startupToggleRef}
+              className={`px-6 py-3 font-semibold text-lg transition-all duration-200 focus:outline-none ${benefitView === 'startup' ? 'bg-teal-600 text-white' : 'text-teal-700 hover:bg-teal-50'}`}
+              onClick={() => setBenefitView('startup')}
+            >
+              🧑‍💻 For Startups
+            </button>
           </div>
         </div>
 
-        {/* How It Works Section */}
-        <div className="max-w-3xl mx-auto w-full mb-12">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">How It Works</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {howItWorks.map((step) => (
-              <div key={step.step} className="bg-white rounded-xl shadow p-6 text-center flex flex-col items-center">
-                <div className="w-12 h-12 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold mb-4">{step.step}</div>
-                <h4 className="text-lg font-semibold mb-2">{step.title}</h4>
-                <p className="text-gray-600">{step.description}</p>
-              </div>
-            ))}
+        {/* Benefits Section */}
+        {benefitView === 'student' && (
+          <div className="max-w-2xl w-full mx-auto mb-12 bg-blue-50 rounded-2xl shadow p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-blue-700 mb-4 flex items-center justify-center gap-2">
+              <span role="img" aria-label="student">👩‍🎓</span> For Students
+            </h2>
+            <ul className="text-lg text-blue-900 space-y-3 mb-6">
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="rocket">🚀</span>
+                <span>Gain real-world startup experience</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="briefcase">💼</span>
+                <span>Work on short-term, skill-building projects (1–3 weeks)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="brain">🧠</span>
+                <span>Build your CV with meaningful, hands-on work</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="link">🔗</span>
+                <span>Connect with real founders and startup teams</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="mail">💌</span>
+                <span>Get feedback, references, and exposure to career opportunities</span>
+              </li>
+            </ul>
+            <p className="text-blue-800 mb-4">
+              Whether you're exploring your first role or adding real-world proof to your passion — <span className="font-semibold">Venturo</span> is your launchpad.
+            </p>
+            <div className="text-center">
+              <button
+                onClick={scrollToForm}
+                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold text-lg shadow hover:bg-blue-700 transition"
+              >
+                📥 Join today and start matching with live startup projects.
+              </button>
+            </div>
           </div>
-        </div>
+        )}
+
+        {benefitView === 'startup' && (
+          <div className="max-w-2xl w-full mx-auto mb-12 bg-teal-50 rounded-2xl shadow p-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-teal-700 mb-4 flex items-center justify-center gap-2">
+              <span role="img" aria-label="startup">🧑‍💻</span> For Startups
+            </h2>
+            <ul className="text-lg text-teal-900 space-y-3 mb-6">
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="check">✅</span>
+                <span>Access driven, capable student talent</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="bulb">💡</span>
+                <span>Get project help in marketing, research, design, tech, and more</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="money">💰</span>
+                <span>Keep costs low — ideal for early-stage, bootstrapped teams</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="puzzle">🧩</span>
+                <span>Delegate tasks you don't have time to focus on</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span role="img" aria-label="speech">💬</span>
+                <span>Get a fresh perspective from tomorrow's professionals</span>
+              </li>
+            </ul>
+            <p className="text-teal-800 mb-4">
+              You get help. Students get experience. Everyone wins.
+            </p>
+            <div className="text-center">
+              <button
+                onClick={scrollToForm}
+                className="inline-block bg-teal-600 text-white px-6 py-3 rounded-lg font-semibold text-lg shadow hover:bg-teal-700 transition"
+              >
+                📤 Post a project in minutes — we'll help match the right students to it.
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Venturo Features Section */}
+        <VenturoFeatures showCTA={false} />
       </div>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8 mt-auto">
-        <div className="max-w-4xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <span className="font-bold text-lg">Project 1</span> &copy; {new Date().getFullYear()}
-          </div>
-          <div className="flex space-x-6">
-            <a href="mailto:info@project1.com" className="text-gray-400 hover:text-white transition-colors duration-300">Contact</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Privacy Policy</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors duration-300">Terms</a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

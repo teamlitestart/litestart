@@ -13,6 +13,15 @@ const AdminPanel: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [userTypeFilter, setUserTypeFilter] = useState<'all' | 'startup' | 'student'>('all');
+  const [nameFilter, setNameFilter] = useState('');
+
+  // Filtered users
+  const filteredUsers = users.filter(user => {
+    const matchesType = userTypeFilter === 'all' || user.userType === userTypeFilter;
+    const matchesName = user.name.toLowerCase().includes(nameFilter.toLowerCase());
+    return matchesType && matchesName;
+  });
 
   const fetchUsers = async () => {
     try {
@@ -113,7 +122,7 @@ const AdminPanel: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Admin Panel</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Venturo Admin Panel</h1>
             <div className="space-x-4">
               <button
                 onClick={fetchUsers}
@@ -136,13 +145,37 @@ const AdminPanel: React.FC = () => {
             </div>
           )}
 
-          <div className="mb-4">
+          <div className="mb-4 flex flex-col md:flex-row md:items-center md:space-x-8 space-y-2 md:space-y-0">
             <p className="text-gray-600">
               Total Users: <span className="font-semibold">{users.length}</span>
             </p>
+            <p className="text-blue-700">
+              Startups: <span className="font-semibold">{users.filter(u => u.userType === 'startup').length}</span>
+            </p>
+            <p className="text-green-700">
+              Students: <span className="font-semibold">{users.filter(u => u.userType === 'student').length}</span>
+            </p>
+            <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
+              <select
+                value={userTypeFilter}
+                onChange={e => setUserTypeFilter(e.target.value as 'all' | 'startup' | 'student')}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All Types</option>
+                <option value="startup">Startups</option>
+                <option value="student">Students</option>
+              </select>
+              <input
+                type="text"
+                placeholder="Search by name..."
+                value={nameFilter}
+                onChange={e => setNameFilter(e.target.value)}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
-          {users.length === 0 ? (
+          {filteredUsers.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               No users found
             </div>
@@ -172,7 +205,7 @@ const AdminPanel: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {users.map((user) => (
+                  {filteredUsers.map((user) => (
                     <tr key={user._id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         {user.name}

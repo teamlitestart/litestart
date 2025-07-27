@@ -49,7 +49,7 @@ const EmailVerification: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
         <div className="mb-6">
-          <img src="/vite.svg" alt="Project 1 Logo" className="mx-auto mb-4 w-16 h-16" />
+          <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Email Verification</h1>
         </div>
 
@@ -108,8 +108,8 @@ const EmailVerification: React.FC = () => {
               </button>
               <p className="text-sm text-gray-500">
                 Need help? Contact us at{' '}
-                <a href="mailto:info@project1.com" className="text-blue-600 hover:underline">
-                  info@project1.com
+                <a href="mailto:info@venturo.com" className="text-blue-600 hover:underline">
+                  info@venturo.com
                 </a>
               </p>
             </div>

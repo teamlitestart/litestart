@@ -4,14 +4,14 @@ import { Quote, Star } from 'lucide-react';
 const TrustSection = () => {
   const testimonials = [
     {
-              quote: "Project 1 connected us with incredible student talent that delivered our MVP in record time. The quality exceeded our expectations.",
+              quote: "Venturo connected us with incredible student talent that delivered our MVP in record time. The quality exceeded our expectations.",
       author: "Sarah Chen",
       role: "Co-founder, TechFlow",
       university: "Stanford Graduate",
       rating: 5
     },
     {
-              quote: "As a student, Project 1 has been game-changing. I've worked on real startup projects and built invaluable experience while earning great money.",
+              quote: "As a student, Venturo has been game-changing. I've worked on real startup projects and built invaluable experience while earning great money.",
       author: "Marcus Rodriguez", 
       role: "Computer Science Student",
       university: "MIT",
@@ -39,11 +39,11 @@ const TrustSection = () => {
     <section className="py-24 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Trusted by Founders & Students
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
+            See how Venturo is helping students and startups build the future—together.
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            See how Project 1 is helping students and startups build the future—together.
+            See how Venturo is helping students and startups build the future—together.
           </p>
         </div>
 

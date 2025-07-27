@@ -26,7 +26,7 @@ const Hero: React.FC<HeroProps> = ({ onJoinAsStudent, onJoinAsStartup }) => {
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Join Project 1 and work on real-world projects with innovative startups. Get paid, gain experience, and launch your career while making a difference.
+              The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <button 

@@ -53,24 +53,24 @@ const sendVerificationEmail = async (email, name, userType, verificationToken) =
     console.log('Verification URL:', verificationUrl);
     
     const mailOptions = {
-      from: '"Project 1" <noreply@project1.com>',
+      from: '"Venturo" <noreply@venturo.com>',
       to: email,
-      subject: 'Verify Your Email - Project 1',
+      subject: 'Verify Your Email - Venturo',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; text-align: center;">
-            <h1 style="color: white; margin: 0;">Project 1</h1>
+            <h1 style="color: white; margin: 0;">Venturo</h1>
           </div>
           
           <div style="padding: 30px; background: #f9f9f9;">
-            <h2 style="color: #333; margin-bottom: 20px;">Welcome to Project 1!</h2>
+            <h2 style="color: #333; margin-bottom: 20px;">Welcome to Venturo!</h2>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
               Hi ${name},
             </p>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              Thank you for signing up as a <strong>${userType}</strong> on Project 1! 
+              Thank you for signing up as a <strong>${userType}</strong> on Venturo! 
               To complete your registration, please verify your email address by clicking the button below.
             </p>
             
@@ -94,13 +94,13 @@ const sendVerificationEmail = async (email, name, userType, verificationToken) =
             </p>
             
             <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
-              If you didn't create an account with Project 1, you can safely ignore this email.
+              If you didn't create an account with Venturo, you can safely ignore this email.
             </p>
           </div>
           
           <div style="background: #333; color: white; padding: 20px; text-align: center;">
             <p style="margin: 0; font-size: 14px;">
-              © 2025 Project 1. All rights reserved.
+              © 2025 Venturo. All rights reserved.
             </p>
           </div>
         </div>
