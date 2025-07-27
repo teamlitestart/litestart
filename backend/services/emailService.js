@@ -38,16 +38,28 @@ const sendVerificationEmail = async (email, name, userType, verificationToken) =
     console.log('User Type:', userType);
     console.log('Token:', verificationToken);
     
-    // Use Gmail for real emails
-    console.log('Setting up Gmail transporter...');
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD, // Use App Password, not regular password
-      },
-    });
-    console.log('Gmail transporter created successfully');
+    let transporter;
+    
+    // Check if Gmail credentials are properly configured
+    if (process.env.GMAIL_USER && 
+        process.env.GMAIL_APP_PASSWORD && 
+        process.env.GMAIL_USER !== 'your-email@gmail.com' && 
+        process.env.GMAIL_APP_PASSWORD !== 'your-app-password') {
+      
+      console.log('Using Gmail transporter...');
+      transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.GMAIL_USER,
+          pass: process.env.GMAIL_APP_PASSWORD, // Use App Password, not regular password
+        },
+      });
+    } else {
+      console.log('Gmail credentials not configured, using Ethereal Email for testing...');
+      transporter = await createTestAccount();
+    }
+    
+    console.log('Transporter created successfully');
     
     const verificationUrl = `http://localhost:5174/verify-email?token=${verificationToken}`;
     console.log('Verification URL:', verificationUrl);
@@ -112,7 +124,11 @@ const sendVerificationEmail = async (email, name, userType, verificationToken) =
     
     console.log('✅ Email sent successfully!');
     console.log('Email sent: %s', info.messageId);
-    console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    
+    // If using Ethereal Email, show the preview URL
+    if (info.messageId.includes('@ethereal.email')) {
+      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    }
     
     return info;
   } catch (error) {
