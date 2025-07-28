@@ -15,7 +15,7 @@ const Hero: React.FC<HeroProps> = ({ onJoinWaitlist }) => {
           alt="Modern workspace with laptops and collaboration" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/60 to-teal-800/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/80 via-blue-100/70 to-white/60"></div>
       </div>
       
       <div className="max-w-7xl mx-auto text-center">
