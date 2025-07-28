@@ -101,11 +101,11 @@ const MouseTracker: React.FC = () => {
 
         // Velocity-based size and opacity
         const velocityFactor = Math.min(current.velocity / 20, 1);
-        const baseSize = 120 + (velocityFactor * 180); // 120px to 300px based on speed
+        const baseSize = 200 + (velocityFactor * 400); // 200px to 600px based on speed
         const size = baseSize * intensity;
         
         // Even more subtle, feint colors
-        const baseOpacity = 0.015 + (velocityFactor * 0.035); // 0.015 to 0.05 opacity
+        const baseOpacity = 0.005 + (velocityFactor * 0.015); // 0.005 to 0.02 opacity
         const opacity = baseOpacity * intensity;
 
         // Create very subtle gradient with larger area
@@ -115,10 +115,10 @@ const MouseTracker: React.FC = () => {
         );
         
         // Very feint purple/magenta gradient with wider spread
-        gradient.addColorStop(0, `rgba(147, 51, 234, ${opacity * 2})`); // Purple center
-        gradient.addColorStop(0.2, `rgba(99, 102, 241, ${opacity * 1.2})`); // Blue-purple
-        gradient.addColorStop(0.5, `rgba(59, 130, 246, ${opacity * 0.8})`); // Blue
-        gradient.addColorStop(0.8, `rgba(147, 197, 253, ${opacity * 0.3})`); // Light blue
+        gradient.addColorStop(0, `rgba(147, 51, 234, ${opacity * 1.5})`); // Purple center
+        gradient.addColorStop(0.15, `rgba(99, 102, 241, ${opacity * 1.0})`); // Blue-purple
+        gradient.addColorStop(0.4, `rgba(59, 130, 246, ${opacity * 0.6})`); // Blue
+        gradient.addColorStop(0.7, `rgba(147, 197, 253, ${opacity * 0.2})`); // Light blue
         gradient.addColorStop(1, `rgba(147, 197, 253, 0)`); // Transparent edge
 
         ctx.beginPath();
