@@ -118,24 +118,24 @@ const SignupPage: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "Venturo connected us with incredible student talent that delivered our MVP in record time. The quality exceeded our expectations.",
-      author: "Sarah Chen",
-      role: "Co-founder, TechFlow",
-      university: "Stanford Graduate",
-      rating: 5
-    },
-    {
-      quote: "As a student, Venturo has been game-changing. I've worked on real startup projects and built invaluable experience while earning great money.",
-      author: "Marcus Rodriguez", 
+      quote: "Working with startups through Venturo gave me real-world experience I couldn't get anywhere else. I built actual products that users love while earning money during my studies.",
+      author: "Emma Thompson",
       role: "Computer Science Student",
-      university: "MIT",
+      university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "The AI matching is incredibly accurate. We got students who understood our vision immediately and delivered exceptional work.",
-      author: "David Park",
-      role: "Founder, GrowthHack",
-      university: "Ex-Y Combinator",
+      quote: "The projects I worked on through Venturo were exactly what I needed for my portfolio. I learned more in 3 weeks than I did in a whole semester of lectures.",
+      author: "James Mitchell", 
+      role: "Engineering Student",
+      university: "University of Bristol",
+      rating: 5
+    },
+    {
+      quote: "Venturo connected me with amazing startups right here in Bristol. I've worked on everything from mobile apps to AI projects, and each experience has been incredible for my career development.",
+      author: "Sophie Williams",
+      role: "Data Science Student",
+      university: "University of Bristol",
       rating: 5
     }
   ];
@@ -413,10 +413,10 @@ const SignupPage: React.FC = () => {
           <AnimatedSection>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                What Our Community Says
+               What Bristol Students Say
               </h2>
               <p className="text-xl text-gray-600">
-                See how Venturo is helping students and startups build the future—together.
+               Hear from University of Bristol students who've gained real experience through Venturo.
               </p>
             </div>
           </AnimatedSection>
