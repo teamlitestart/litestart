@@ -157,25 +157,6 @@ const AboutPage: React.FC = () => (
       </div>
     </section>
 
-    {/* Call to Action Footer */}
-    <section className="py-20 bg-gradient-to-r from-blue-600 to-teal-600">
-      <div className="max-w-4xl mx-auto px-4 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-          We are building the future of work.
-        </h2>
-        <p className="text-xl text-blue-100 mb-8">
-          Join us — as a founder, student, or supporter.
-        </p>
-        <Link
-          to="/contact"
-          className="inline-flex items-center space-x-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-all duration-300 hover:shadow-lg hover:scale-105"
-        >
-          <span>Get Involved</span>
-          <ArrowRight className="w-5 h-5" />
-        </Link>
-      </div>
-    </section>
-    
     <Footer />
   </div>
 );
