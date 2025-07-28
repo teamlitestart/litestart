@@ -21,14 +21,24 @@ const AboutPage: React.FC = () => (
     <Header />
     <div className="max-w-4xl mx-auto px-4 py-16">
       <h1 className="text-4xl font-bold text-gray-900 mb-8">About Us</h1>
-      <p className="text-lg text-gray-600 mb-6">
-        Venturo was born out of the Bristol entrepreneurial community, with a mission to bridge the gap between talented university students and innovative startups.
-      </p>
-      <p className="text-lg text-gray-600 mb-6">
-        Our platform connects elite university students with early-stage startups for high-impact freelance work, creating meaningful opportunities for both parties.
-      </p>
-      <p className="text-lg text-gray-600">
-        We believe in the power of real-world experience and the value that students can bring to growing businesses.
+      <div className="space-y-6">
+        <p className="text-lg text-gray-600">
+          We are <strong>Reece Forbes</strong> and <strong>Scott Sampson</strong>, co-presidents of the Bristol Entrepreneur Society.
+        </p>
+        <p className="text-lg text-gray-600">
+          We started this platform to solve a problem we both experienced first-hand:
+        </p>
+        <ul className="text-lg text-gray-600 ml-6 space-y-2">
+          <li>• Founders need fast, affordable, and high-quality help.</li>
+          <li>• Students want real-world experience that actually matters.</li>
+        </ul>
+        <p className="text-lg text-gray-600">
+          By connecting startups with top student talent from elite universities, we help both sides win. Founders grow faster. Students build skills and earn money.
+        </p>
+        <p className="text-lg text-gray-600">
+          This is built by students, for students and startups — with the goal of unlocking the next generation of entrepreneurial talent.
+        </p>
+      </div>
       </p>
     </div>
     <Footer />
