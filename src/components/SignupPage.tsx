@@ -174,7 +174,7 @@ const SignupPage: React.FC = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative min-h-[200vh] bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -186,7 +186,13 @@ const SignupPage: React.FC = () => {
         
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <AnimatedSection delay={200}>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-gray-900 mb-8 leading-tight">
+            <div className="flex justify-center mb-6">
+              <div className="flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+                <Zap className="w-4 h-4" />
+                <span>AI-Powered Talent Matching</span>
+              </div>
+            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
               Build Your Future.<br />
               <span className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent block">
                 Real Projects. Real Startups. Real Impact.
@@ -195,43 +201,37 @@ const SignupPage: React.FC = () => {
           </AnimatedSection>
           
           <AnimatedSection delay={400}>
-            <div className="text-xl md:text-2xl text-gray-700 mb-12 max-w-5xl mx-auto leading-relaxed space-y-6">
-              <p className="font-medium">
-                We are two student founders — <strong>Reece Forbes</strong> and <strong>Scott Sampson</strong> — building the platform we wish existed.
-              </p>
-              
-              <p>
-                As co-presidents of the Bristol Entrepreneur Society, we saw two big problems:
-              </p>
-              
-              <div className="space-y-3 text-lg md:text-xl">
-                <p><strong>1.</strong> Founders struggle to find fast, affordable, reliable help.</p>
-                <p><strong>2.</strong> Talented students want experience but lack access to real-world projects.</p>
-              </div>
-              
-              <p>
-                This platform connects both sides. Our goal is to unlock top student talent from elite universities and help startups grow faster — all while giving students paid experience that actually means something.
-              </p>
-              
-              <p className="font-medium text-blue-700">
-                This is built by students, for students and startups.
-              </p>
+            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+              <button 
+                onClick={handleJoinWaitlist}
+                className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2"
+              >
+                <span>Post a Project</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+              <button 
+                onClick={handleJoinWaitlist}
+                className="group border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
+              >
+                <Users className="w-5 h-5" />
+                <span>Join as Student</span>
+              </button>
             </div>
-          </AnimatedSection>
-          
-          <AnimatedSection delay={800}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="text-5xl font-bold text-blue-600 mb-3">500+</div>
-                <p className="text-xl text-gray-600">Top University Students</p>
+                <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
+                <p className="text-gray-600">Top University Students</p>
               </div>
               <div className="text-center">
-                <div className="text-5xl font-bold text-teal-600 mb-3">150+</div>
-                <p className="text-xl text-gray-600">Startups Served</p>
+                <div className="text-3xl font-bold text-teal-600 mb-2">150+</div>
+                <p className="text-gray-600">Startups Served</p>
               </div>
               <div className="text-center">
-                <div className="text-5xl font-bold text-orange-600 mb-3">48hr</div>
-                <p className="text-xl text-gray-600">Average Delivery</p>
+                <div className="text-3xl font-bold text-orange-600 mb-2">48hr</div>
+                <p className="text-gray-600">Average Delivery</p>
               </div>
             </div>
           </AnimatedSection>
