@@ -304,17 +304,6 @@ const SignupPage: React.FC = () => {
             ))}
           </div>
 
-          <AnimatedSection delay={600}>
-            <div className="text-center mt-12">
-              <button
-                onClick={handleViewProjects}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2 mx-auto"
-              >
-                <span>View Sample Projects</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </AnimatedSection>
         </div>
       </section>
 
@@ -346,9 +335,9 @@ const SignupPage: React.FC = () => {
                 </ul>
                 <button
                   onClick={handleJoinWaitlist}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2"
                 >
-                  <span>Join as Student</span>
+                  <span>Join the Waitlist</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
