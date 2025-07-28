@@ -195,7 +195,7 @@ const SignupPage: React.FC = () => {
           </AnimatedSection>
           
           <AnimatedSection delay={200}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-gray-900 mb-8 leading-tight">
               Build Your Future.<br />
               <span className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent block">
                 Real Projects. Real Startups. Real Impact.
@@ -204,43 +204,43 @@ const SignupPage: React.FC = () => {
           </AnimatedSection>
           
           <AnimatedSection delay={400}>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-2xl md:text-3xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
               The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
             </p>
           </AnimatedSection>
           
           <AnimatedSection delay={600}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
               <button 
                 onClick={handleJoinWaitlist}
-                className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2"
+                className="group bg-blue-600 hover:bg-blue-700 text-white px-12 py-6 rounded-xl font-semibold text-xl transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-3"
               >
                 <span>Join Waitlist</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </button>
               <button 
                 onClick={handleLearnMore}
-                className="group border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
+                className="group border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-12 py-6 rounded-xl font-semibold text-xl transition-all duration-300 hover:shadow-lg flex items-center space-x-3"
               >
                 <span>Learn More</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
           </AnimatedSection>
           
           <AnimatedSection delay={800}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
-                <p className="text-gray-600">Top University Students</p>
+                <div className="text-5xl font-bold text-blue-600 mb-3">500+</div>
+                <p className="text-xl text-gray-600">Top University Students</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-teal-600 mb-2">150+</div>
-                <p className="text-gray-600">Startups Served</p>
+                <div className="text-5xl font-bold text-teal-600 mb-3">150+</div>
+                <p className="text-xl text-gray-600">Startups Served</p>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600 mb-2">48hr</div>
-                <p className="text-gray-600">Average Delivery</p>
+                <div className="text-5xl font-bold text-orange-600 mb-3">48hr</div>
+                <p className="text-xl text-gray-600">Average Delivery</p>
               </div>
             </div>
           </AnimatedSection>

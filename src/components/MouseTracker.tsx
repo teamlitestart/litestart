@@ -13,6 +13,7 @@ const MouseTracker: React.FC = () => {
   const animationRef = useRef<number>();
   const [isVisible, setIsVisible] = useState(false);
   const lastMousePos = useRef({ x: 0, y: 0 });
+  const lastMoveTime = useRef(Date.now());
 
   useEffect(() => {
     // Don't show on mobile devices
@@ -35,7 +36,7 @@ const MouseTracker: React.FC = () => {
     const handleMouseMove = (e: MouseEvent) => {
       setIsVisible(true);
       
-      // Calculate velocity for fire intensity
+      // Calculate velocity for intensity
       const dx = e.clientX - lastMousePos.current.x;
       const dy = e.clientY - lastMousePos.current.y;
       const velocity = Math.sqrt(dx * dx + dy * dy);
@@ -44,173 +45,87 @@ const MouseTracker: React.FC = () => {
         x: e.clientX,
         y: e.clientY,
         timestamp: Date.now(),
-        velocity: Math.min(velocity, 50) // Cap velocity for consistent effect
+        velocity: Math.min(velocity, 30) // Cap velocity for consistent effect
       });
 
       lastMousePos.current = { x: e.clientX, y: e.clientY };
+      lastMoveTime.current = Date.now();
 
-      // Keep only recent positions (last 600ms for gradient trail)
+      // Keep only recent positions (last 300ms for feint effect)
       const now = Date.now();
       mousePositions.current = mousePositions.current.filter(
-        pos => now - pos.timestamp < 600
+        pos => now - pos.timestamp < 300
       );
     };
 
     const handleMouseLeave = () => {
-      setIsVisible(false);
-      mousePositions.current = [];
+      // Don't immediately hide, let it fade naturally
     };
 
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      // Clear canvas with slight fade for gradient effect
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Clear canvas completely for feint effect
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const positions = mousePositions.current;
-      if (positions.length < 2) {
+      const now = Date.now();
+      
+      // Check if mouse has stopped moving
+      const timeSinceLastMove = now - lastMoveTime.current;
+      if (timeSinceLastMove > 100) {
+        // Mouse stopped, start fading out
+        mousePositions.current = mousePositions.current.filter(
+          pos => now - pos.timestamp < 200 // Shorter fade when stopped
+        );
+        
+        if (mousePositions.current.length === 0) {
+          setIsVisible(false);
+        }
+      }
+
+      if (positions.length < 1) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
 
-      const now = Date.now();
-      ctx.globalCompositeOperation = 'lighter'; // Additive blending for glow effect
-
-      // Draw gradient particles
-      for (let i = 1; i < positions.length; i++) {
+      // Draw feint gradient trail
+      for (let i = 0; i < positions.length; i++) {
         const current = positions[i];
-        const previous = positions[i - 1];
-        
-        // Calculate age and intensity
         const age = now - current.timestamp;
-        const maxAge = 600;
+        const maxAge = 300;
         const normalizedAge = age / maxAge;
         const intensity = Math.max(0, 1 - normalizedAge);
         
         if (intensity <= 0) continue;
 
-        // Purple/Magenta gradient color progression
-        let r, g, b;
-        if (normalizedAge < 0.2) {
-          // Bright white/cyan to bright magenta
-          const t = normalizedAge / 0.2;
-          r = Math.floor(255 * (0.8 + t * 0.2)); // 204 -> 255
-          g = Math.floor(255 * (0.8 - t * 0.6)); // 204 -> 51
-          b = 255; // Keep blue high
-        } else if (normalizedAge < 0.4) {
-          // Bright magenta to deep purple
-          const t = (normalizedAge - 0.2) / 0.2;
-          r = Math.floor(255 * (1 - t * 0.4)); // 255 -> 153
-          g = Math.floor(51 * (1 - t * 0.6)); // 51 -> 20
-          b = Math.floor(255 * (1 - t * 0.2)); // 255 -> 204
-        } else if (normalizedAge < 0.7) {
-          // Deep purple to dark purple
-          const t = (normalizedAge - 0.4) / 0.3;
-          r = Math.floor(153 * (1 - t * 0.5)); // 153 -> 76
-          g = Math.floor(20 * (1 - t * 0.5)); // 20 -> 10
-          b = Math.floor(204 * (1 - t * 0.3)); // 204 -> 143
-        } else {
-          // Dark purple to very dark purple
-          const t = (normalizedAge - 0.7) / 0.3;
-          r = Math.floor(76 * (1 - t * 0.7)); // 76 -> 23
-          g = Math.floor(10 * (1 - t * 0.8)); // 10 -> 2
-          b = Math.floor(143 * (1 - t * 0.6)); // 143 -> 57
-        }
-
-        // Add velocity-based brightness for more dynamic effect
-        const velocityFactor = Math.min(current.velocity / 20, 1);
-        r = Math.min(255, r + velocityFactor * 40);
-        g = Math.min(255, g + velocityFactor * 20);
-        b = Math.min(255, b + velocityFactor * 30);
-
-        const alpha = intensity * 0.9;
-
-        // Create multiple gradient particles with random offsets
-        const numParticles = Math.floor(2 + current.velocity / 15);
+        // Velocity-based size and opacity
+        const velocityFactor = Math.min(current.velocity / 15, 1);
+        const baseSize = 40 + (velocityFactor * 60); // 40px to 100px based on speed
+        const size = baseSize * intensity;
         
-        for (let p = 0; p < numParticles; p++) {
-          // Random offset for organic movement
-          const offsetX = (Math.random() - 0.5) * 15 * intensity;
-          const offsetY = (Math.random() - 0.5) * 15 * intensity;
-          
-          const particleX = current.x + offsetX;
-          const particleY = current.y + offsetY;
-          
-          // Particle size based on intensity and velocity
-          const baseSize = 12 + current.velocity * 0.4;
-          const size = baseSize * intensity * (0.5 + Math.random() * 0.5);
-          
-          // Create radial gradient for each particle
-          const gradient = ctx.createRadialGradient(
-            particleX, particleY, 0,
-            particleX, particleY, size
-          );
-          
-          gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
-          gradient.addColorStop(0.5, `rgba(${Math.floor(r * 0.7)}, ${Math.floor(g * 0.5)}, ${Math.floor(b * 0.8)}, ${alpha * 0.6})`);
-          gradient.addColorStop(1, `rgba(${Math.floor(r * 0.2)}, ${Math.floor(g * 0.1)}, ${Math.floor(b * 0.4)}, 0)`);
+        // Very subtle, feint colors
+        const baseOpacity = 0.03 + (velocityFactor * 0.07); // 0.03 to 0.1 opacity
+        const opacity = baseOpacity * intensity;
 
-          ctx.beginPath();
-          ctx.arc(particleX, particleY, size, 0, Math.PI * 2);
-          ctx.fillStyle = gradient;
-          ctx.fill();
-        }
+        // Create subtle gradient
+        const gradient = ctx.createRadialGradient(
+          current.x, current.y, 0,
+          current.x, current.y, size
+        );
+        
+        // Feint purple/blue gradient
+        gradient.addColorStop(0, `rgba(147, 51, 234, ${opacity * 1.5})`); // Purple center
+        gradient.addColorStop(0.3, `rgba(99, 102, 241, ${opacity})`); // Blue-purple
+        gradient.addColorStop(0.6, `rgba(59, 130, 246, ${opacity * 0.7})`); // Blue
+        gradient.addColorStop(1, `rgba(147, 197, 253, 0)`); // Transparent blue edge
 
-        // Draw connecting gradient trail
-        if (i > 0) {
-          const trailGradient = ctx.createLinearGradient(
-            previous.x, previous.y,
-            current.x, current.y
-          );
-          
-          trailGradient.addColorStop(0, `rgba(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.6)}, ${b}, ${alpha * 0.4})`);
-          trailGradient.addColorStop(1, `rgba(${r}, ${Math.floor(g * 0.7)}, ${Math.floor(b * 0.9)}, ${alpha * 0.6})`);
-
-          ctx.beginPath();
-          ctx.moveTo(previous.x, previous.y);
-          ctx.lineTo(current.x, current.y);
-          ctx.lineWidth = Math.max(3, intensity * 10 + current.velocity * 0.3);
-          ctx.strokeStyle = trailGradient;
-          ctx.lineCap = 'round';
-          ctx.stroke();
-        }
+        ctx.beginPath();
+        ctx.arc(current.x, current.y, size, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
       }
 
-      // Draw main cursor glow
-      if (positions.length > 0) {
-        const current = positions[positions.length - 1];
-        const age = now - current.timestamp;
-        
-        if (age < 100) {
-          // Main cursor with multiple gradient layers
-          const layers = [
-            { size: 30, color: [255, 100, 255, 0.9] }, // Bright magenta
-            { size: 22, color: [200, 50, 255, 0.8] },  // Purple-magenta
-            { size: 16, color: [150, 30, 200, 0.7] },  // Deep purple
-            { size: 10, color: [100, 20, 150, 0.6] }   // Dark purple
-          ];
-
-          layers.forEach(layer => {
-            const gradient = ctx.createRadialGradient(
-              current.x, current.y, 0,
-              current.x, current.y, layer.size
-            );
-            
-            gradient.addColorStop(0, `rgba(${layer.color[0]}, ${layer.color[1]}, ${layer.color[2]}, ${layer.color[3]})`);
-            gradient.addColorStop(0.6, `rgba(${Math.floor(layer.color[0] * 0.7)}, ${Math.floor(layer.color[1] * 0.5)}, ${Math.floor(layer.color[2] * 0.8)}, ${layer.color[3] * 0.4})`);
-            gradient.addColorStop(1, 'rgba(100, 20, 150, 0)');
-            
-            ctx.beginPath();
-            ctx.arc(current.x, current.y, layer.size, 0, Math.PI * 2);
-            ctx.fillStyle = gradient;
-            ctx.fill();
-          });
-        }
-      }
-
-      ctx.globalCompositeOperation = 'source-over';
       animationRef.current = requestAnimationFrame(animate);
     };
 
@@ -240,9 +155,6 @@ const MouseTracker: React.FC = () => {
       className={`fixed inset-0 pointer-events-none z-50 transition-opacity duration-300 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
-      style={{
-        mixBlendMode: 'screen',
-      }}
     />
   );
 };
