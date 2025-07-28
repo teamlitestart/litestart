@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import SignupPage from './components/SignupPage';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
