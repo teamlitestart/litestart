@@ -119,21 +119,21 @@ const SignupPage: React.FC = () => {
   const testimonials = [
     {
       quote: "Working with startups through Venturo gave me real-world experience I couldn't get anywhere else. I built actual products that users love while earning money during my studies.",
-      author: "Emma Thompson",
+      author: "Eshaan Walia",
       role: "Computer Science Student",
       university: "University of Bristol",
       rating: 5
     },
     {
       quote: "The projects I worked on through Venturo were exactly what I needed for my portfolio. I learned more in 3 weeks than I did in a whole semester of lectures.",
-      author: "James Mitchell", 
+      author: "Tyler Bains", 
       role: "Engineering Student",
       university: "University of Bristol",
       rating: 5
     },
     {
       quote: "Venturo connected me with amazing startups right here in Bristol. I've worked on everything from mobile apps to AI projects, and each experience has been incredible for my career development.",
-      author: "Sophie Williams",
+      author: "Darius Winkler",
       role: "Data Science Student",
       university: "University of Bristol",
       rating: 5
