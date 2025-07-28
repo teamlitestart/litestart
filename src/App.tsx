@@ -13,6 +13,7 @@ import AdminPanel from './components/AdminPanel';
 import EmailVerification from './components/EmailVerification';
 import VenturoFeatures from './components/VenturoFeatures';
 import Header from './components/Header';
+import MouseTracker from './components/MouseTracker';
 
 // Placeholder components for new pages
 const AboutPage: React.FC = () => (
@@ -130,6 +131,7 @@ function MainSite() {
 
   return (
     <div className="min-h-screen">
+      <MouseTracker />
       <Hero onJoinAsStudent={handleJoinAsStudent} onJoinAsStartup={handleJoinAsStartup} />
       <VenturoFeatures />
       <HowItWorks />

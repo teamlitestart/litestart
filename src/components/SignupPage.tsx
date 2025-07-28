@@ -3,6 +3,7 @@ import { ArrowRight, Users, Zap, Clock, Target, Briefcase, Star, Quote, CheckCir
 import VenturoFeatures from './VenturoFeatures';
 import Header from './Header';
 import Footer from './Footer';
+import MouseTracker from './MouseTracker';
 
 // Intersection Observer hook for scroll animations
 const useIntersectionObserver = (options = {}) => {
@@ -169,6 +170,7 @@ const SignupPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <MouseTracker />
       <Header />
       
       {/* Hero Section */}
