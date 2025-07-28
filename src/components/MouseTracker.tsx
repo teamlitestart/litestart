@@ -49,10 +49,10 @@ const MouseTracker: React.FC = () => {
 
       lastMousePos.current = { x: e.clientX, y: e.clientY };
 
-      // Keep only recent positions (last 800ms for longer fire trail)
+      // Keep only recent positions (last 600ms for gradient trail)
       const now = Date.now();
       mousePositions.current = mousePositions.current.filter(
-        pos => now - pos.timestamp < 800
+        pos => now - pos.timestamp < 600
       );
     };
 
@@ -64,9 +64,9 @@ const MouseTracker: React.FC = () => {
     const animate = () => {
       if (!ctx || !canvas) return;
 
-      // Clear canvas with slight fade for fire effect
+      // Clear canvas with slight fade for gradient effect
       ctx.globalCompositeOperation = 'source-over';
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const positions = mousePositions.current;
@@ -76,80 +76,81 @@ const MouseTracker: React.FC = () => {
       }
 
       const now = Date.now();
-      ctx.globalCompositeOperation = 'lighter'; // Additive blending for fire effect
+      ctx.globalCompositeOperation = 'lighter'; // Additive blending for glow effect
 
-      // Draw fire particles/flames
+      // Draw gradient particles
       for (let i = 1; i < positions.length; i++) {
         const current = positions[i];
         const previous = positions[i - 1];
         
         // Calculate age and intensity
         const age = now - current.timestamp;
-        const maxAge = 800;
+        const maxAge = 600;
         const normalizedAge = age / maxAge;
         const intensity = Math.max(0, 1 - normalizedAge);
         
         if (intensity <= 0) continue;
 
-        // Fire color progression: white -> yellow -> orange -> red -> dark red
+        // Purple/Magenta gradient color progression
         let r, g, b;
         if (normalizedAge < 0.2) {
-          // White to yellow
+          // Bright white/cyan to bright magenta
           const t = normalizedAge / 0.2;
-          r = 255;
-          g = 255;
-          b = Math.floor(255 * (1 - t * 0.5));
+          r = Math.floor(255 * (0.8 + t * 0.2)); // 204 -> 255
+          g = Math.floor(255 * (0.8 - t * 0.6)); // 204 -> 51
+          b = 255; // Keep blue high
         } else if (normalizedAge < 0.4) {
-          // Yellow to orange
+          // Bright magenta to deep purple
           const t = (normalizedAge - 0.2) / 0.2;
-          r = 255;
-          g = Math.floor(255 * (1 - t * 0.3));
-          b = Math.floor(128 * (1 - t));
+          r = Math.floor(255 * (1 - t * 0.4)); // 255 -> 153
+          g = Math.floor(51 * (1 - t * 0.6)); // 51 -> 20
+          b = Math.floor(255 * (1 - t * 0.2)); // 255 -> 204
         } else if (normalizedAge < 0.7) {
-          // Orange to red
+          // Deep purple to dark purple
           const t = (normalizedAge - 0.4) / 0.3;
-          r = 255;
-          g = Math.floor(179 * (1 - t));
-          b = 0;
+          r = Math.floor(153 * (1 - t * 0.5)); // 153 -> 76
+          g = Math.floor(20 * (1 - t * 0.5)); // 20 -> 10
+          b = Math.floor(204 * (1 - t * 0.3)); // 204 -> 143
         } else {
-          // Red to dark red
+          // Dark purple to very dark purple
           const t = (normalizedAge - 0.7) / 0.3;
-          r = Math.floor(255 * (1 - t * 0.6));
-          g = 0;
-          b = 0;
+          r = Math.floor(76 * (1 - t * 0.7)); // 76 -> 23
+          g = Math.floor(10 * (1 - t * 0.8)); // 10 -> 2
+          b = Math.floor(143 * (1 - t * 0.6)); // 143 -> 57
         }
 
-        // Add velocity-based color variation for more dynamic fire
+        // Add velocity-based brightness for more dynamic effect
         const velocityFactor = Math.min(current.velocity / 20, 1);
-        r = Math.min(255, r + velocityFactor * 50);
-        g = Math.min(255, g + velocityFactor * 30);
+        r = Math.min(255, r + velocityFactor * 40);
+        g = Math.min(255, g + velocityFactor * 20);
+        b = Math.min(255, b + velocityFactor * 30);
 
-        const alpha = intensity * 0.8;
+        const alpha = intensity * 0.9;
 
-        // Create multiple flame particles with random offsets
-        const numParticles = Math.floor(3 + current.velocity / 10);
+        // Create multiple gradient particles with random offsets
+        const numParticles = Math.floor(2 + current.velocity / 15);
         
         for (let p = 0; p < numParticles; p++) {
-          // Random offset for flame flicker effect
-          const offsetX = (Math.random() - 0.5) * 20 * intensity;
-          const offsetY = (Math.random() - 0.5) * 20 * intensity - age * 0.02; // Slight upward drift
+          // Random offset for organic movement
+          const offsetX = (Math.random() - 0.5) * 15 * intensity;
+          const offsetY = (Math.random() - 0.5) * 15 * intensity;
           
           const particleX = current.x + offsetX;
           const particleY = current.y + offsetY;
           
-          // Flame size based on intensity and velocity
-          const baseSize = 8 + current.velocity * 0.3;
+          // Particle size based on intensity and velocity
+          const baseSize = 12 + current.velocity * 0.4;
           const size = baseSize * intensity * (0.5 + Math.random() * 0.5);
           
-          // Create radial gradient for each flame particle
+          // Create radial gradient for each particle
           const gradient = ctx.createRadialGradient(
             particleX, particleY, 0,
             particleX, particleY, size
           );
           
           gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
-          gradient.addColorStop(0.4, `rgba(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.6)}, ${Math.floor(b * 0.3)}, ${alpha * 0.7})`);
-          gradient.addColorStop(1, `rgba(${Math.floor(r * 0.3)}, 0, 0, 0)`);
+          gradient.addColorStop(0.5, `rgba(${Math.floor(r * 0.7)}, ${Math.floor(g * 0.5)}, ${Math.floor(b * 0.8)}, ${alpha * 0.6})`);
+          gradient.addColorStop(1, `rgba(${Math.floor(r * 0.2)}, ${Math.floor(g * 0.1)}, ${Math.floor(b * 0.4)}, 0)`);
 
           ctx.beginPath();
           ctx.arc(particleX, particleY, size, 0, Math.PI * 2);
@@ -157,38 +158,38 @@ const MouseTracker: React.FC = () => {
           ctx.fill();
         }
 
-        // Draw connecting flame trail
+        // Draw connecting gradient trail
         if (i > 0) {
           const trailGradient = ctx.createLinearGradient(
             previous.x, previous.y,
             current.x, current.y
           );
           
-          trailGradient.addColorStop(0, `rgba(${r}, ${Math.floor(g * 0.7)}, 0, ${alpha * 0.3})`);
-          trailGradient.addColorStop(1, `rgba(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.5)}, 0, ${alpha * 0.5})`);
+          trailGradient.addColorStop(0, `rgba(${Math.floor(r * 0.8)}, ${Math.floor(g * 0.6)}, ${b}, ${alpha * 0.4})`);
+          trailGradient.addColorStop(1, `rgba(${r}, ${Math.floor(g * 0.7)}, ${Math.floor(b * 0.9)}, ${alpha * 0.6})`);
 
           ctx.beginPath();
           ctx.moveTo(previous.x, previous.y);
           ctx.lineTo(current.x, current.y);
-          ctx.lineWidth = Math.max(2, intensity * 8 + current.velocity * 0.2);
+          ctx.lineWidth = Math.max(3, intensity * 10 + current.velocity * 0.3);
           ctx.strokeStyle = trailGradient;
           ctx.lineCap = 'round';
           ctx.stroke();
         }
       }
 
-      // Draw main cursor flame
+      // Draw main cursor glow
       if (positions.length > 0) {
         const current = positions[positions.length - 1];
         const age = now - current.timestamp;
         
         if (age < 100) {
-          // Main cursor flame with multiple layers
+          // Main cursor with multiple gradient layers
           const layers = [
-            { size: 25, color: [255, 255, 200, 0.9] },
-            { size: 18, color: [255, 200, 100, 0.8] },
-            { size: 12, color: [255, 150, 50, 0.7] },
-            { size: 8, color: [255, 100, 0, 0.6] }
+            { size: 30, color: [255, 100, 255, 0.9] }, // Bright magenta
+            { size: 22, color: [200, 50, 255, 0.8] },  // Purple-magenta
+            { size: 16, color: [150, 30, 200, 0.7] },  // Deep purple
+            { size: 10, color: [100, 20, 150, 0.6] }   // Dark purple
           ];
 
           layers.forEach(layer => {
@@ -198,8 +199,8 @@ const MouseTracker: React.FC = () => {
             );
             
             gradient.addColorStop(0, `rgba(${layer.color[0]}, ${layer.color[1]}, ${layer.color[2]}, ${layer.color[3]})`);
-            gradient.addColorStop(0.6, `rgba(${Math.floor(layer.color[0] * 0.8)}, ${Math.floor(layer.color[1] * 0.6)}, 0, ${layer.color[3] * 0.5})`);
-            gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+            gradient.addColorStop(0.6, `rgba(${Math.floor(layer.color[0] * 0.7)}, ${Math.floor(layer.color[1] * 0.5)}, ${Math.floor(layer.color[2] * 0.8)}, ${layer.color[3] * 0.4})`);
+            gradient.addColorStop(1, 'rgba(100, 20, 150, 0)');
             
             ctx.beginPath();
             ctx.arc(current.x, current.y, layer.size, 0, Math.PI * 2);
