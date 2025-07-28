@@ -52,11 +52,6 @@ const Footer: React.FC<FooterProps> = ({ onJoinAsStudent, onJoinAsStartup }) => 
                   Contact
                 </Link>
               </li>
-              <li>
-                <Link to="/careers" className="text-gray-300 hover:text-white transition-colors">
-                  Careers
-                </Link>
-              </li>
             </ul>
           </div>
 

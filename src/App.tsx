@@ -153,7 +153,6 @@ function App() {
         <Route path="/verify-email" element={<EmailVerification />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/careers" element={<CareersPage />} />
       </Routes>
     </BrowserRouter>
   );
