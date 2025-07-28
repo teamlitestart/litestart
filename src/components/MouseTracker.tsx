@@ -45,16 +45,16 @@ const MouseTracker: React.FC = () => {
         x: e.clientX,
         y: e.clientY,
         timestamp: Date.now(),
-        velocity: Math.min(velocity, 30) // Cap velocity for consistent effect
+        velocity: Math.min(velocity, 50) // Higher cap for more dynamic range
       });
 
       lastMousePos.current = { x: e.clientX, y: e.clientY };
       lastMoveTime.current = Date.now();
 
-      // Keep only recent positions (last 300ms for feint effect)
+      // Keep only recent positions (last 400ms for feint effect)
       const now = Date.now();
       mousePositions.current = mousePositions.current.filter(
-        pos => now - pos.timestamp < 300
+        pos => now - pos.timestamp < 400
       );
     };
 
@@ -73,10 +73,10 @@ const MouseTracker: React.FC = () => {
       
       // Check if mouse has stopped moving
       const timeSinceLastMove = now - lastMoveTime.current;
-      if (timeSinceLastMove > 100) {
+      if (timeSinceLastMove > 150) {
         // Mouse stopped, start fading out
         mousePositions.current = mousePositions.current.filter(
-          pos => now - pos.timestamp < 200 // Shorter fade when stopped
+          pos => now - pos.timestamp < 250 // Slightly longer fade when stopped
         );
         
         if (mousePositions.current.length === 0) {
@@ -93,32 +93,33 @@ const MouseTracker: React.FC = () => {
       for (let i = 0; i < positions.length; i++) {
         const current = positions[i];
         const age = now - current.timestamp;
-        const maxAge = 300;
+        const maxAge = 400;
         const normalizedAge = age / maxAge;
         const intensity = Math.max(0, 1 - normalizedAge);
         
         if (intensity <= 0) continue;
 
         // Velocity-based size and opacity
-        const velocityFactor = Math.min(current.velocity / 15, 1);
-        const baseSize = 40 + (velocityFactor * 60); // 40px to 100px based on speed
+        const velocityFactor = Math.min(current.velocity / 20, 1);
+        const baseSize = 120 + (velocityFactor * 180); // 120px to 300px based on speed
         const size = baseSize * intensity;
         
-        // Very subtle, feint colors
-        const baseOpacity = 0.03 + (velocityFactor * 0.07); // 0.03 to 0.1 opacity
+        // Even more subtle, feint colors
+        const baseOpacity = 0.015 + (velocityFactor * 0.035); // 0.015 to 0.05 opacity
         const opacity = baseOpacity * intensity;
 
-        // Create subtle gradient
+        // Create very subtle gradient with larger area
         const gradient = ctx.createRadialGradient(
           current.x, current.y, 0,
           current.x, current.y, size
         );
         
-        // Feint purple/blue gradient
-        gradient.addColorStop(0, `rgba(147, 51, 234, ${opacity * 1.5})`); // Purple center
-        gradient.addColorStop(0.3, `rgba(99, 102, 241, ${opacity})`); // Blue-purple
-        gradient.addColorStop(0.6, `rgba(59, 130, 246, ${opacity * 0.7})`); // Blue
-        gradient.addColorStop(1, `rgba(147, 197, 253, 0)`); // Transparent blue edge
+        // Very feint purple/magenta gradient with wider spread
+        gradient.addColorStop(0, `rgba(147, 51, 234, ${opacity * 2})`); // Purple center
+        gradient.addColorStop(0.2, `rgba(99, 102, 241, ${opacity * 1.2})`); // Blue-purple
+        gradient.addColorStop(0.5, `rgba(59, 130, 246, ${opacity * 0.8})`); // Blue
+        gradient.addColorStop(0.8, `rgba(147, 197, 253, ${opacity * 0.3})`); // Light blue
+        gradient.addColorStop(1, `rgba(147, 197, 253, 0)`); // Transparent edge
 
         ctx.beginPath();
         ctx.arc(current.x, current.y, size, 0, Math.PI * 2);
