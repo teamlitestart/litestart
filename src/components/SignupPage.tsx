@@ -333,13 +333,6 @@ const SignupPage: React.FC = () => {
                     <span className="text-gray-700">Build your CV with meaningful, hands-on work</span>
                   </li>
                 </ul>
-                <button
-                  onClick={handleJoinWaitlist}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2"
-                >
-                  <span>Join the Waitlist</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
               </div>
             </AnimatedSection>
             
