@@ -394,13 +394,6 @@ const SignupPage: React.FC = () => {
                     <span className="text-gray-700">Keep costs low — ideal for early-stage, bootstrapped teams</span>
                   </li>
                 </ul>
-                <button
-                  onClick={handleJoinWaitlist}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
-                >
-                  <span>Post a Project</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
               </div>
             </AnimatedSection>
           </div>
