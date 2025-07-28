@@ -2,11 +2,10 @@ import React from 'react';
 import { ArrowRight, Users, Zap } from 'lucide-react';
 
 interface HeroProps {
-  onJoinAsStudent: () => void;
-  onJoinAsStartup: () => void;
+  onJoinWaitlist: () => void;
 }
 
-const Hero: React.FC<HeroProps> = ({ onJoinAsStudent, onJoinAsStartup }) => {
+const Hero: React.FC<HeroProps> = ({ onJoinWaitlist }) => {
   return (
       <section className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center">
@@ -28,20 +27,13 @@ const Hero: React.FC<HeroProps> = ({ onJoinAsStudent, onJoinAsStartup }) => {
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
               The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <div className="flex justify-center items-center mb-12">
               <button 
-                onClick={onJoinAsStartup}
+                onClick={onJoinWaitlist}
                 className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2"
               >
-                <span>Post a Project</span>
+                <span>Join the Waitlist</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button 
-                onClick={onJoinAsStudent}
-                className="group border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
-              >
-                <Users className="w-5 h-5" />
-                <span>Join as Student</span>
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">

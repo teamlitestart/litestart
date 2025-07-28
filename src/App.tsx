@@ -250,21 +250,23 @@ function MainSite() {
   const [isStudentOnboardingOpen, setIsStudentOnboardingOpen] = useState(false);
   const [isStartupOnboardingOpen, setIsStartupOnboardingOpen] = useState(false);
 
-  const handleJoinAsStudent = () => setIsStudentOnboardingOpen(true);
-  const handleJoinAsStartup = () => setIsStartupOnboardingOpen(true);
+  const handleJoinWaitlist = () => {
+    // Navigate to signup page
+    window.location.href = '/';
+  };
   const handleCloseStudentOnboarding = () => setIsStudentOnboardingOpen(false);
   const handleCloseStartupOnboarding = () => setIsStartupOnboardingOpen(false);
 
   return (
     <div className="min-h-screen">
       <MouseTracker />
-      <Hero onJoinAsStudent={handleJoinAsStudent} onJoinAsStartup={handleJoinAsStartup} />
+      <Hero onJoinWaitlist={handleJoinWaitlist} />
       <VenturoFeatures />
       <HowItWorks />
-      <DualOfferingToggle onJoinAsStudent={handleJoinAsStudent} onJoinAsStartup={handleJoinAsStartup} />
+      <DualOfferingToggle onJoinAsStudent={() => window.location.href = '/'} onJoinAsStartup={() => window.location.href = '/'} />
       <TrustSection />
       <FAQ />
-      <Footer onJoinAsStudent={handleJoinAsStudent} onJoinAsStartup={handleJoinAsStartup} />
+      <Footer onJoinAsStudent={() => window.location.href = '/'} onJoinAsStartup={() => window.location.href = '/'} />
       <StudentOnboarding isOpen={isStudentOnboardingOpen} onClose={handleCloseStudentOnboarding} />
       <StartupOnboarding isOpen={isStartupOnboardingOpen} onClose={handleCloseStartupOnboarding} />
     </div>
