@@ -216,8 +216,6 @@ const SignupPage: React.FC = () => {
               <p className="font-medium text-blue-700">
                 This is built by students, for students and startups.
               </p>
-            </div>
-            </p>
           </AnimatedSection>
           
           <AnimatedSection delay={800}>
