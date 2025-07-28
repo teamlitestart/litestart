@@ -36,20 +36,6 @@ const Hero: React.FC<HeroProps> = ({ onJoinWaitlist }) => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">500+</div>
-                <p className="text-gray-600">Top University Students</p>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-teal-600 mb-2">150+</div>
-                <p className="text-gray-600">Startups Served</p>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-orange-600 mb-2">48hr</div>
-                <p className="text-gray-600">Average Delivery</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>

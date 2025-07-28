@@ -55,7 +55,7 @@ const SignupPage: React.FC = () => {
   const [userType, setUserType] = useState<'startup' | 'student'>('startup');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const signupRef = useRef<HTMLDivElement>(null);
+  const [showSignupModal, setShowSignupModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -95,9 +95,7 @@ const SignupPage: React.FC = () => {
   };
 
   const scrollToSignup = () => {
-    if (signupRef.current) {
-      signupRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    setShowSignupModal(true);
   };
 
   const handleJoinWaitlist = () => {
@@ -483,98 +481,119 @@ const SignupPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Signup Section - Moved to Bottom */}
-      <section ref={signupRef} className="py-24 bg-gray-50">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-              <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
-              <h2 className="text-3xl font-bold mb-4 text-gray-900">Launching Soon!</h2>
-              <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
-              
-              {submitted ? (
-                <div className="py-8">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h3 className="text-green-600 text-xl font-semibold mb-2">Check Your Email!</h3>
-                  <p className="text-gray-600 mb-4">
-                    Thank you for signing up as a {userType === 'startup' ? 'startup' : 'student'}! 
-                    We've sent a verification email to your inbox.
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Please click the verification link in your email to complete your registration.
-                  </p>
+      {/* Signup Modal */}
+      {showSignupModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 text-center">
+            <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Launching Soon!</h2>
+            <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
+            
+            {submitted ? (
+              <div className="py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-              ) : error ? (
+                <h3 className="text-green-600 text-xl font-semibold mb-2">Check Your Email!</h3>
+                <p className="text-gray-600 mb-4">
+                  Thank you for signing up as a {userType === 'startup' ? 'startup' : 'student'}! 
+                  We've sent a verification email to your inbox.
+                </p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Please click the verification link in your email to complete your registration.
+                </p>
+                <button
+                  onClick={() => setShowSignupModal(false)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            ) : error ? (
+              <div>
                 <div className="text-red-600 text-lg font-semibold py-4 bg-red-50 rounded-lg px-4 mb-6">
                   {error}
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your Name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your Email"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                    />
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setUserType('student')}
-                      className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
-                        userType === 'student'
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
-                      }`}
-                    >
-                      👩‍🎓 Student
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setUserType('startup')}
-                      className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
-                        userType === 'startup'
-                          ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white text-teal-600 border-teal-600 hover:bg-teal-50'
-                      }`}
-                    >
-                      🧑‍💻 Startup
-                    </button>
-                  </div>
+                <button
+                  onClick={() => setError('')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your Name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your Email"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setUserType('student')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
+                      userType === 'student'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    👩‍🎓 Student
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserType('startup')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
+                      userType === 'startup'
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-teal-600 border-teal-600 hover:bg-teal-50'
+                    }`}
+                  >
+                    🧑‍💻 Startup
+                  </button>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowSignupModal(false)}
+                    className="flex-1 border-2 border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-semibold text-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md ${
+                    className={`flex-1 font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md ${
                       loading 
                         ? 'bg-gray-400 cursor-not-allowed' 
                         : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg hover:scale-105'
                     }`}
                   >
-                    {loading ? 'Signing up...' : `Join Waitlist as ${userType === 'startup' ? 'Startup' : 'Student'}`}
+                    {loading ? 'Signing up...' : `Join Waitlist`}
                   </button>
-                </form>
-              )}
-            </div>
-          </AnimatedSection>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
-      </section>
+      )}
 
       <Footer />
     </div>
