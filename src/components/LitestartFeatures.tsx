@@ -1,11 +1,11 @@
 import React from 'react';
 import { Clock, FileText, Handshake, MapPin } from 'lucide-react';
 
-interface VenturoFeaturesProps {
+interface LitestartFeaturesProps {
   showCTA?: boolean;
 }
 
-const VenturoFeatures: React.FC<VenturoFeaturesProps> = ({ showCTA = true }) => {
+const LitestartFeatures: React.FC<LitestartFeaturesProps> = ({ showCTA = true }) => {
   const features = [
     {
       icon: <Clock className="w-8 h-8" />,
@@ -15,16 +15,16 @@ const VenturoFeatures: React.FC<VenturoFeaturesProps> = ({ showCTA = true }) => 
     {
       icon: <FileText className="w-8 h-8" />,
       title: "📋 Project-based, with defined scope and time commitment",
-      description: "Each opportunity is outcome-focused and time-bound — so students know exactly what they're signing up for, and startups respect that."
+      description: "Each opportunity is outcome-focused and time-bound — so students know exactly what they're signing up for, and LiteStart respect that."
     },
     {
       icon: <Handshake className="w-8 h-8" />,
-      title: "🤝 Win-win model — built for both students and startups",
-      description: "Students gain experience. Startups get real support. Both sides grow."
+      title: "🤝 Win-win model — built for both students and LiteStart",
+      description: "Students gain experience. LiteStart get real support. Both sides grow."
     },
     {
       icon: <MapPin className="w-8 h-8" />,
-      title: "📍 Rooted in the UK student/startup ecosystem",
+      title: "📍 Rooted in the UK student/LiteStart ecosystem",
       description: "Born out of the Bristol entrepreneurial community, with strong ties to university networks and early-stage founders."
     }
   ];
@@ -34,10 +34,10 @@ const VenturoFeatures: React.FC<VenturoFeaturesProps> = ({ showCTA = true }) => 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Why Venturo Works
+            Why LiteStart Works
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our platform is designed around the real needs of students and startups, creating meaningful connections that benefit everyone.
+            Our platform is designed around the real needs of students and LiteStart, creating meaningful connections that benefit everyone.
           </p>
         </div>
         
@@ -71,7 +71,7 @@ const VenturoFeatures: React.FC<VenturoFeaturesProps> = ({ showCTA = true }) => 
                 Ready to Get Started?
               </h3>
               <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-                Join hundreds of students and startups who are already building their futures together through Venturo.
+                Join hundreds of students and LiteStart who are already building their futures together through LiteStart.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-semibold hover:bg-gray-50 transition-colors">
@@ -89,4 +89,4 @@ const VenturoFeatures: React.FC<VenturoFeaturesProps> = ({ showCTA = true }) => 
   );
 };
 
-export default VenturoFeatures; 
+export default LitestartFeatures; 

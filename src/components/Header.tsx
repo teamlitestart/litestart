@@ -5,12 +5,11 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-32">
+        <div className="flex justify-between items-center h-24">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <img src="/vite.svg" alt="Venturo Logo" className="w-16 h-16" />
-              <span className="text-4xl font-bold text-gray-900">Venturo</span>
+              <img src="/litestart-logo.png" alt="LiteStart logo" className="h-64 w-auto" />
             </Link>
           </div>
 

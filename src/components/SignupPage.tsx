@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ArrowRight, Users, Zap, Clock, Target, Briefcase, Star, Quote, CheckCircle, Search } from 'lucide-react';
-import VenturoFeatures from './VenturoFeatures';
 import Header from './Header';
 import Footer from './Footer';
 import Hero from './Hero';
@@ -118,21 +117,21 @@ const SignupPage: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "Most internships are either unpaid or require a huge time commitment. Venturo's approach of short, paid projects that actually relate to my economics degree makes sense. I can work around my studies and still gain relevant experience.",
+      quote: "Most internships are either unpaid or require a huge time commitment. LiteStart's approach of short, paid projects that actually relate to my economics degree makes sense. I can work around my studies and still gain relevant experience.",
       author: "Eshaan Walia",
       role: "Economics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "The physics job market is competitive, and most opportunities want years of experience. Working with startups through Venturo gives me a chance to apply technical skills in real scenarios without the pressure of a full-time commitment.",
+      quote: "The physics job market is competitive, and most opportunities want years of experience. Working with startups through LiteStart gives me a chance to apply technical skills in real scenarios without the pressure of a full-time commitment.",
       author: "Tyler Bains", 
       role: "Physics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. Venturo connects me with biotech startups where I can contribute meaningfully while still completing my degree.",
+      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. LiteStart connects me with biotech startups where I can contribute meaningfully while still completing my degree.",
       author: "Alfie Shores",
       role: "Biochemistry Student",
       university: "University of Bristol",
@@ -161,7 +160,7 @@ const SignupPage: React.FC = () => {
     }
   ];
 
-  const colorClasses = {
+  const colorClasses: { [key: string]: string } = {
     blue: "bg-blue-100 text-blue-600",
     teal: "bg-teal-100 text-teal-600", 
     orange: "bg-orange-100 text-orange-600"
@@ -182,7 +181,7 @@ const SignupPage: React.FC = () => {
           <AnimatedSection>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Why Venturo Works
+                Why LiteStart Works
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Our platform is designed around the real needs of students and startups, creating meaningful connections that benefit everyone.
@@ -272,7 +271,7 @@ const SignupPage: React.FC = () => {
           <AnimatedSection>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                How Venturo Works
+                How LiteStart Works
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
                 Land real experience, earn money, and launch your career in three simple steps
@@ -402,7 +401,7 @@ const SignupPage: React.FC = () => {
                What Bristol Students Say
               </h2>
               <p className="text-xl text-gray-600">
-               Hear from University of Bristol students who've gained real experience through Venturo.
+               Hear from University of Bristol students who've gained real experience through LiteStart.
               </p>
             </div>
           </AnimatedSection>
@@ -460,7 +459,7 @@ const SignupPage: React.FC = () => {
       {showSignupModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-8 text-center">
-            <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
+            <img src="/litestart-logo.png" alt="LiteStart Logo" className="mx-auto mb-2 mt-2 w-48 h-48" />
             <h2 className="text-3xl font-bold mb-4 text-gray-900">Launching Soon!</h2>
             <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
             
@@ -469,13 +468,9 @@ const SignupPage: React.FC = () => {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-                <h3 className="text-green-600 text-xl font-semibold mb-2">Check Your Email!</h3>
+                <h3 className="text-green-600 text-xl font-semibold mb-2">Thank you for signing up!</h3>
                 <p className="text-gray-600 mb-4">
-                  Thank you for signing up as a {userType === 'startup' ? 'startup' : 'student'}! 
-                  We've sent a verification email to your inbox.
-                </p>
-                <p className="text-sm text-gray-500 mb-4">
-                  Please click the verification link in your email to complete your registration.
+                  You have been added to the waitlist as a {userType === 'startup' ? 'startup' : 'student'}.
                 </p>
                 <button
                   onClick={() => setShowSignupModal(false)}

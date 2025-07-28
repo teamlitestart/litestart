@@ -12,9 +12,12 @@ import StudentOnboarding from './components/StudentOnboarding';
 import StartupOnboarding from './components/StartupOnboarding';
 import AdminPanel from './components/AdminPanel';
 import EmailVerification from './components/EmailVerification';
-import VenturoFeatures from './components/VenturoFeatures';
+import LitestartFeatures from './components/LitestartFeatures';
 import Header from './components/Header';
 import MouseTracker from './components/MouseTracker';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
+import CookiePolicy from './components/CookiePolicy';
 
 // FAQs Page Component
 const FAQsPage: React.FC = () => (
@@ -181,11 +184,11 @@ const ContactPage: React.FC = () => (
         <div>
           <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
           <p className="text-gray-600 mb-4">
-            Have questions about Venturo? We'd love to hear from you.
+            Have questions about LiteStart? We'd love to hear from you.
           </p>
           <div className="space-y-2">
             <p className="text-gray-600">
-              <strong>Email:</strong> info@venturo.com
+              <strong>Email:</strong> info@litestart.com
             </p>
             <p className="text-gray-600">
               <strong>Location:</strong> Bristol, UK
@@ -202,7 +205,7 @@ const CareersPage: React.FC = () => (
   <div className="min-h-screen bg-white">
     <Header />
     <div className="max-w-4xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">Careers at Venturo</h1>
+      <h1 className="text-4xl font-bold text-gray-900 mb-8">Careers at LiteStart</h1>
       <p className="text-lg text-gray-600 mb-8">
         Join our team and help us build the future of student-startup collaboration.
       </p>
@@ -246,12 +249,12 @@ function MainSite() {
     <div className="min-h-screen">
       <MouseTracker />
       <Hero onJoinWaitlist={handleJoinWaitlist} />
-      <VenturoFeatures />
+      <LitestartFeatures />
       <HowItWorks />
       <DualOfferingToggle onJoinAsStudent={() => window.location.href = '/'} onJoinAsStartup={() => window.location.href = '/'} />
       <TrustSection />
       <FAQ />
-      <Footer onJoinAsStudent={() => window.location.href = '/'} onJoinAsStartup={() => window.location.href = '/'} />
+      <Footer />
       <StudentOnboarding isOpen={isStudentOnboardingOpen} onClose={handleCloseStudentOnboarding} />
       <StartupOnboarding isOpen={isStartupOnboardingOpen} onClose={handleCloseStartupOnboarding} />
     </div>
@@ -269,6 +272,9 @@ function App() {
         <Route path="/faqs" element={<FAQsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookie" element={<CookiePolicy />} />
       </Routes>
     </BrowserRouter>
   );

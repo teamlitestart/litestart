@@ -122,7 +122,7 @@ const AdminPanel: React.FC = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Venturo Admin Panel</h1>
+            <h1 className="text-3xl font-bold text-gray-900">LiteStart Admin Panel</h1>
             <div className="space-x-4">
               <button
                 onClick={fetchUsers}
