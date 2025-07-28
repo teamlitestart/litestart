@@ -3,6 +3,7 @@ import { ArrowRight, Users, Zap, Clock, Target, Briefcase, Star, Quote, CheckCir
 import VenturoFeatures from './VenturoFeatures';
 import Header from './Header';
 import Footer from './Footer';
+import Hero from './Hero';
 import MouseTracker from './MouseTracker';
 
 // Intersection Observer hook for scroll animations
@@ -54,7 +55,7 @@ const SignupPage: React.FC = () => {
   const [userType, setUserType] = useState<'startup' | 'student'>('startup');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const signupRef = useRef<HTMLDivElement>(null);
+  const [showSignupModal, setShowSignupModal] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -94,9 +95,7 @@ const SignupPage: React.FC = () => {
   };
 
   const scrollToSignup = () => {
-    if (signupRef.current) {
-      signupRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    setShowSignupModal(true);
   };
 
   const handleJoinWaitlist = () => {
@@ -119,24 +118,24 @@ const SignupPage: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "Venturo connected us with incredible student talent that delivered our MVP in record time. The quality exceeded our expectations.",
-      author: "Sarah Chen",
-      role: "Co-founder, TechFlow",
-      university: "Stanford Graduate",
+      quote: "Most internships are either unpaid or require a huge time commitment. Venturo's approach of short, paid projects that actually relate to my economics degree makes sense. I can work around my studies and still gain relevant experience.",
+      author: "Eshaan Walia",
+      role: "Economics Student",
+      university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "As a student, Venturo has been game-changing. I've worked on real startup projects and built invaluable experience while earning great money.",
-      author: "Marcus Rodriguez", 
-      role: "Computer Science Student",
-      university: "MIT",
+      quote: "The physics job market is competitive, and most opportunities want years of experience. Working with startups through Venturo gives me a chance to apply technical skills in real scenarios without the pressure of a full-time commitment.",
+      author: "Tyler Bains", 
+      role: "Physics Student",
+      university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "The AI matching is incredibly accurate. We got students who understood our vision immediately and delivered exceptional work.",
-      author: "David Park",
-      role: "Founder, GrowthHack",
-      university: "Ex-Y Combinator",
+      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. Venturo connects me with biotech startups where I can contribute meaningfully while still completing my degree.",
+      author: "Alfie Shores",
+      role: "Biochemistry Student",
+      university: "University of Bristol",
       rating: 5
     }
   ];
@@ -174,81 +173,11 @@ const SignupPage: React.FC = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop" 
-            alt="Students collaborating" 
-            className="w-full h-full object-cover opacity-10"
-          />
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto text-center">
-          <AnimatedSection>
-            <div className="flex justify-center mb-6">
-              <div className="flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
-                <Zap className="w-4 h-4" />
-                <span>AI-Powered Talent Matching</span>
-              </div>
-            </div>
-          </AnimatedSection>
-          
-          <AnimatedSection delay={200}>
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-gray-900 mb-8 leading-tight">
-              Build Your Future.<br />
-              <span className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent block">
-                Real Projects. Real Startups. Real Impact.
-              </span>
-            </h1>
-          </AnimatedSection>
-          
-          <AnimatedSection delay={400}>
-            <p className="text-2xl md:text-3xl text-gray-600 mb-12 max-w-4xl mx-auto leading-relaxed">
-              The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
-            </p>
-          </AnimatedSection>
-          
-          <AnimatedSection delay={600}>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-              <button 
-                onClick={handleJoinWaitlist}
-                className="group bg-blue-600 hover:bg-blue-700 text-white px-12 py-6 rounded-xl font-semibold text-xl transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-3"
-              >
-                <span>Join Waitlist</span>
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button 
-                onClick={handleLearnMore}
-                className="group border-2 border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600 px-12 py-6 rounded-xl font-semibold text-xl transition-all duration-300 hover:shadow-lg flex items-center space-x-3"
-              >
-                <span>Learn More</span>
-                <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </div>
-          </AnimatedSection>
-          
-          <AnimatedSection delay={800}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
-              <div className="text-center">
-                <div className="text-5xl font-bold text-blue-600 mb-3">500+</div>
-                <p className="text-xl text-gray-600">Top University Students</p>
-              </div>
-              <div className="text-center">
-                <div className="text-5xl font-bold text-teal-600 mb-3">150+</div>
-                <p className="text-xl text-gray-600">Startups Served</p>
-              </div>
-              <div className="text-center">
-                <div className="text-5xl font-bold text-orange-600 mb-3">48hr</div>
-                <p className="text-xl text-gray-600">Average Delivery</p>
-              </div>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
-
+      <Hero onJoinWaitlist={handleJoinWaitlist} />
+      
       {/* Features Section */}
       <section id="features" className="py-24 bg-white">
+        {/* Background Image */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
@@ -375,17 +304,6 @@ const SignupPage: React.FC = () => {
             ))}
           </div>
 
-          <AnimatedSection delay={600}>
-            <div className="text-center mt-12">
-              <button
-                onClick={handleViewProjects}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg hover:scale-105 flex items-center space-x-2 mx-auto"
-              >
-                <span>View Sample Projects</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-            </div>
-          </AnimatedSection>
         </div>
       </section>
 
@@ -415,13 +333,6 @@ const SignupPage: React.FC = () => {
                     <span className="text-gray-700">Build your CV with meaningful, hands-on work</span>
                   </li>
                 </ul>
-                <button
-                  onClick={handleJoinWaitlist}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
-                >
-                  <span>Join as Student</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
               </div>
             </AnimatedSection>
             
@@ -476,13 +387,6 @@ const SignupPage: React.FC = () => {
                     <span className="text-gray-700">Keep costs low — ideal for early-stage, bootstrapped teams</span>
                   </li>
                 </ul>
-                <button
-                  onClick={handleJoinWaitlist}
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-lg flex items-center space-x-2"
-                >
-                  <span>Post a Project</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
               </div>
             </AnimatedSection>
           </div>
@@ -495,10 +399,10 @@ const SignupPage: React.FC = () => {
           <AnimatedSection>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                What Our Community Says
+               What Bristol Students Say
               </h2>
               <p className="text-xl text-gray-600">
-                See how Venturo is helping students and startups build the future—together.
+               Hear from University of Bristol students who've gained real experience through Venturo.
               </p>
             </div>
           </AnimatedSection>
@@ -552,98 +456,119 @@ const SignupPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Signup Section - Moved to Bottom */}
-      <section ref={signupRef} className="py-24 bg-gray-50">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-              <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
-              <h2 className="text-3xl font-bold mb-4 text-gray-900">Launching Soon!</h2>
-              <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
-              
-              {submitted ? (
-                <div className="py-8">
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <CheckCircle className="w-8 h-8 text-green-600" />
-                  </div>
-                  <h3 className="text-green-600 text-xl font-semibold mb-2">Check Your Email!</h3>
-                  <p className="text-gray-600 mb-4">
-                    Thank you for signing up as a {userType === 'startup' ? 'startup' : 'student'}! 
-                    We've sent a verification email to your inbox.
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Please click the verification link in your email to complete your registration.
-                  </p>
+      {/* Signup Modal */}
+      {showSignupModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-8 text-center">
+            <img src="/vite.svg" alt="Venturo Logo" className="mx-auto mb-4 w-16 h-16" />
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Launching Soon!</h2>
+            <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
+            
+            {submitted ? (
+              <div className="py-8">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
                 </div>
-              ) : error ? (
+                <h3 className="text-green-600 text-xl font-semibold mb-2">Check Your Email!</h3>
+                <p className="text-gray-600 mb-4">
+                  Thank you for signing up as a {userType === 'startup' ? 'startup' : 'student'}! 
+                  We've sent a verification email to your inbox.
+                </p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Please click the verification link in your email to complete your registration.
+                </p>
+                <button
+                  onClick={() => setShowSignupModal(false)}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            ) : error ? (
+              <div>
                 <div className="text-red-600 text-lg font-semibold py-4 bg-red-50 rounded-lg px-4 mb-6">
                   {error}
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={form.name}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your Name"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="email"
-                      name="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      required
-                      placeholder="Your Email"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
-                    />
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setUserType('student')}
-                      className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
-                        userType === 'student'
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
-                      }`}
-                    >
-                      👩‍🎓 Student
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setUserType('startup')}
-                      className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
-                        userType === 'startup'
-                          ? 'bg-teal-600 text-white border-teal-600'
-                          : 'bg-white text-teal-600 border-teal-600 hover:bg-teal-50'
-                      }`}
-                    >
-                      🧑‍💻 Startup
-                    </button>
-                  </div>
+                <button
+                  onClick={() => setError('')}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
+                >
+                  Try Again
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your Name"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                  />
+                </div>
+                <div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    placeholder="Your Email"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                  />
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setUserType('student')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
+                      userType === 'student'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    👩‍🎓 Student
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserType('startup')}
+                    className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
+                      userType === 'startup'
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-teal-600 border-teal-600 hover:bg-teal-50'
+                    }`}
+                  >
+                    🧑‍💻 Startup
+                  </button>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowSignupModal(false)}
+                    className="flex-1 border-2 border-gray-300 text-gray-700 px-4 py-3 rounded-lg font-semibold text-lg hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md ${
+                    className={`flex-1 font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md ${
                       loading 
                         ? 'bg-gray-400 cursor-not-allowed' 
                         : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg hover:scale-105'
                     }`}
                   >
-                    {loading ? 'Signing up...' : `Join Waitlist as ${userType === 'startup' ? 'Startup' : 'Student'}`}
+                    {loading ? 'Signing up...' : `Join Waitlist`}
                   </button>
-                </form>
-              )}
-            </div>
-          </AnimatedSection>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
-      </section>
+      )}
 
       <Footer />
     </div>
