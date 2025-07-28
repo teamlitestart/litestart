@@ -118,21 +118,21 @@ const SignupPage: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "I'm so excited about Venturo because it's exactly what I've been looking for - a way to apply my economics knowledge to real startup challenges while building my CV and earning money. Finally, a platform that gets what students actually want!",
+      quote: "Most internships are either unpaid or require a huge time commitment. Venturo's approach of short, paid projects that actually relate to my economics degree makes sense. I can work around my studies and still gain relevant experience.",
       author: "Eshaan Walia",
       role: "Economics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "As a physics student, I'm thrilled that Venturo will let me work on cutting-edge tech projects with real startups. The idea of short-term commitments that fit around my studies is perfect - I can't wait to get started!",
+      quote: "The physics job market is competitive, and most opportunities want years of experience. Working with startups through Venturo gives me a chance to apply technical skills in real scenarios without the pressure of a full-time commitment.",
       author: "Tyler Bains", 
       role: "Physics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "What excites me most about Venturo is the opportunity to bridge the gap between my biochemistry studies and the startup world. I'm eager to work on biotech projects and see how my scientific background can drive real innovation!",
+      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. Venturo connects me with biotech startups where I can contribute meaningfully while still completing my degree.",
       author: "Alfie Shores",
       role: "Biochemistry Student",
       university: "University of Bristol",
