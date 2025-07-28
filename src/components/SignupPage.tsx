@@ -118,21 +118,21 @@ const SignupPage: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "Working with startups through Venturo gave me real-world experience I couldn't get anywhere else. I built actual products that users love while earning money during my studies.",
+      quote: "I'm so excited about Venturo because it's exactly what I've been looking for - a way to apply my economics knowledge to real startup challenges while building my CV and earning money. Finally, a platform that gets what students actually want!",
       author: "Eshaan Walia",
       role: "Economics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "The projects I worked on through Venturo were exactly what I needed for my portfolio. I learned more in 3 weeks than I did in a whole semester of lectures.",
+      quote: "As a physics student, I'm thrilled that Venturo will let me work on cutting-edge tech projects with real startups. The idea of short-term commitments that fit around my studies is perfect - I can't wait to get started!",
       author: "Tyler Bains", 
       role: "Physics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "Through Venturo, I've been able to apply my analytical skills to real startup challenges. The experience has been invaluable for understanding how science translates to business solutions.",
+      quote: "What excites me most about Venturo is the opportunity to bridge the gap between my biochemistry studies and the startup world. I'm eager to work on biotech projects and see how my scientific background can drive real innovation!",
       author: "Alfie Shores",
       role: "Biochemistry Student",
       university: "University of Bristol",
