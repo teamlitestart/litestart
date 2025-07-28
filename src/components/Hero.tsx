@@ -11,8 +11,8 @@ const Hero: React.FC<HeroProps> = ({ onJoinWaitlist }) => {
       {/* Single Large Background Image */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop" 
-          alt="Students and startups collaborating" 
+          src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop" 
+          alt="Modern workspace with laptops and collaboration" 
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/70 via-blue-800/60 to-teal-800/70"></div>
