@@ -39,7 +39,6 @@ const AboutPage: React.FC = () => (
           This is built by students, for students and startups — with the goal of unlocking the next generation of entrepreneurial talent.
         </p>
       </div>
-      </p>
     </div>
     <Footer />
   </div>
