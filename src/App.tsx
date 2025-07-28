@@ -181,32 +181,6 @@ const ContactPage: React.FC = () => (
             </p>
           </div>
         </div>
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Send us a Message</h2>
-          <form className="space-y-4">
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <textarea
-              placeholder="Your Message"
-              rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            ></textarea>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Send Message
-            </button>
-          </form>
-        </div>
       </div>
     </div>
     <Footer />
