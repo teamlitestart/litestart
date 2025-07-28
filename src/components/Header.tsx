@@ -23,6 +23,12 @@ const Header: React.FC = () => {
               Home
             </Link>
             <Link 
+              to="/faqs" 
+              className="text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
+            >
+              FAQs
+            </Link>
+            <Link 
               to="/about" 
               className="text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
             >

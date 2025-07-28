@@ -16,6 +16,17 @@ import VenturoFeatures from './components/VenturoFeatures';
 import Header from './components/Header';
 import MouseTracker from './components/MouseTracker';
 
+// FAQs Page Component
+const FAQsPage: React.FC = () => (
+  <div className="min-h-screen bg-white">
+    <Header />
+    <div className="py-16">
+      <FAQ />
+    </div>
+    <Footer />
+  </div>
+);
+
 // Placeholder components for new pages
 const AboutPage: React.FC = () => (
   <div className="min-h-screen bg-white">
@@ -255,6 +266,7 @@ function App() {
         <Route path="/preview" element={<MainSite />} />
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/verify-email" element={<EmailVerification />} />
+        <Route path="/faqs" element={<FAQsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
       </Routes>
