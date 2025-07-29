@@ -96,7 +96,7 @@ const AboutPage: React.FC = () => (
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Scott Sampson</h3>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Tech-driven founder, software engineer, and co-president of the Bristol Entrepreneur Society.
+              Finance & marketing strategist, startup advisor, and co-president of the Bristol Entrepreneur Society.
             </p>
           </div>
         </div>
