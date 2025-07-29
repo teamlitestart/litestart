@@ -57,6 +57,12 @@ const SignupPage: React.FC = () => {
   const [error, setError] = useState('');
   const [showSignupModal, setShowSignupModal] = useState(false);
 
+  // Test if component is loading
+  useEffect(() => {
+    alert('SignupPage component loaded! Debug button should be visible.');
+    console.log('SignupPage component mounted');
+  }, []);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -67,19 +73,43 @@ const SignupPage: React.FC = () => {
     setError('');
     
     try {
+      console.log('Submitting signup form...');
       const data = await apiCall.signup({
         name: form.name,
         email: form.email,
         userType: userType
       });
       
+      console.log('Signup successful:', data);
       setSubmitted(true);
       setForm({ name: '', email: '' });
     } catch (err) {
+      console.error('Signup error:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Test function to debug API configuration
+  const testApiConfig = () => {
+    console.log('Testing API configuration...');
+    console.log('Environment:', import.meta.env.MODE);
+    console.log('DEV:', import.meta.env.DEV);
+    console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+    
+    // Test the signup function directly
+    apiCall.signup({
+      name: 'Test User',
+      email: 'test@example.com',
+      userType: 'student'
+    }).then(result => {
+      console.log('Test signup result:', result);
+      alert('Test signup successful! Check console for details.');
+    }).catch(error => {
+      console.error('Test signup failed:', error);
+      alert('Test signup failed! Check console for details.');
+    });
   };
 
   const scrollToSignup = () => {
@@ -160,8 +190,55 @@ const SignupPage: React.FC = () => {
       <MouseTracker />
       <Header />
       
+      {/* Debug Test Button - Always Visible */}
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={testApiConfig}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors shadow-lg"
+        >
+          🧪 Test API
+        </button>
+      </div>
+      
       {/* Hero Section */}
-      <Hero onJoinWaitlist={handleJoinWaitlist} />
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-teal-50 overflow-hidden">
+        {/* Background Graphics */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200 rounded-full blur-xl"></div>
+          <div className="absolute bottom-20 right-20 w-40 h-40 bg-teal-200 rounded-full blur-xl"></div>
+          <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-purple-200 rounded-full blur-lg"></div>
+        </div>
+        
+        <div className="relative max-w-6xl mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Build Your Future.<br />
+            <span className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
+              Real Projects. Real Startups. Real Impact.
+            </span>
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-8">
+            The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
+          </p>
+          
+          {/* Debug Test Button - Very Obvious */}
+          <div className="mb-8">
+            <button
+              onClick={testApiConfig}
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold text-lg transition-colors shadow-lg border-4 border-yellow-400"
+            >
+              🧪 DEBUG: Test API Configuration
+            </button>
+          </div>
+          
+          <button
+            onClick={handleJoinWaitlist}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center mx-auto space-x-2"
+          >
+            <span>Join the Waitlist</span>
+            <ArrowRight className="w-6 h-6" />
+          </button>
+        </div>
+      </section>
       
       {/* Features Section */}
       <section id="features" className="py-24 bg-white">
@@ -546,6 +623,15 @@ const SignupPage: React.FC = () => {
                     }`}
                   >
                     {loading ? 'Signing up...' : `Join Waitlist`}
+                  </button>
+                </div>
+                <div className="pt-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={testApiConfig}
+                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+                  >
+                    🧪 Test API Configuration
                   </button>
                 </div>
               </form>
