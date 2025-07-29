@@ -69,7 +69,7 @@ const AboutPage: React.FC = () => (
           {/* Reece Forbes */}
           <div className="text-center group">
             <div className="relative mb-6">
-              <div className="w-72 h-72 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-teal-500 p-1 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-72 h-72 mx-auto rounded-full bg-gradient-to-br from-teal-500 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300">
                 <img 
                   src="/litestart/reece-forbes-profile.png" 
                   alt="Reece Forbes - Co-founder" 
