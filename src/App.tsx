@@ -69,15 +69,11 @@ const AboutPage: React.FC = () => (
           {/* Reece Forbes */}
           <div className="text-center group">
             <div className="relative mb-6">
-              <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-teal-500 p-1 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-56 h-56 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-teal-500 p-1 group-hover:scale-105 transition-transform duration-300">
                 <img 
                   src="/litestart/reece-forbes-profile.jpg" 
                   alt="Reece Forbes - Co-founder" 
                   className="w-full h-full rounded-full object-cover"
-                  onError={(e) => {
-                    console.log('Failed to load Reece Forbes image');
-                    e.currentTarget.style.display = 'none';
-                  }}
                 />
               </div>
             </div>
@@ -90,7 +86,7 @@ const AboutPage: React.FC = () => (
           {/* Scott Sampson */}
           <div className="text-center group">
             <div className="relative mb-6">
-              <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-teal-500 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300">
+              <div className="w-56 h-56 mx-auto rounded-full bg-gradient-to-br from-teal-500 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300">
                 <img 
                   src="/litestart/scott-sampson-profile.png" 
                   alt="Scott Sampson - Co-founder" 
