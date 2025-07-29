@@ -157,39 +157,12 @@ const SignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-50/30">
       <MouseTracker />
       <Header />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-teal-50 overflow-hidden">
-        {/* Background Graphics */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200 rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 right-20 w-40 h-40 bg-teal-200 rounded-full blur-xl"></div>
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-purple-200 rounded-full blur-lg"></div>
-        </div>
-        
-        <div className="relative max-w-6xl mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            Build Your Future.<br />
-            <span className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">
-              Real Projects. Real Startups. Real Impact.
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-8">
-            The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
-          </p>
-          
-          <button
-            onClick={handleJoinWaitlist}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center mx-auto space-x-2"
-          >
-            <span>Join the Waitlist</span>
-            <ArrowRight className="w-6 h-6" />
-          </button>
-        </div>
-      </section>
+      <Hero onJoinWaitlist={handleJoinWaitlist} />
       
       {/* Features Section */}
       <section id="features" className="py-24 bg-white">
