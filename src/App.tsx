@@ -19,8 +19,6 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import CookiePolicy from './components/CookiePolicy';
 
-console.log('🔍 App component is loading...');
-
 // FAQs Page Component
 const FAQsPage: React.FC = () => (
   <div className="min-h-screen bg-white">
@@ -264,9 +262,6 @@ function MainSite() {
 }
 
 function App() {
-  console.log('🎯 App function is rendering...');
-  console.log('Current pathname:', window.location.pathname);
-  
   return (
     <BrowserRouter basename="/litestart">
       <Routes>
