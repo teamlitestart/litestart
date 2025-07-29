@@ -74,6 +74,10 @@ const AboutPage: React.FC = () => (
                   src="/litestart/reece-forbes-profile.png" 
                   alt="Reece Forbes - Co-founder" 
                   className="w-full h-full rounded-full object-cover"
+                  onError={(e) => {
+                    console.log('Failed to load Reece Forbes image');
+                    e.currentTarget.style.display = 'none';
+                  }}
                 />
               </div>
             </div>
