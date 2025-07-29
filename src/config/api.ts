@@ -2,6 +2,13 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (import.meta.env.DEV ? 'http://localhost:3001' : null);
 
+// Debug logging
+console.log('API Configuration:', {
+  VITE_API_URL: import.meta.env.VITE_API_URL,
+  DEV: import.meta.env.DEV,
+  API_BASE_URL: API_BASE_URL
+});
+
 // Fallback function for when backend is not available
 const fallbackSignup = async (userData: any) => {
   // Simulate API delay
@@ -38,7 +45,11 @@ export const API_ENDPOINTS = {
 // API wrapper functions that handle fallbacks
 export const apiCall = {
   signup: async (userData: any) => {
+    console.log('Signup called with:', userData);
+    console.log('API_BASE_URL:', API_BASE_URL);
+    
     if (API_BASE_URL) {
+      console.log('Using backend API');
       const response = await fetch(API_ENDPOINTS.SIGNUP!, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,6 +57,7 @@ export const apiCall = {
       });
       return response.json();
     } else {
+      console.log('Using localStorage fallback');
       return fallbackSignup(userData);
     }
   },
