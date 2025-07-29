@@ -1,5 +1,5 @@
 // API configuration for different environments
-// Last updated: 2024-07-29 21:45 - Force fresh deployment
+// Last updated: 2024-07-29 22:15 - Force fresh deployment with correct base path
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (import.meta.env.DEV ? 'http://localhost:3001' : null);
 
