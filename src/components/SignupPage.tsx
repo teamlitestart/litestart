@@ -50,6 +50,8 @@ const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string;
 };
 
 const SignupPage: React.FC = () => {
+  console.log('📝 SignupPage component is rendering...');
+  
   const [form, setForm] = useState({ name: '', email: '' });
   const [submitted, setSubmitted] = useState(false);
   const [userType, setUserType] = useState<'startup' | 'student'>('startup');
@@ -59,8 +61,8 @@ const SignupPage: React.FC = () => {
 
   // Test if component is loading
   useEffect(() => {
+    console.log('📝 SignupPage component mounted - should show alert');
     alert('SignupPage component loaded! Debug button should be visible.');
-    console.log('SignupPage component mounted');
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
