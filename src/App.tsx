@@ -268,7 +268,7 @@ function App() {
   console.log('Current pathname:', window.location.pathname);
   
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/litestart">
       <Routes>
         <Route path="/" element={<SignupPage />} />
         <Route path="/preview" element={<MainSite />} />
