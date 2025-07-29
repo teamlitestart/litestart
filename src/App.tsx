@@ -71,7 +71,7 @@ const AboutPage: React.FC = () => (
             <div className="relative mb-6">
               <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-teal-500 p-1 group-hover:scale-105 transition-transform duration-300">
                 <img 
-                  src="/litestart/reece-forbes-profile.png" 
+                  src="/litestart/reece-forbes-profile.jpg" 
                   alt="Reece Forbes - Co-founder" 
                   className="w-full h-full rounded-full object-cover"
                   onError={(e) => {
