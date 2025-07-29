@@ -70,9 +70,11 @@ const AboutPage: React.FC = () => (
           <div className="text-center group">
             <div className="relative mb-6">
               <div className="w-32 h-32 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-teal-500 p-1 group-hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-gray-600">RF</span>
-                </div>
+                <img 
+                  src="/litestart/reece-forbes-profile.png" 
+                  alt="Reece Forbes - Co-founder" 
+                  className="w-full h-full rounded-full object-cover"
+                />
               </div>
             </div>
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Reece Forbes</h3>
