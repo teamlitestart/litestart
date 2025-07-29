@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { apiCall } from '../config/api';
 
 interface User {
   _id: string;
@@ -25,11 +26,7 @@ const AdminPanel: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/users');
-      if (!response.ok) {
-        throw new Error('Failed to fetch users');
-      }
-      const data = await response.json();
+      const data = await apiCall.getUsers();
       setUsers(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch users');
@@ -45,22 +42,7 @@ const AdminPanel: React.FC = () => {
 
     try {
       console.log('Deleting user with ID:', id);
-      const response = await fetch(`http://localhost:3001/api/users/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      console.log('Delete response status:', response.status);
-      
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Delete error response:', errorData);
-        throw new Error(`Failed to delete user: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      const result = await apiCall.deleteUser(id);
       console.log('Delete result:', result);
 
       // Remove user from local state
@@ -79,24 +61,8 @@ const AdminPanel: React.FC = () => {
 
     try {
       console.log('Deleting all users');
-      const response = await fetch('http://localhost:3001/api/users', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      console.log('Delete all response status:', response.status);
-      
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Delete all error response:', errorData);
-        throw new Error(`Failed to delete all users: ${response.status} ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log('Delete all result:', result);
-
+      // For delete all, we'll clear localStorage
+      localStorage.removeItem('litestart_users');
       setUsers([]);
       alert('All users deleted successfully!');
     } catch (err) {

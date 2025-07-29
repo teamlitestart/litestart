@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Hero from './Hero';
 import MouseTracker from './MouseTracker';
+import { apiCall } from '../config/api';
 
 // Intersection Observer hook for scroll animations
 const useIntersectionObserver = (options = {}) => {
@@ -66,23 +67,11 @@ const SignupPage: React.FC = () => {
     setError('');
     
     try {
-      const response = await fetch('http://localhost:3001/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: form.name,
-          email: form.email,
-          userType: userType
-        }),
+      const data = await apiCall.signup({
+        name: form.name,
+        email: form.email,
+        userType: userType
       });
-      
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
-      }
       
       setSubmitted(true);
       setForm({ name: '', email: '' });
