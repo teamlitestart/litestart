@@ -5,7 +5,7 @@ const crypto = require('crypto');
 require('dotenv').config();
 
 const User = require('./models/User');
-const { sendVerificationEmail } = require('./services/emailService');
+const { sendThankYouEmail } = require('./services/emailService');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,7 +21,8 @@ app.get('/', (req, res) => {
 app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, userType } = req.body;
-    // Always create a new user entry, even if the email exists, or just return success
+    
+    // Create user in database
     const user = new User({
       name,
       email,
@@ -29,14 +30,19 @@ app.post('/api/signup', async (req, res) => {
       isEmailVerified: true
     });
     await user.save().catch(() => {}); // Ignore duplicate errors
+    
+    // Send thank you email
+    const emailResult = await sendThankYouEmail({ name, email, userType });
+    
     res.status(201).json({ 
-      message: 'Thank you for signing up! You have been added to the waitlist.',
+      message: 'Thank you for signing up! You have been added to the waitlist. Check your email for a welcome message!',
       user: {
         name,
         email,
         userType,
         isEmailVerified: true
-      }
+      },
+      emailSent: emailResult.success
     });
   } catch (error) {
     console.error('Signup error:', error);

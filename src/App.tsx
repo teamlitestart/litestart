@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import SignupPage from './components/SignupPage';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
@@ -241,6 +240,33 @@ const CareersPage: React.FC = () => (
 function MainSite() {
   const [isStudentOnboardingOpen, setIsStudentOnboardingOpen] = useState(false);
   const [isStartupOnboardingOpen, setIsStartupOnboardingOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  // Preview password - in production, this should be more secure
+  const PREVIEW_PASSWORD = 'BES25';
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === PREVIEW_PASSWORD) {
+      setIsAuthenticated(true);
+      setLoginError('');
+      // Store authentication in session storage
+      sessionStorage.setItem('preview_authenticated', 'true');
+    } else {
+      setLoginError('Incorrect password');
+      setPassword('');
+    }
+  };
+
+  // Check if already authenticated
+  useEffect(() => {
+    const authenticated = sessionStorage.getItem('preview_authenticated');
+    if (authenticated === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   const handleJoinWaitlist = () => {
     // Navigate to signup page
@@ -248,6 +274,50 @@ function MainSite() {
   };
   const handleCloseStudentOnboarding = () => setIsStudentOnboardingOpen(false);
   const handleCloseStartupOnboarding = () => setIsStartupOnboardingOpen(false);
+
+  // Login Screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">LiteStart Preview</h1>
+            <p className="text-gray-600">Enter password to access the preview site</p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-6">
+            <div>
+              <label htmlFor="preview-password" className="block text-sm font-medium text-gray-700 mb-2">
+                Preview Password
+              </label>
+              <input
+                type="password"
+                id="preview-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter password"
+                required
+              />
+            </div>
+            
+            {loginError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                {loginError}
+              </div>
+            )}
+            
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+            >
+              Access Preview
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

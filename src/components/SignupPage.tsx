@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, Users, Zap, Clock, Target, Briefcase, Star, Quote, CheckCircle, Search } from 'lucide-react';
+import { ArrowRight, Users, Clock, Target, Briefcase, Star, Quote, CheckCircle, Search, ChevronLeft, ChevronRight } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import Hero from './Hero';
@@ -56,6 +56,42 @@ const SignupPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showSignupModal, setShowSignupModal] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Auto-advance slideshow
+  useEffect(() => {
+    if (isPaused) return; // Don't auto-advance when paused
+    
+    const interval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isPaused]);
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+  };
+
+  const nextTestimonial = () => {
+    setIsPaused(true); // Pause when manually navigating
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setIsPaused(true); // Pause when manually navigating
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const goToTestimonial = (index: number) => {
+    setIsPaused(true); // Pause when manually navigating
+    setCurrentTestimonial(index);
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -107,21 +143,21 @@ const SignupPage: React.FC = () => {
 
   const testimonials = [
     {
-      quote: "Most internships are either unpaid or require a huge time commitment. LiteStart's approach of short, paid projects that actually relate to my economics degree makes sense. I can work around my studies and still gain relevant experience.",
+      quote: "I'm excited about LiteStart because most internships are either unpaid or require huge time commitments. The idea of short, paid projects that actually relate to my economics degree makes so much sense. I can work around my studies and still gain relevant experience.",
       author: "Eshaan Walia",
       role: "Economics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "The physics job market is competitive, and most opportunities want years of experience. Working with startups through LiteStart gives me a chance to apply technical skills in real scenarios without the pressure of a full-time commitment.",
+      quote: "The physics job market is so competitive, and most opportunities want years of experience. I'm looking forward to LiteStart giving me a chance to apply my technical skills in real scenarios without the pressure of a full-time commitment.",
       author: "Tyler Bains", 
       role: "Physics Student",
       university: "University of Bristol",
       rating: 5
     },
     {
-      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. LiteStart connects me with biotech startups where I can contribute meaningfully while still completing my degree.",
+      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. I'm excited that LiteStart will connect me with biotech startups where I can contribute meaningfully while still completing my degree.",
       author: "Alfie Shores",
       role: "Biochemistry Student",
       university: "University of Bristol",
@@ -388,38 +424,86 @@ const SignupPage: React.FC = () => {
           <AnimatedSection>
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-               What Bristol Students Say
+               What Bristol Students Are Excited About
               </h2>
               <p className="text-xl text-gray-600">
-               Hear from University of Bristol students who've gained real experience through LiteStart.
+               Hear from University of Bristol students about why they're looking forward to LiteStart and how it will help them.
               </p>
             </div>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <AnimatedSection key={index} delay={index * 200}>
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group">
-                  <div className="flex items-center mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                    ))}
+          {/* Slideshow Container */}
+          <div 
+            className="relative max-w-4xl mx-auto"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            {/* Navigation Buttons */}
+            <button
+              onClick={prevTestimonial}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-12 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border border-gray-200"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-600" />
+            </button>
+            
+            <button
+              onClick={nextTestimonial}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-12 z-10 bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110 border border-gray-200"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-600" />
+            </button>
+
+            {/* Testimonial Display */}
+            <div className="relative overflow-hidden">
+              <div 
+                className="flex transition-transform duration-500 ease-in-out"
+                style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+              >
+                {testimonials.map((testimonial, index) => (
+                  <div key={index} className="w-full flex-shrink-0 px-4">
+                    <AnimatedSection delay={200}>
+                      <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group">
+                        <div className="flex items-center mb-4">
+                          {[...Array(testimonial.rating)].map((_, i) => (
+                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                        
+                        <Quote className="w-8 h-8 text-blue-600 mb-4 group-hover:scale-110 transition-transform duration-300" />
+                        
+                        <p className="text-gray-700 mb-6 leading-relaxed text-lg">
+                          "{testimonial.quote}"
+                        </p>
+                        
+                        <div className="border-t pt-4">
+                          <div className="font-semibold text-gray-900 text-lg">{testimonial.author}</div>
+                          <div className="text-gray-600 text-sm">{testimonial.role}</div>
+                          <div className="text-blue-600 text-sm font-medium">{testimonial.university}</div>
+                        </div>
+                      </div>
+                    </AnimatedSection>
                   </div>
-                  
-                  <Quote className="w-8 h-8 text-blue-600 mb-4 group-hover:scale-110 transition-transform duration-300" />
-                  
-                  <p className="text-gray-700 mb-6 leading-relaxed">
-                    "{testimonial.quote}"
-                  </p>
-                  
-                  <div className="border-t pt-4">
-                    <div className="font-semibold text-gray-900">{testimonial.author}</div>
-                    <div className="text-gray-600 text-sm">{testimonial.role}</div>
-                    <div className="text-blue-600 text-sm font-medium">{testimonial.university}</div>
-                  </div>
-                </div>
-              </AnimatedSection>
-            ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Dots Indicator */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial
+                      ? 'bg-blue-600 scale-125'
+                      : 'bg-gray-300 hover:bg-gray-400'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
