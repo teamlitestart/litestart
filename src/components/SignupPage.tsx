@@ -448,10 +448,10 @@ const SignupPage: React.FC = () => {
       {/* Signup Modal */}
       {showSignupModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-8 text-center">
-                            <img src="/litestart-logo.png" alt="LiteStart Logo" className="mx-auto mb-2 mt-2 w-48 h-48" />
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Launching Soon!</h2>
-            <p className="text-gray-600 mb-6">Sign up to get early access and updates.</p>
+          <div className="bg-white rounded-2xl max-w-md w-full p-4 text-center overflow-hidden">
+                            <img src="/litestart-logo.png" alt="LiteStart Logo" className="mx-auto mb-0 -mt-16 w-72 h-72" />
+            <h2 className="text-3xl font-bold mb-2 text-gray-900 -mt-16">Launching Soon!</h2>
+            <p className="text-gray-600 mb-4">Sign up to get early access and updates.</p>
             
             {submitted ? (
               <div className="py-8">
