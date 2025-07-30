@@ -9,7 +9,7 @@ const Header: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <img src="/litestart/litestart-logo.png" alt="LiteStart logo" className="h-64 w-auto" />
+              <img src="/litestart-logo.png" alt="LiteStart logo" className="h-64 w-auto" />
             </Link>
           </div>
 

@@ -71,7 +71,7 @@ const AboutPage: React.FC = () => (
             <div className="relative mb-6">
               <div className="w-72 h-72 mx-auto rounded-full bg-gradient-to-br from-teal-500 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300">
                 <img 
-                  src="/litestart/reece-forbes-profile.png" 
+                  src="/reece-forbes-profile.png" 
                   alt="Reece Forbes - Co-founder" 
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -88,7 +88,7 @@ const AboutPage: React.FC = () => (
             <div className="relative mb-6">
               <div className="w-72 h-72 mx-auto rounded-full bg-gradient-to-br from-teal-500 to-blue-500 p-1 group-hover:scale-105 transition-transform duration-300">
                 <img 
-                  src="/litestart/scott-sampson-profile.png" 
+                  src="/scott-sampson-profile.png" 
                   alt="Scott Sampson - Co-founder" 
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -267,7 +267,7 @@ function MainSite() {
 
 function App() {
   return (
-    <BrowserRouter basename="/litestart">
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignupPage />} />
         <Route path="/preview" element={<MainSite />} />
