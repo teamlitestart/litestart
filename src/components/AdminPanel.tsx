@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { apiCall } from '../config/api';
+import API_BASE_URL from '../config/api';
 
 interface User {
   _id: string;
@@ -29,6 +30,7 @@ const AdminPanel: React.FC = () => {
       const data = await apiCall.getUsers();
       setUsers(data);
     } catch (err) {
+      console.error('Fetch error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch users');
     } finally {
       setLoading(false);
@@ -45,8 +47,8 @@ const AdminPanel: React.FC = () => {
       const result = await apiCall.deleteUser(id);
       console.log('Delete result:', result);
 
-      // Remove user from local state
-      setUsers(users.filter(user => user._id !== id));
+      // Refresh the data from server to ensure consistency
+      await fetchUsers();
       alert('User deleted successfully!');
     } catch (err) {
       console.error('Delete error:', err);
@@ -61,9 +63,17 @@ const AdminPanel: React.FC = () => {
 
     try {
       console.log('Deleting all users');
-      // For delete all, we'll clear localStorage
-      localStorage.removeItem('litestart_users');
-      setUsers([]);
+      // Call the backend API to delete all users
+      const response = await fetch(`${API_BASE_URL}/api/users`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to delete all users');
+      }
+      
+      // Refresh the data from server to ensure consistency
+      await fetchUsers();
       alert('All users deleted successfully!');
     } catch (err) {
       console.error('Delete all error:', err);
