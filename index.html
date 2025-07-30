@@ -5,6 +5,12 @@
     <link rel="icon" type="image/png" href="/litestart-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LiteStart</title>
+    <!-- Redirect non-www to www -->
+    <script>
+      if (window.location.hostname === 'litestart.co.uk') {
+        window.location.href = 'https://www.litestart.co.uk' + window.location.pathname + window.location.search + window.location.hash;
+      }
+    </script>
     <script type="module" crossorigin src="/src/main.tsx"></script>
     <link rel="stylesheet" crossorigin href="/src/index.css">
     <script type="text/javascript">

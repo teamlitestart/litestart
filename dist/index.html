@@ -2,9 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/litestart/litestart-logo.png" />
+    <link rel="icon" type="image/png" href="/litestart-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LiteStart</title>
+    <!-- Redirect non-www to www -->
+    <script>
+      if (window.location.hostname === 'litestart.co.uk') {
+        window.location.href = 'https://www.litestart.co.uk' + window.location.pathname + window.location.search + window.location.hash;
+      }
+    </script>
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
       // MIT License
@@ -27,8 +33,8 @@
         }
       }(window.location))
     </script>
-    <script type="module" crossorigin src="/litestart/assets/index-6L1QONgQ.js"></script>
-    <link rel="stylesheet" crossorigin href="/litestart/assets/index-DJ9frfqF.css">
+    <script type="module" crossorigin src="/assets/index-nQOuFbXy.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DJ9frfqF.css">
   </head>
   <body>
     <div id="root"></div>
