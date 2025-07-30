@@ -1,6 +1,6 @@
 // API configuration for different environments
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
-  (import.meta.env.DEV ? 'http://localhost:3001' : null);
+  (import.meta.env.DEV ? 'http://localhost:3001' : 'https://litestart-backend.onrender.com');
 
 // Fallback function for when backend is not available
 const fallbackSignup = async (userData: any) => {
