@@ -35,7 +35,7 @@ app.post('/api/signup', async (req, res) => {
     const emailResult = await sendThankYouEmail({ name, email, userType });
     
     res.status(201).json({ 
-      message: 'Thank you for signing up! You have been added to the waitlist. Check your email for a welcome message!',
+      message: 'Thank you for signing up! You have been added to the waitlist.',
       user: {
         name,
         email,
