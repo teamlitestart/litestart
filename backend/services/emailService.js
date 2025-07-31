@@ -51,6 +51,9 @@ const sendThankYouEmail = async (userData) => {
             <p style="color: #6b7280; font-size: 14px;">
               Built by student founders at the University of Bristol
             </p>
+            <p style="color: #6b7280; font-size: 12px; margin-top: 5px;">
+              In partnership with Bristol Entrepreneur Society and the British Association of Student Entrepreneurship (BASE)
+            </p>
             <p style="color: #6b7280; font-size: 12px; margin-top: 10px;">
               If you have any questions, feel free to reply to this email.
             </p>
