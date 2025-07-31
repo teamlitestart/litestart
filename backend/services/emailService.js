@@ -1,11 +1,13 @@
 const nodemailer = require('nodemailer');
 
-// Create transporter for Gmail
+// Create transporter for Mailgun SMTP
 const transporter = nodemailer.createTransporter({
-  service: 'gmail',
+  host: 'smtp.mailgun.org',
+  port: 587,
+  secure: false, // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_USER, // Your Gmail address
-    pass: process.env.EMAIL_PASS  // Your Gmail app password
+    user: process.env.MAILGUN_SMTP_USER, // Your Mailgun SMTP username
+    pass: process.env.MAILGUN_SMTP_PASS  // Your Mailgun SMTP password
   }
 });
 
@@ -15,7 +17,7 @@ const sendThankYouEmail = async (userData) => {
     const { name, email, userType } = userData;
     
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.MAILGUN_FROM_EMAIL || 'noreply@litestart.co.uk',
       to: email,
       subject: 'Welcome to LiteStart! 🚀',
       html: `
