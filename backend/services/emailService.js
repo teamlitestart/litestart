@@ -24,7 +24,6 @@ const sendThankYouEmail = async (userData) => {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">
-            <img src="https://www.litestart.co.uk/litestart-logo.png" alt="LiteStart Logo" style="width: 200px; height: auto; margin-bottom: 20px;">
             <h1 style="color: #2563eb; margin-bottom: 10px;">Welcome to LiteStart!</h1>
             <p style="color: #6b7280; font-size: 18px;">Thank you for joining our waitlist</p>
           </div>
