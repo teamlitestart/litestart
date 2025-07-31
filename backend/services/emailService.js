@@ -17,7 +17,7 @@ const sendThankYouEmail = async (userData) => {
     const { name, email, userType } = userData;
     
     const mailOptions = {
-      from: process.env.MAILGUN_FROM_EMAIL || 'noreply@litestart.co.uk',
+      from: `"LiteStart" <${process.env.MAILGUN_FROM_EMAIL || 'noreply@litestart.co.uk'}>`,
       to: email,
       subject: 'Welcome to LiteStart! 🚀',
       html: `
