@@ -163,10 +163,10 @@ const AdminDashboard: React.FC = () => {
       filename = `litestart-platform-users-${new Date().toISOString().split('T')[0]}`;
     }
 
-    if (format === 'csv') {
+    // Force CSV format for both options to ensure Excel compatibility
+    console.log('Exporting data:', { dataType, format, filename, dataLength: data.length });
+    if (format === 'csv' || format === 'excel') {
       exportToCSV(data, filename);
-    } else {
-      exportToExcel(data, filename);
     }
     
     setShowExportModal(false);
