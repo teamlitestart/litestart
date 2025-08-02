@@ -31,7 +31,7 @@ const AdminDashboard: React.FC = () => {
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
 
   // Admin password - in production, this should be more secure
-  const ADMIN_PASSWORD = 'BES25';
+  const ADMIN_PASSWORD = 'BES25'; // Updated for deployment
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
