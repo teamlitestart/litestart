@@ -117,7 +117,7 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // For Excel, we'll create a CSV with .xlsx extension (browsers will handle it)
+    // Create a proper Excel-compatible CSV file
     const headers = Object.keys(data[0]);
     const csvContent = [
       headers.join(','),
@@ -129,11 +129,15 @@ const AdminDashboard: React.FC = () => {
       )
     ].join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    // Add BOM for Excel compatibility
+    const BOM = '\uFEFF';
+    const csvContentWithBOM = BOM + csvContent;
+
+    const blob = new Blob([csvContentWithBOM], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.xlsx`);
+    link.setAttribute('download', `${filename}.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -466,16 +470,16 @@ const AdminDashboard: React.FC = () => {
                       <Download className="h-4 w-4 text-blue-600" />
                     </button>
                     
-                    <button
-                      onClick={() => handleExport('signup', 'excel')}
-                      className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="font-medium text-gray-900">Signup Users (Excel)</p>
-                        <p className="text-sm text-gray-600">Export landing page signups</p>
-                      </div>
-                      <Download className="h-4 w-4 text-green-600" />
-                    </button>
+                                         <button
+                       onClick={() => handleExport('signup', 'excel')}
+                       className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
+                     >
+                       <div>
+                         <p className="font-medium text-gray-900">Signup Users (Excel CSV)</p>
+                         <p className="text-sm text-gray-600">Export landing page signups (Excel compatible)</p>
+                       </div>
+                       <Download className="h-4 w-4 text-green-600" />
+                     </button>
                     
                     <button
                       onClick={() => handleExport('platform', 'csv')}
@@ -488,16 +492,16 @@ const AdminDashboard: React.FC = () => {
                       <Download className="h-4 w-4 text-blue-600" />
                     </button>
                     
-                    <button
-                      onClick={() => handleExport('platform', 'excel')}
-                      className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="font-medium text-gray-900">Platform Users (Excel)</p>
-                        <p className="text-sm text-gray-600">Export authenticated users</p>
-                      </div>
-                      <Download className="h-4 w-4 text-green-600" />
-                    </button>
+                                         <button
+                       onClick={() => handleExport('platform', 'excel')}
+                       className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
+                     >
+                       <div>
+                         <p className="font-medium text-gray-900">Platform Users (Excel CSV)</p>
+                         <p className="text-sm text-gray-600">Export authenticated users (Excel compatible)</p>
+                       </div>
+                       <Download className="h-4 w-4 text-green-600" />
+                     </button>
                   </div>
                 </div>
               </div>
