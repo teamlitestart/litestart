@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
+import { apiCall } from '../config/api';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
 
@@ -19,6 +20,9 @@ const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [signupUsers, setSignupUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'checking'>('checking');
 
   // Admin password - in production, this should be more secure
   const ADMIN_PASSWORD = 'BES25';
@@ -42,6 +46,36 @@ const AdminDashboard: React.FC = () => {
       setIsAuthenticated(true);
     }
   }, []);
+
+  const checkBackendStatus = async () => {
+    try {
+      const response = await fetch('https://litestart-backend.onrender.com/api/users');
+      setBackendStatus(response.ok ? 'online' : 'offline');
+    } catch (err) {
+      setBackendStatus('offline');
+    }
+  };
+
+  const fetchSignupUsers = async () => {
+    try {
+      setLoading(true);
+      const data = await apiCall.getUsers();
+      setSignupUsers(data);
+    } catch (err) {
+      console.error('Failed to fetch signup users:', err);
+      setSignupUsers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch data when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      checkBackendStatus();
+      fetchSignupUsers();
+    }
+  }, [isAuthenticated]);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
@@ -148,7 +182,9 @@ const AdminDashboard: React.FC = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-blue-600">Signup Users</p>
-                <p className="text-2xl font-bold text-blue-900">150+</p>
+                <p className="text-2xl font-bold text-blue-900">
+                  {loading ? '...' : signupUsers.length}
+                </p>
                 <p className="text-xs text-gray-500">Landing page signups</p>
               </div>
             </div>
@@ -161,7 +197,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-green-600">Platform Users</p>
-                <p className="text-2xl font-bold text-green-900">25+</p>
+                <p className="text-2xl font-bold text-green-900">0</p>
                 <p className="text-xs text-gray-500">Active accounts</p>
               </div>
             </div>
@@ -174,8 +210,13 @@ const AdminDashboard: React.FC = () => {
               </div>
               <div className="ml-4">
                 <p className="text-sm font-medium text-purple-600">System Status</p>
-                <p className="text-2xl font-bold text-purple-900">Online</p>
-                <p className="text-xs text-gray-500">All systems operational</p>
+                <p className="text-2xl font-bold text-purple-900">
+                  {backendStatus === 'online' ? 'Online' : backendStatus === 'offline' ? 'Offline' : 'Checking...'}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {backendStatus === 'online' ? 'All systems operational' : 
+                   backendStatus === 'offline' ? 'Backend sleeping' : 'Checking connection...'}
+                </p>
               </div>
             </div>
           </div>
@@ -199,15 +240,21 @@ const AdminDashboard: React.FC = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Total Signups:</span>
-                  <span className="font-medium">150+</span>
+                  <span className="font-medium">
+                    {loading ? '...' : signupUsers.length}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Startups:</span>
-                  <span className="font-medium text-blue-600">45</span>
+                  <span className="font-medium text-blue-600">
+                    {loading ? '...' : signupUsers.filter(u => u.userType === 'startup').length}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Students:</span>
-                  <span className="font-medium text-green-600">105</span>
+                  <span className="font-medium text-green-600">
+                    {loading ? '...' : signupUsers.filter(u => u.userType === 'student').length}
+                  </span>
                 </div>
               </div>
 
@@ -237,15 +284,15 @@ const AdminDashboard: React.FC = () => {
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Total Users:</span>
-                  <span className="font-medium">25+</span>
+                  <span className="font-medium">0</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Active:</span>
-                  <span className="font-medium text-green-600">20</span>
+                  <span className="font-medium text-green-600">0</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Suspended:</span>
-                  <span className="font-medium text-red-600">2</span>
+                  <span className="font-medium text-red-600">0</span>
                 </div>
               </div>
 
