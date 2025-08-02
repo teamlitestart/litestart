@@ -7,7 +7,10 @@ import {
   LogOut,
   ArrowRight,
   Database,
-  Activity
+  Activity,
+  Download,
+  BarChart3,
+  X
 } from 'lucide-react';
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
@@ -23,6 +26,9 @@ const AdminDashboard: React.FC = () => {
   const [signupUsers, setSignupUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
 
   // Admin password - in production, this should be more secure
   const ADMIN_PASSWORD = 'BES25';
@@ -76,6 +82,91 @@ const AdminDashboard: React.FC = () => {
       fetchSignupUsers();
     }
   }, [isAuthenticated]);
+
+  const exportToCSV = (data: any[], filename: string) => {
+    if (data.length === 0) {
+      alert('No data to export');
+      return;
+    }
+
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => 
+        headers.map(header => {
+          const value = row[header];
+          return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        }).join(',')
+      )
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${filename}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const exportToExcel = (data: any[], filename: string) => {
+    if (data.length === 0) {
+      alert('No data to export');
+      return;
+    }
+
+    // For Excel, we'll create a CSV with .xlsx extension (browsers will handle it)
+    const headers = Object.keys(data[0]);
+    const csvContent = [
+      headers.join(','),
+      ...data.map(row => 
+        headers.map(header => {
+          const value = row[header];
+          return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+        }).join(',')
+      )
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${filename}.xlsx`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleExport = (dataType: 'signup' | 'platform', format: 'csv' | 'excel') => {
+    let data: any[] = [];
+    let filename = '';
+
+    if (dataType === 'signup') {
+      data = signupUsers.map(user => ({
+        Name: user.name,
+        Email: user.email,
+        'User Type': user.userType,
+        'Email Verified': user.isEmailVerified ? 'Yes' : 'No',
+        'Signup Date': new Date(user.signupDate).toLocaleDateString()
+      }));
+      filename = `litestart-signup-users-${new Date().toISOString().split('T')[0]}`;
+    } else {
+      // Platform users - for now empty, but structure ready for future
+      data = [];
+      filename = `litestart-platform-users-${new Date().toISOString().split('T')[0]}`;
+    }
+
+    if (format === 'csv') {
+      exportToCSV(data, filename);
+    } else {
+      exportToExcel(data, filename);
+    }
+    
+    setShowExportModal(false);
+  };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
@@ -311,7 +402,10 @@ const AdminDashboard: React.FC = () => {
         <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={() => setShowExportModal(true)}
+              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <Database className="h-5 w-5 text-blue-600 mr-3" />
               <div className="text-left">
                 <p className="font-medium text-gray-900">Export Data</p>
@@ -319,7 +413,10 @@ const AdminDashboard: React.FC = () => {
               </div>
             </button>
             
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={() => setShowSettingsModal(true)}
+              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <Settings className="h-5 w-5 text-gray-600 mr-3" />
               <div className="text-left">
                 <p className="font-medium text-gray-900">System Settings</p>
@@ -327,7 +424,10 @@ const AdminDashboard: React.FC = () => {
               </div>
             </button>
             
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+            <button 
+              onClick={() => setShowAnalyticsModal(true)}
+              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
               <Activity className="h-5 w-5 text-green-600 mr-3" />
               <div className="text-left">
                 <p className="font-medium text-gray-900">Analytics</p>
@@ -336,6 +436,202 @@ const AdminDashboard: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Export Modal */}
+        {showExportModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Export Data</h3>
+                <button 
+                  onClick={() => setShowExportModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Select Data Type</label>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => handleExport('signup', 'csv')}
+                      className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-900">Signup Users (CSV)</p>
+                        <p className="text-sm text-gray-600">Export landing page signups</p>
+                      </div>
+                      <Download className="h-4 w-4 text-blue-600" />
+                    </button>
+                    
+                    <button
+                      onClick={() => handleExport('signup', 'excel')}
+                      className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-900">Signup Users (Excel)</p>
+                        <p className="text-sm text-gray-600">Export landing page signups</p>
+                      </div>
+                      <Download className="h-4 w-4 text-green-600" />
+                    </button>
+                    
+                    <button
+                      onClick={() => handleExport('platform', 'csv')}
+                      className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-900">Platform Users (CSV)</p>
+                        <p className="text-sm text-gray-600">Export authenticated users</p>
+                      </div>
+                      <Download className="h-4 w-4 text-blue-600" />
+                    </button>
+                    
+                    <button
+                      onClick={() => handleExport('platform', 'excel')}
+                      className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
+                    >
+                      <div>
+                        <p className="font-medium text-gray-900">Platform Users (Excel)</p>
+                        <p className="text-sm text-gray-600">Export authenticated users</p>
+                      </div>
+                      <Download className="h-4 w-4 text-green-600" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Settings Modal */}
+        {showSettingsModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">System Settings</h3>
+                <button 
+                  onClick={() => setShowSettingsModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">Backend Status</h4>
+                  <p className="text-sm text-blue-700">
+                    Status: <span className={`font-medium ${backendStatus === 'online' ? 'text-green-600' : 'text-red-600'}`}>
+                      {backendStatus === 'online' ? 'Online' : backendStatus === 'offline' ? 'Offline' : 'Checking...'}
+                    </span>
+                  </p>
+                </div>
+                
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-2">Database Info</h4>
+                  <p className="text-sm text-gray-700">MongoDB Atlas</p>
+                  <p className="text-sm text-gray-700">Hosted on Render</p>
+                </div>
+                
+                <div className="p-4 bg-green-50 rounded-lg">
+                  <h4 className="font-medium text-green-900 mb-2">Platform Status</h4>
+                  <p className="text-sm text-green-700">All systems operational</p>
+                  <p className="text-sm text-green-700">Last updated: {new Date().toLocaleString()}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Analytics Modal */}
+        {showAnalyticsModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Platform Analytics</h3>
+                <button 
+                  onClick={() => setShowAnalyticsModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-blue-900 mb-2">Signup Analytics</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-blue-700">Total Signups:</span>
+                      <span className="font-medium">{signupUsers.length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-blue-700">Students:</span>
+                      <span className="font-medium">{signupUsers.filter(u => u.userType === 'student').length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-blue-700">Startups:</span>
+                      <span className="font-medium">{signupUsers.filter(u => u.userType === 'startup').length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-blue-700">Verified Emails:</span>
+                      <span className="font-medium">{signupUsers.filter(u => u.isEmailVerified).length}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-green-50 rounded-lg">
+                  <h4 className="font-medium text-green-900 mb-2">Recent Activity</h4>
+                  <div className="space-y-2">
+                    <div className="text-sm text-green-700">
+                      Latest signup: {signupUsers.length > 0 ? 
+                        new Date(signupUsers[signupUsers.length - 1]?.signupDate).toLocaleDateString() : 
+                        'No signups yet'}
+                    </div>
+                    <div className="text-sm text-green-700">
+                      This month: {signupUsers.filter(u => {
+                        const signupDate = new Date(u.signupDate);
+                        const now = new Date();
+                        return signupDate.getMonth() === now.getMonth() && 
+                               signupDate.getFullYear() === now.getFullYear();
+                      }).length}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-4 bg-purple-50 rounded-lg md:col-span-2">
+                  <h4 className="font-medium text-purple-900 mb-2">Growth Metrics</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">{signupUsers.length}</div>
+                      <div className="text-xs text-purple-700">Total Users</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">
+                        {signupUsers.filter(u => u.userType === 'student').length}
+                      </div>
+                      <div className="text-xs text-green-700">Students</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">
+                        {signupUsers.filter(u => u.userType === 'startup').length}
+                      </div>
+                      <div className="text-xs text-blue-700">Startups</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-orange-600">
+                        {signupUsers.filter(u => u.isEmailVerified).length}
+                      </div>
+                      <div className="text-xs text-orange-700">Verified</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
