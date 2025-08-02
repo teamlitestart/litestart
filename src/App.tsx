@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import LandingPage from './components/LandingPage';
 import SignupPage from './components/SignupPage';
+import LoginPage from './components/LoginPage';
+import SignupForm from './components/SignupForm';
+import Dashboard from './components/Dashboard';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
 import DualOfferingToggle from './components/DualOfferingToggle';
@@ -9,7 +13,7 @@ import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import StudentOnboarding from './components/StudentOnboarding';
 import StartupOnboarding from './components/StartupOnboarding';
-import AdminPanel from './components/AdminPanel';
+import AdminDashboard from './components/AdminDashboard';
 import EmailVerification from './components/EmailVerification';
 import LitestartFeatures from './components/LitestartFeatures';
 import Header from './components/Header';
@@ -319,20 +323,8 @@ function MainSite() {
     );
   }
 
-  return (
-    <div className="min-h-screen">
-      <MouseTracker />
-      <Hero onJoinWaitlist={handleJoinWaitlist} />
-      <LitestartFeatures />
-      <HowItWorks />
-      <DualOfferingToggle onJoinAsStudent={() => window.location.href = '/'} onJoinAsStartup={() => window.location.href = '/'} />
-      <TrustSection />
-      <FAQ />
-      <Footer />
-      <StudentOnboarding isOpen={isStudentOnboardingOpen} onClose={handleCloseStudentOnboarding} />
-      <StartupOnboarding isOpen={isStartupOnboardingOpen} onClose={handleCloseStartupOnboarding} />
-    </div>
-  );
+  // Return the new landing page content instead of the old components
+  return <LandingPage />;
 }
 
 function App() {
@@ -341,7 +333,10 @@ function App() {
       <Routes>
         <Route path="/" element={<SignupPage />} />
         <Route path="/preview" element={<MainSite />} />
-        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupForm />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/verify-email" element={<EmailVerification />} />
         <Route path="/faqs" element={<FAQsPage />} />
         <Route path="/about" element={<AboutPage />} />
