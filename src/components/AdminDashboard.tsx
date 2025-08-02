@@ -15,6 +15,7 @@ import {
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
 import { apiCall } from '../config/api';
+import * as XLSX from 'xlsx';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
 
@@ -117,27 +118,19 @@ const AdminDashboard: React.FC = () => {
       return;
     }
 
-    // Create a proper Excel-compatible CSV file
-    const headers = Object.keys(data[0]);
-    const csvContent = [
-      headers.join(','),
-      ...data.map(row => 
-        headers.map(header => {
-          const value = row[header];
-          return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
-        }).join(',')
-      )
-    ].join('\n');
-
-    // Add BOM for Excel compatibility
-    const BOM = '\uFEFF';
-    const csvContentWithBOM = BOM + csvContent;
-
-    const blob = new Blob([csvContentWithBOM], { type: 'text/csv;charset=utf-8;' });
+    // Create a real Excel file using XLSX library
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
+    
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.csv`);
+    link.setAttribute('download', `${filename}.xlsx`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -163,10 +156,11 @@ const AdminDashboard: React.FC = () => {
       filename = `litestart-platform-users-${new Date().toISOString().split('T')[0]}`;
     }
 
-    // Force CSV format for both options to ensure Excel compatibility
     console.log('Exporting data:', { dataType, format, filename, dataLength: data.length });
-    if (format === 'csv' || format === 'excel') {
+    if (format === 'csv') {
       exportToCSV(data, filename);
+    } else if (format === 'excel') {
+      exportToExcel(data, filename);
     }
     
     setShowExportModal(false);
@@ -475,8 +469,8 @@ const AdminDashboard: React.FC = () => {
                        className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
                      >
                        <div>
-                         <p className="font-medium text-gray-900">Signup Users (Excel CSV)</p>
-                         <p className="text-sm text-gray-600">Export landing page signups (Excel compatible)</p>
+                         <p className="font-medium text-gray-900">Signup Users (Excel)</p>
+                         <p className="text-sm text-gray-600">Export as native Excel file (.xlsx)</p>
                        </div>
                        <Download className="h-4 w-4 text-green-600" />
                      </button>
@@ -497,8 +491,8 @@ const AdminDashboard: React.FC = () => {
                        className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
                      >
                        <div>
-                         <p className="font-medium text-gray-900">Platform Users (Excel CSV)</p>
-                         <p className="text-sm text-gray-600">Export authenticated users (Excel compatible)</p>
+                         <p className="font-medium text-gray-900">Platform Users (Excel)</p>
+                         <p className="text-sm text-gray-600">Export as native Excel file (.xlsx)</p>
                        </div>
                        <Download className="h-4 w-4 text-green-600" />
                      </button>
