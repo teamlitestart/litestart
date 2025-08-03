@@ -33,13 +33,20 @@ const Dashboard: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  // Initialize startup projects data when user is authenticated
+  useEffect(() => {
+    if (isAuthenticated && user?.userType === 'startup') {
+      setStartupProjects(startupProjectsData);
+    }
+  }, [isAuthenticated, user?.userType]);
+
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
 
   // Startup dashboard functions
-  const [startupProjects, setStartupProjects] = useState(startupProjectsData);
+  const [startupProjects, setStartupProjects] = useState<any[]>([]);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
 
