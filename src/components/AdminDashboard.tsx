@@ -15,7 +15,6 @@ import {
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
 import { apiCall } from '../config/api';
-import * as XLSX from 'xlsx';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
 
@@ -112,32 +111,9 @@ const AdminDashboard: React.FC = () => {
     document.body.removeChild(link);
   };
 
-  const exportToExcel = (data: any[], filename: string) => {
-    if (data.length === 0) {
-      alert('No data to export');
-      return;
-    }
 
-    // Create a real Excel file using XLSX library
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Users');
-    
-    // Generate Excel file
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
-    link.setAttribute('href', url);
-    link.setAttribute('download', `${filename}.xlsx`);
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
-  const handleExport = (dataType: 'signup' | 'platform', format: 'csv' | 'excel') => {
+  const handleExport = (dataType: 'signup' | 'platform') => {
     let data: any[] = [];
     let filename = '';
 
@@ -156,13 +132,8 @@ const AdminDashboard: React.FC = () => {
       filename = `litestart-platform-users-${new Date().toISOString().split('T')[0]}`;
     }
 
-    console.log('Exporting data:', { dataType, format, filename, dataLength: data.length });
-    if (format === 'csv') {
-      exportToCSV(data, filename);
-    } else if (format === 'excel') {
-      exportToExcel(data, filename);
-    }
-    
+    console.log('Exporting data:', { dataType, filename, dataLength: data.length });
+    exportToCSV(data, filename);
     setShowExportModal(false);
   };
 
@@ -454,7 +425,7 @@ const AdminDashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Select Data Type</label>
                   <div className="space-y-2">
                     <button
-                      onClick={() => handleExport('signup', 'csv')}
+                      onClick={() => handleExport('signup')}
                       className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
                     >
                       <div>
@@ -464,19 +435,8 @@ const AdminDashboard: React.FC = () => {
                       <Download className="h-4 w-4 text-blue-600" />
                     </button>
                     
-                                         <button
-                       onClick={() => handleExport('signup', 'excel')}
-                       className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
-                     >
-                       <div>
-                         <p className="font-medium text-gray-900">Signup Users (Excel)</p>
-                         <p className="text-sm text-gray-600">Export as native Excel file (.xlsx)</p>
-                       </div>
-                       <Download className="h-4 w-4 text-green-600" />
-                     </button>
-                    
                     <button
-                      onClick={() => handleExport('platform', 'csv')}
+                      onClick={() => handleExport('platform')}
                       className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
                     >
                       <div>
@@ -485,17 +445,6 @@ const AdminDashboard: React.FC = () => {
                       </div>
                       <Download className="h-4 w-4 text-blue-600" />
                     </button>
-                    
-                                         <button
-                       onClick={() => handleExport('platform', 'excel')}
-                       className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex items-center justify-between"
-                     >
-                       <div>
-                         <p className="font-medium text-gray-900">Platform Users (Excel)</p>
-                         <p className="text-sm text-gray-600">Export as native Excel file (.xlsx)</p>
-                       </div>
-                       <Download className="h-4 w-4 text-green-600" />
-                     </button>
                   </div>
                 </div>
               </div>
