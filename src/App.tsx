@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-// Force rebuild $(date)
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import LandingPage from './components/LandingPage';
 import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
@@ -24,20 +23,29 @@ import TermsOfService from './components/TermsOfService';
 import CookiePolicy from './components/CookiePolicy';
 
 // FAQs Page Component
-const FAQsPage: React.FC = () => (
-  <div className="min-h-screen bg-white">
-    <Header />
-    <div className="py-16">
-      <FAQ />
+const FAQsPage: React.FC = () => {
+  const location = useLocation();
+  const isPreviewRoute = location.pathname.startsWith('/preview');
+  
+  return (
+    <div className="min-h-screen bg-white">
+      <Header showAuthButtons={isPreviewRoute} homePath={isPreviewRoute ? "/preview" : "/"} />
+      <div className="py-16">
+        <FAQ />
+      </div>
+      <Footer />
     </div>
-    <Footer />
-  </div>
-);
+  );
+};
 
 // Placeholder components for new pages
-const AboutPage: React.FC = () => (
-  <div className="min-h-screen bg-white">
-    <Header />
+const AboutPage: React.FC = () => {
+  const location = useLocation();
+  const isPreviewRoute = location.pathname.startsWith('/preview');
+  
+  return (
+    <div className="min-h-screen bg-white">
+      <Header showAuthButtons={isPreviewRoute} homePath={isPreviewRoute ? "/preview" : "/"} />
     
     {/* Header Section */}
     <section className="relative py-20 bg-gradient-to-br from-blue-50 via-white to-teal-50 overflow-hidden">
@@ -181,11 +189,16 @@ const AboutPage: React.FC = () => (
 
     <Footer />
   </div>
-);
+  );
+};
 
-const ContactPage: React.FC = () => (
-  <div className="min-h-screen bg-white">
-    <Header />
+const ContactPage: React.FC = () => {
+  const location = useLocation();
+  const isPreviewRoute = location.pathname.startsWith('/preview');
+  
+  return (
+    <div className="min-h-screen bg-white">
+      <Header showAuthButtons={isPreviewRoute} homePath={isPreviewRoute ? "/preview" : "/"} />
     <div className="max-w-4xl mx-auto px-4 py-16">
       <h1 className="text-4xl font-bold text-gray-900 mb-8">Contact Us</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -207,7 +220,8 @@ const ContactPage: React.FC = () => (
     </div>
     <Footer />
   </div>
-);
+  );
+};
 
 const CareersPage: React.FC = () => (
   <div className="min-h-screen bg-white">
@@ -342,6 +356,9 @@ function App() {
         <Route path="/faqs" element={<FAQsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/preview/faqs" element={<FAQsPage />} />
+        <Route path="/preview/about" element={<AboutPage />} />
+        <Route path="/preview/contact" element={<ContactPage />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
         <Route path="/cookie" element={<CookiePolicy />} />

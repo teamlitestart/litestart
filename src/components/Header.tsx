@@ -45,19 +45,19 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 Home
               </Link>
               <Link 
-                to="/faqs" 
+                to={`${homePath === "/" ? "/faqs" : "/preview/faqs"}`}
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
               >
                 FAQs
               </Link>
               <Link 
-                to="/about" 
+                to={`${homePath === "/" ? "/about" : "/preview/about"}`}
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
               >
                 About Us
               </Link>
               <Link 
-                to="/contact" 
+                to={`${homePath === "/" ? "/contact" : "/preview/contact"}`}
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
               >
                 Contact
@@ -135,21 +135,21 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 Home
               </Link>
               <Link 
-                to="/faqs" 
+                to={`${homePath === "/" ? "/faqs" : "/preview/faqs"}`}
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
               >
                 FAQs
               </Link>
               <Link 
-                to="/about" 
+                to={`${homePath === "/" ? "/about" : "/preview/about"}`}
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
               >
                 About Us
               </Link>
               <Link 
-                to="/contact" 
+                to={`${homePath === "/" ? "/contact" : "/preview/contact"}`}
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
               >
