@@ -39,34 +39,98 @@ const Dashboard: React.FC = () => {
   };
 
   // Startup dashboard functions
+  const [startupProjects, setStartupProjects] = useState(startupProjectsData);
+  const [editingProject, setEditingProject] = useState<any>(null);
+  const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+
   const handleViewApplications = (project: any) => {
     setSelectedProject(project);
     setShowApplicationsModal(true);
   };
 
   const handleEditProject = (project: any) => {
-    setSelectedProject(project);
+    setEditingProject({ ...project });
     setShowProjectModal(true);
   };
 
   const handleUpdateApplicationStatus = (projectId: number, applicationId: number, newStatus: string) => {
-    // In a real app, this would make an API call
-    console.log(`Updating application ${applicationId} for project ${projectId} to status: ${newStatus}`);
+    setStartupProjects(prevProjects => 
+      prevProjects.map(project => {
+        if (project.id === projectId) {
+          return {
+            ...project,
+            applicationsList: project.applicationsList.map((app: any) => 
+              app.id === applicationId ? { ...app, status: newStatus } : app
+            ),
+            applications: project.applicationsList.length
+          };
+        }
+        return project;
+      })
+    );
+    
+    // Update selected project if it's currently being viewed
+    if (selectedProject && selectedProject.id === projectId) {
+      setSelectedProject(prev => ({
+        ...prev,
+        applicationsList: prev.applicationsList.map((app: any) => 
+          app.id === applicationId ? { ...app, status: newStatus } : app
+        )
+      }));
+    }
+    
     alert(`Application status updated to ${newStatus}`);
   };
 
   const handleDeleteProject = (projectId: number) => {
     if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-      // In a real app, this would make an API call
-      console.log(`Deleting project ${projectId}`);
+      setStartupProjects(prevProjects => prevProjects.filter(project => project.id !== projectId));
       alert('Project deleted successfully');
     }
   };
 
   const handlePublishProject = (projectId: number) => {
-    // In a real app, this would make an API call
-    console.log(`Publishing project ${projectId}`);
+    setStartupProjects(prevProjects => 
+      prevProjects.map(project => 
+        project.id === projectId ? { ...project, status: 'active' } : project
+      )
+    );
     alert('Project published successfully');
+  };
+
+  const handleSaveProject = (updatedProject: any) => {
+    setStartupProjects(prevProjects => 
+      prevProjects.map(project => 
+        project.id === updatedProject.id ? updatedProject : project
+      )
+    );
+    setShowProjectModal(false);
+    setEditingProject(null);
+    alert('Project updated successfully');
+  };
+
+  const handleCreateNewProject = (newProject: any) => {
+    const projectWithId = {
+      ...newProject,
+      id: Math.max(...startupProjects.map(p => p.id)) + 1,
+      applications: 0,
+      applicationsList: [],
+      postedDate: new Date().toISOString().split('T')[0],
+      status: 'draft'
+    };
+    setStartupProjects(prevProjects => [...prevProjects, projectWithId]);
+    setShowNewProjectModal(false);
+    alert('Project created successfully');
+  };
+
+  const handleMessageStudent = (studentEmail: string, studentName: string) => {
+    alert(`Opening message interface for ${studentName} (${studentEmail})`);
+    // In a real app, this would open a messaging interface
+  };
+
+  const handleViewStudentProfile = (studentEmail: string, studentName: string) => {
+    alert(`Opening profile for ${studentName} (${studentEmail})`);
+    // In a real app, this would open a student profile modal
   };
 
   // Sample data for students
@@ -104,7 +168,7 @@ const Dashboard: React.FC = () => {
   ];
 
   // Sample data for startups
-  const startupProjects = [
+  const startupProjectsData = [
     {
       id: 1,
       title: "Marketing Strategy for FinTech Startup",
@@ -319,7 +383,10 @@ const Dashboard: React.FC = () => {
                     <span>Filter</span>
                   </button>
                   {user.userType === 'startup' && (
-                    <button className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                    <button 
+                      onClick={() => setShowNewProjectModal(true)}
+                      className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    >
                       <Plus className="h-5 w-5" />
                       <span>Post Project</span>
                     </button>
@@ -564,12 +631,18 @@ const Dashboard: React.FC = () => {
                           </button>
                         </>
                       )}
-                      <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
-                        View Profile
-                      </button>
-                      <button className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700">
-                        Message
-                      </button>
+                                             <button 
+                         onClick={() => handleViewStudentProfile(application.email, application.studentName)}
+                         className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
+                       >
+                         View Profile
+                       </button>
+                       <button 
+                         onClick={() => handleMessageStudent(application.email, application.studentName)}
+                         className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700"
+                       >
+                         Message
+                       </button>
                     </div>
                   </div>
                 ))}
@@ -580,19 +653,22 @@ const Dashboard: React.FC = () => {
       )}
 
       {/* Project Edit Modal for Startups */}
-      {showProjectModal && selectedProject && (
+      {showProjectModal && editingProject && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">
-                Edit Project: {selectedProject.title}
+                Edit Project: {editingProject.title}
               </h3>
-              <button 
-                onClick={() => setShowProjectModal(false)}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <X className="h-5 w-5" />
-              </button>
+                              <button 
+                  onClick={() => {
+                    setShowProjectModal(false);
+                    setEditingProject(null);
+                  }}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="h-5 w-5" />
+                </button>
             </div>
             
             <div className="space-y-4">
@@ -600,7 +676,8 @@ const Dashboard: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Project Title</label>
                 <input
                   type="text"
-                  defaultValue={selectedProject.title}
+                  value={editingProject.title}
+                  onChange={(e) => setEditingProject({...editingProject, title: e.target.value})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -608,7 +685,8 @@ const Dashboard: React.FC = () => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
                 <textarea
-                  defaultValue={selectedProject.description}
+                  value={editingProject.description}
+                  onChange={(e) => setEditingProject({...editingProject, description: e.target.value})}
                   rows={4}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
@@ -619,7 +697,8 @@ const Dashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
                   <input
                     type="text"
-                    defaultValue={selectedProject.duration}
+                    value={editingProject.duration}
+                    onChange={(e) => setEditingProject({...editingProject, duration: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -627,7 +706,8 @@ const Dashboard: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Compensation</label>
                   <input
                     type="text"
-                    defaultValue={selectedProject.compensation}
+                    value={editingProject.compensation}
+                    onChange={(e) => setEditingProject({...editingProject, compensation: e.target.value})}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -637,7 +717,8 @@ const Dashboard: React.FC = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Required Skills</label>
                 <input
                   type="text"
-                  defaultValue={selectedProject.skills.join(', ')}
+                  value={editingProject.skills.join(', ')}
+                  onChange={(e) => setEditingProject({...editingProject, skills: e.target.value.split(',').map(s => s.trim())})}
                   placeholder="e.g., Marketing, Strategy, Analytics"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
@@ -645,12 +726,18 @@ const Dashboard: React.FC = () => {
               
               <div className="flex justify-end space-x-3 pt-4">
                 <button
-                  onClick={() => setShowProjectModal(false)}
+                  onClick={() => {
+                    setShowProjectModal(false);
+                    setEditingProject(null);
+                  }}
                   className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
                 >
                   Cancel
                 </button>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <button 
+                  onClick={() => handleSaveProject(editingProject)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
                   Save Changes
                 </button>
               </div>
@@ -658,7 +745,127 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* New Project Modal for Startups */}
+      {showNewProjectModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Create New Project
+              </h3>
+              <button 
+                onClick={() => setShowNewProjectModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <NewProjectForm onSubmit={handleCreateNewProject} onCancel={() => setShowNewProjectModal(false)} />
+          </div>
+        </div>
+      )}
     </div>
+  );
+};
+
+// New Project Form Component
+const NewProjectForm: React.FC<{ onSubmit: (project: any) => void; onCancel: () => void }> = ({ onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    duration: '',
+    compensation: '',
+    skills: ''
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newProject = {
+      ...formData,
+      skills: formData.skills.split(',').map(s => s.trim()).filter(s => s)
+    };
+    onSubmit(newProject);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Project Title</label>
+        <input
+          type="text"
+          value={formData.title}
+          onChange={(e) => setFormData({...formData, title: e.target.value})}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+        <textarea
+          value={formData.description}
+          onChange={(e) => setFormData({...formData, description: e.target.value})}
+          rows={4}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+          <input
+            type="text"
+            value={formData.duration}
+            onChange={(e) => setFormData({...formData, duration: e.target.value})}
+            placeholder="e.g., 2 weeks"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Compensation</label>
+          <input
+            type="text"
+            value={formData.compensation}
+            onChange={(e) => setFormData({...formData, compensation: e.target.value})}
+            placeholder="e.g., £500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+      </div>
+      
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Required Skills</label>
+        <input
+          type="text"
+          value={formData.skills}
+          onChange={(e) => setFormData({...formData, skills: e.target.value})}
+          placeholder="e.g., Marketing, Strategy, Analytics"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          required
+        />
+      </div>
+      
+      <div className="flex justify-end space-x-3 pt-4">
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+        >
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Create Project
+        </button>
+      </div>
+    </form>
   );
 };
 
