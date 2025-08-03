@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  showAuthButtons?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
 
@@ -60,42 +64,44 @@ const Header: React.FC = () => {
             </div>
             
             {/* Auth Buttons */}
-            <div className="flex items-center space-x-4 ml-8">
-              {isAuthenticated ? (
-                <>
-                  <Link 
-                    to="/dashboard" 
-                    className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">{user?.email}</span>
-                    <button
-                      onClick={handleLogout}
-                      className="text-gray-700 hover:text-red-600 px-4 py-2 text-lg font-medium transition-colors"
+            {showAuthButtons && (
+              <div className="flex items-center space-x-4 ml-8">
+                {isAuthenticated ? (
+                  <>
+                    <Link 
+                      to="/dashboard" 
+                      className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
                     >
-                      Logout
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Link 
-                    to="/login" 
-                    className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    to="/signup" 
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-lg font-medium transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
+                      Dashboard
+                    </Link>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-gray-600">{user?.email}</span>
+                      <button
+                        onClick={handleLogout}
+                        className="text-gray-700 hover:text-red-600 px-4 py-2 text-lg font-medium transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Link 
+                      to="/login" 
+                      className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
+                    >
+                      Login
+                    </Link>
+                    <Link 
+                      to="/signup" 
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-lg font-medium transition-colors"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
+              </div>
+            )}
           </nav>
 
           {/* Mobile menu button */}
@@ -150,45 +156,47 @@ const Header: React.FC = () => {
               </Link>
               
               {/* Mobile Auth Buttons */}
-              <div className="border-t border-gray-200 pt-4 mt-4">
-                {isAuthenticated ? (
-                  <>
-                    <Link 
-                      to="/dashboard" 
-                      className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
-                      onClick={closeMobileMenu}
-                    >
-                      Dashboard
-                    </Link>
-                    <div className="px-6 py-2 text-sm text-gray-600">
-                      {user?.email}
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left text-gray-700 hover:text-red-600 px-6 py-4 text-xl font-medium transition-colors"
-                    >
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link 
-                      to="/login" 
-                      className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
-                      onClick={closeMobileMenu}
-                    >
-                      Login
-                    </Link>
-                    <Link 
-                      to="/signup" 
-                      className="block bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 text-xl font-medium transition-colors rounded-lg mx-6 mt-2"
-                      onClick={closeMobileMenu}
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
-              </div>
+              {showAuthButtons && (
+                <div className="border-t border-gray-200 pt-4 mt-4">
+                  {isAuthenticated ? (
+                    <>
+                      <Link 
+                        to="/dashboard" 
+                        className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
+                        onClick={closeMobileMenu}
+                      >
+                        Dashboard
+                      </Link>
+                      <div className="px-6 py-2 text-sm text-gray-600">
+                        {user?.email}
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left text-gray-700 hover:text-red-600 px-6 py-4 text-xl font-medium transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link 
+                        to="/login" 
+                        className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
+                        onClick={closeMobileMenu}
+                      >
+                        Login
+                      </Link>
+                      <Link 
+                        to="/signup" 
+                        className="block bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 text-xl font-medium transition-colors rounded-lg mx-6 mt-2"
+                        onClick={closeMobileMenu}
+                      >
+                        Sign Up
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         )}
