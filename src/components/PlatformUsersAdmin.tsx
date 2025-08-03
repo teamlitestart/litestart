@@ -38,12 +38,8 @@ const PlatformUsersAdmin: React.FC = () => {
   const [userTypeFilter, setUserTypeFilter] = useState<'all' | 'startup' | 'student'>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'suspended'>('all');
   const [searchFilter, setSearchFilter] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [loginError, setLoginError] = useState('');
-
-  // Admin password - in production, this should be more secure
-  const ADMIN_PASSWORD = 'BES25';
+  // No password required - already authenticated from main dashboard
+  const isAuthenticated = true;
 
   // Sample data for demonstration
   const sampleUsers: PlatformUser[] = [
@@ -120,25 +116,7 @@ const PlatformUsersAdmin: React.FC = () => {
     }
   ];
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setLoginError('');
-      sessionStorage.setItem('platform_admin_authenticated', 'true');
-    } else {
-      setLoginError('Incorrect password');
-      setPassword('');
-    }
-  };
 
-  // Check if already authenticated
-  useEffect(() => {
-    const authenticated = sessionStorage.getItem('platform_admin_authenticated');
-    if (authenticated === 'true') {
-      setIsAuthenticated(true);
-    }
-  }, []);
 
   // Filtered users
   const filteredUsers = users.filter(user => {
@@ -224,49 +202,7 @@ const PlatformUsersAdmin: React.FC = () => {
     }
   }, [isAuthenticated]);
 
-  // Login Screen
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Platform Users Admin</h1>
-            <p className="text-gray-600">Enter password to access platform users admin panel</p>
-          </div>
-          
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Admin Password
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter password"
-                required
-              />
-            </div>
-            
-            {loginError && (
-              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                {loginError}
-              </div>
-            )}
-            
-            <button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
-            >
-              Login
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
+
 
   if (loading) {
     return (
