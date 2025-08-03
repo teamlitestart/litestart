@@ -36,8 +36,19 @@ const LoginPage: React.FC = () => {
       // For demo purposes, accept any email/password combination
       // In production, this would validate against your backend
       if (formData.email && formData.password) {
-        // Use the auth context to login
-        login(formData.email, 'student'); // Default to student for demo
+        // Check if this user has signed up before and get their userType
+        const storedEmail = localStorage.getItem('userEmail');
+        const storedUserType = localStorage.getItem('userType');
+        
+        let userType = 'student'; // Default fallback
+        
+        // If the email matches a previously signed up user, use their userType
+        if (storedEmail === formData.email && storedUserType) {
+          userType = storedUserType;
+        }
+        
+        // Use the auth context to login with the correct userType
+        login(formData.email, userType);
         
         // Redirect to dashboard
         navigate('/dashboard');
