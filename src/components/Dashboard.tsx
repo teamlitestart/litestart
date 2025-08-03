@@ -11,12 +11,17 @@ import {
   LogOut,
   User,
   Settings,
-  Bell
+  Bell,
+  Calendar,
+  X
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('projects');
+  const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [showProjectModal, setShowProjectModal] = useState(false);
+  const [showApplicationsModal, setShowApplicationsModal] = useState(false);
   const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useAuth();
 
@@ -31,6 +36,37 @@ const Dashboard: React.FC = () => {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  // Startup dashboard functions
+  const handleViewApplications = (project: any) => {
+    setSelectedProject(project);
+    setShowApplicationsModal(true);
+  };
+
+  const handleEditProject = (project: any) => {
+    setSelectedProject(project);
+    setShowProjectModal(true);
+  };
+
+  const handleUpdateApplicationStatus = (projectId: number, applicationId: number, newStatus: string) => {
+    // In a real app, this would make an API call
+    console.log(`Updating application ${applicationId} for project ${projectId} to status: ${newStatus}`);
+    alert(`Application status updated to ${newStatus}`);
+  };
+
+  const handleDeleteProject = (projectId: number) => {
+    if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      // In a real app, this would make an API call
+      console.log(`Deleting project ${projectId}`);
+      alert('Project deleted successfully');
+    }
+  };
+
+  const handlePublishProject = (projectId: number) => {
+    // In a real app, this would make an API call
+    console.log(`Publishing project ${projectId}`);
+    alert('Project published successfully');
   };
 
   // Sample data for students
@@ -76,7 +112,14 @@ const Dashboard: React.FC = () => {
       status: "active",
       duration: "2 weeks",
       compensation: "£500",
-      postedDate: "2024-01-15"
+      postedDate: "2024-01-15",
+      description: "Help develop a comprehensive marketing strategy for our new fintech product launch.",
+      skills: ["Marketing", "Strategy", "Analytics"],
+      applicationsList: [
+        { id: 1, studentName: "Sarah Chen", email: "sarah.chen@bristol.ac.uk", status: "pending", appliedDate: "2024-01-20", university: "University of Bristol" },
+        { id: 2, studentName: "Emma Thompson", email: "emma.thompson@bristol.ac.uk", status: "accepted", appliedDate: "2024-01-18", university: "University of Bristol" },
+        { id: 3, studentName: "James Wilson", email: "james.wilson@bristol.ac.uk", status: "rejected", appliedDate: "2024-01-17", university: "University of Bristol" }
+      ]
     },
     {
       id: 2,
@@ -85,7 +128,25 @@ const Dashboard: React.FC = () => {
       status: "active",
       duration: "1 week",
       compensation: "£300",
-      postedDate: "2024-01-10"
+      postedDate: "2024-01-10",
+      description: "Create engaging social media content for our brand across multiple platforms.",
+      skills: ["Content Creation", "Social Media", "Design"],
+      applicationsList: [
+        { id: 4, studentName: "Alex Johnson", email: "alex.johnson@bristol.ac.uk", status: "pending", appliedDate: "2024-01-19", university: "University of Bristol" },
+        { id: 5, studentName: "Maria Garcia", email: "maria.garcia@bristol.ac.uk", status: "pending", appliedDate: "2024-01-16", university: "University of Bristol" }
+      ]
+    },
+    {
+      id: 3,
+      title: "Frontend Development for E-commerce Platform",
+      applications: 5,
+      status: "draft",
+      duration: "3 weeks",
+      compensation: "£800",
+      postedDate: "2024-01-25",
+      description: "Build responsive frontend components for our e-commerce platform.",
+      skills: ["React", "JavaScript", "CSS"],
+      applicationsList: []
     }
   ];
 
@@ -267,51 +328,125 @@ const Dashboard: React.FC = () => {
 
                 {/* Projects Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {(user.userType === 'student' ? studentProjects : startupProjects).map((project) => (
-                    <div key={project.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                      <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
-                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                          {project.status}
-                        </span>
-                      </div>
-                      
-                      <p className="text-gray-600 mb-4">{project.company}</p>
-                      
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Clock className="h-4 w-4 mr-2" />
-                          {project.duration}
+                  {user.userType === 'student' ? (
+                    // Student view - available projects
+                    studentProjects.map((project) => (
+                      <div key={project.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
+                          <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                            {project.status}
+                          </span>
                         </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <Briefcase className="h-4 w-4 mr-2" />
-                          {project.compensation}
+                        
+                        <p className="text-gray-600 mb-4">{project.company}</p>
+                        
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Clock className="h-4 w-4 mr-2" />
+                            {project.duration}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Briefcase className="h-4 w-4 mr-2" />
+                            {project.compensation}
+                          </div>
                         </div>
-                                                 {user.userType === 'startup' && (
-                           <div className="flex items-center text-sm text-gray-500">
-                             <Users className="h-4 w-4 mr-2" />
-                             {project.applications} applications
-                           </div>
-                         )}
+
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-1">
+                            {project.skills.map((skill, index) => (
+                              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+
+                        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                          Apply Now
+                        </button>
                       </div>
+                    ))
+                  ) : (
+                    // Startup view - their own projects
+                    startupProjects.map((project) => (
+                      <div key={project.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+                        <div className="flex justify-between items-start mb-4">
+                          <h3 className="text-lg font-semibold text-gray-900">{project.title}</h3>
+                          <span className={`px-2 py-1 text-xs rounded-full ${
+                            project.status === 'active' ? 'bg-green-100 text-green-800' :
+                            project.status === 'draft' ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {project.status}
+                          </span>
+                        </div>
+                        
+                        <p className="text-gray-600 mb-2">{project.description}</p>
+                        
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Clock className="h-4 w-4 mr-2" />
+                            {project.duration}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Briefcase className="h-4 w-4 mr-2" />
+                            {project.compensation}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Users className="h-4 w-4 mr-2" />
+                            {project.applications} applications
+                          </div>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Posted: {new Date(project.postedDate).toLocaleDateString()}
+                          </div>
+                        </div>
 
-                                             {user.userType === 'student' && (
-                         <div className="mb-4">
-                           <div className="flex flex-wrap gap-1">
-                             {project.skills.map((skill, index) => (
-                               <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                                 {skill}
-                               </span>
-                             ))}
-                           </div>
-                         </div>
-                       )}
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-1">
+                            {project.skills.map((skill, index) => (
+                              <span key={index} className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
 
-                                             <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                         {user.userType === 'student' ? 'Apply Now' : 'View Applications'}
-                       </button>
-                    </div>
-                  ))}
+                        <div className="space-y-2">
+                          <button 
+                            onClick={() => handleViewApplications(project)}
+                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            View Applications ({project.applications})
+                          </button>
+                          
+                          <div className="flex space-x-2">
+                            <button 
+                              onClick={() => handleEditProject(project)}
+                              className="flex-1 bg-gray-600 text-white py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm"
+                            >
+                              Edit
+                            </button>
+                            {project.status === 'draft' && (
+                              <button 
+                                onClick={() => handlePublishProject(project.id)}
+                                className="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
+                              >
+                                Publish
+                              </button>
+                            )}
+                            <button 
+                              onClick={() => handleDeleteProject(project.id)}
+                              className="flex-1 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition-colors text-sm"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
@@ -341,6 +476,188 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Applications Modal for Startups */}
+      {showApplicationsModal && selectedProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Applications for: {selectedProject.title}
+              </h3>
+              <button 
+                onClick={() => setShowApplicationsModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <span className="font-medium text-blue-900">Total Applications:</span>
+                  <span className="ml-2 text-blue-700">{selectedProject.applications}</span>
+                </div>
+                <div>
+                  <span className="font-medium text-blue-900">Pending:</span>
+                  <span className="ml-2 text-blue-700">
+                    {selectedProject.applicationsList.filter((app: any) => app.status === 'pending').length}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-medium text-blue-900">Accepted:</span>
+                  <span className="ml-2 text-blue-700">
+                    {selectedProject.applicationsList.filter((app: any) => app.status === 'accepted').length}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-medium text-blue-900">Rejected:</span>
+                  <span className="ml-2 text-blue-700">
+                    {selectedProject.applicationsList.filter((app: any) => app.status === 'rejected').length}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {selectedProject.applicationsList.length === 0 ? (
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600">No applications yet for this project.</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {selectedProject.applicationsList.map((application: any) => (
+                  <div key={application.id} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h4 className="font-medium text-gray-900">{application.studentName}</h4>
+                        <p className="text-sm text-gray-600">{application.email}</p>
+                        <p className="text-sm text-gray-500">{application.university}</p>
+                        <p className="text-xs text-gray-400">Applied: {new Date(application.appliedDate).toLocaleDateString()}</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`px-3 py-1 rounded-full text-sm ${
+                          application.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                          application.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {application.status}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-2">
+                      {application.status === 'pending' && (
+                        <>
+                          <button
+                            onClick={() => handleUpdateApplicationStatus(selectedProject.id, application.id, 'accepted')}
+                            className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() => handleUpdateApplicationStatus(selectedProject.id, application.id, 'rejected')}
+                            className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                      <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
+                        View Profile
+                      </button>
+                      <button className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700">
+                        Message
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Project Edit Modal for Startups */}
+      {showProjectModal && selectedProject && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Edit Project: {selectedProject.title}
+              </h3>
+              <button 
+                onClick={() => setShowProjectModal(false)}
+                className="text-gray-400 hover:text-gray-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Project Title</label>
+                <input
+                  type="text"
+                  defaultValue={selectedProject.title}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  defaultValue={selectedProject.description}
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                  <input
+                    type="text"
+                    defaultValue={selectedProject.duration}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Compensation</label>
+                  <input
+                    type="text"
+                    defaultValue={selectedProject.compensation}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Required Skills</label>
+                <input
+                  type="text"
+                  defaultValue={selectedProject.skills.join(', ')}
+                  placeholder="e.g., Marketing, Strategy, Analytics"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              
+              <div className="flex justify-end space-x-3 pt-4">
+                <button
+                  onClick={() => setShowProjectModal(false)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
