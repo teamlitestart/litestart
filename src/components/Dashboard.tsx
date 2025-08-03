@@ -49,6 +49,8 @@ const Dashboard: React.FC = () => {
   const [startupProjects, setStartupProjects] = useState<any[]>([]);
   const [editingProject, setEditingProject] = useState<any>(null);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
+  const [applicationFilter, setApplicationFilter] = useState<'all' | 'pending' | 'accepted' | 'rejected'>('all');
+  const [applicationSort, setApplicationSort] = useState<'date' | 'name' | 'university'>('date');
 
   const handleViewApplications = (project: any) => {
     setSelectedProject(project);
@@ -554,105 +556,200 @@ const Dashboard: React.FC = () => {
       {/* Applications Modal for Startups */}
       {showApplicationsModal && selectedProject && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[80vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Applications for: {selectedProject.title}
-              </h3>
+          <div className="bg-white rounded-lg p-6 max-w-7xl w-full mx-4 max-h-[90vh] overflow-hidden">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Screening Applications: {selectedProject.title}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  {selectedProject.applications} total applications • 
+                  {selectedProject.applicationsList.filter((app: any) => app.status === 'pending').length} pending review
+                </p>
+              </div>
               <button 
                 onClick={() => setShowApplicationsModal(false)}
                 className="text-gray-400 hover:text-gray-600"
               >
-                <X className="h-5 w-5" />
+                <X className="h-6 w-6" />
               </button>
             </div>
             
-            <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+            {/* Quick Stats Bar */}
+            <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                  <span className="font-medium text-blue-900">Total Applications:</span>
-                  <span className="ml-2 text-blue-700">{selectedProject.applications}</span>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-blue-900">{selectedProject.applications}</div>
+                  <div className="text-xs text-blue-700">Total</div>
                 </div>
-                <div>
-                  <span className="font-medium text-blue-900">Pending:</span>
-                  <span className="ml-2 text-blue-700">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-yellow-600">
                     {selectedProject.applicationsList.filter((app: any) => app.status === 'pending').length}
-                  </span>
+                  </div>
+                  <div className="text-xs text-yellow-700">Pending</div>
                 </div>
-                <div>
-                  <span className="font-medium text-blue-900">Accepted:</span>
-                  <span className="ml-2 text-blue-700">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-green-600">
                     {selectedProject.applicationsList.filter((app: any) => app.status === 'accepted').length}
-                  </span>
+                  </div>
+                  <div className="text-xs text-green-700">Accepted</div>
                 </div>
-                <div>
-                  <span className="font-medium text-blue-900">Rejected:</span>
-                  <span className="ml-2 text-blue-700">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-red-600">
                     {selectedProject.applicationsList.filter((app: any) => app.status === 'rejected').length}
-                  </span>
+                  </div>
+                  <div className="text-xs text-red-700">Rejected</div>
                 </div>
               </div>
             </div>
 
+            {/* Filters and Controls */}
+            <div className="mb-6 flex flex-wrap gap-4 items-center">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-gray-700">Filter:</span>
+                <select 
+                  value={applicationFilter} 
+                  onChange={(e) => setApplicationFilter(e.target.value as any)}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Applications</option>
+                  <option value="pending">Pending Review</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-gray-700">Sort by:</span>
+                <select 
+                  value={applicationSort} 
+                  onChange={(e) => setApplicationSort(e.target.value as any)}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="date">Application Date</option>
+                  <option value="name">Student Name</option>
+                  <option value="university">University</option>
+                </select>
+              </div>
+
+              <div className="ml-auto">
+                <button
+                  onClick={() => {
+                    // Bulk accept all pending
+                    const pendingApps = selectedProject.applicationsList.filter((app: any) => app.status === 'pending');
+                    pendingApps.forEach((app: any) => {
+                      handleUpdateApplicationStatus(selectedProject.id, app.id, 'accepted');
+                    });
+                  }}
+                  className="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 font-medium"
+                >
+                  Accept All Pending
+                </button>
+              </div>
+            </div>
+
+            {/* Applications Grid */}
             {selectedProject.applicationsList.length === 0 ? (
-              <div className="text-center py-8">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">No applications yet for this project.</p>
+              <div className="text-center py-12">
+                <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                <p className="text-gray-600 text-lg">No applications yet for this project.</p>
+                <p className="text-gray-500 text-sm mt-2">Applications will appear here once students apply.</p>
               </div>
             ) : (
-              <div className="space-y-4">
-                {selectedProject.applicationsList.map((application: any) => (
-                  <div key={application.id} className="border border-gray-200 rounded-lg p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <div>
-                        <h4 className="font-medium text-gray-900">{application.studentName}</h4>
-                        <p className="text-sm text-gray-600">{application.email}</p>
-                        <p className="text-sm text-gray-500">{application.university}</p>
-                        <p className="text-xs text-gray-400">Applied: {new Date(application.appliedDate).toLocaleDateString()}</p>
+              <div className="overflow-y-auto max-h-[60vh]">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {selectedProject.applicationsList
+                    .filter((app: any) => applicationFilter === 'all' || app.status === applicationFilter)
+                    .sort((a: any, b: any) => {
+                      switch (applicationSort) {
+                        case 'date':
+                          return new Date(b.appliedDate).getTime() - new Date(a.appliedDate).getTime();
+                        case 'name':
+                          return a.studentName.localeCompare(b.studentName);
+                        case 'university':
+                          return a.university.localeCompare(b.university);
+                        default:
+                          return 0;
+                      }
+                    })
+                    .map((application: any) => (
+                    <div key={application.id} className={`border rounded-lg p-4 transition-all duration-200 hover:shadow-md ${
+                      application.status === 'accepted' ? 'border-green-200 bg-green-50' :
+                      application.status === 'rejected' ? 'border-red-200 bg-red-50' :
+                      'border-gray-200 bg-white hover:border-blue-300'
+                    }`}>
+                      {/* Header */}
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900 text-lg">{application.studentName}</h4>
+                          <p className="text-sm text-gray-600">{application.email}</p>
+                          <p className="text-sm font-medium text-gray-700">{application.university}</p>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            application.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                            application.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                            'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {application.status}
+                          </span>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {new Date(application.appliedDate).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <span className={`px-3 py-1 rounded-full text-sm ${
-                          application.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                          application.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                          'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {application.status}
-                        </span>
+
+                      {/* Quick Info */}
+                      <div className="mb-4 space-y-1">
+                        <div className="flex items-center text-sm">
+                          <span className="font-medium text-gray-700 w-20">Course:</span>
+                          <span className="text-gray-600">{application.course || 'Computer Science'}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <span className="font-medium text-gray-700 w-20">Year:</span>
+                          <span className="text-gray-600">{application.year || '2nd Year'}</span>
+                        </div>
+                        <div className="flex items-center text-sm">
+                          <span className="font-medium text-gray-700 w-20">Skills:</span>
+                          <span className="text-gray-600">{application.skills || 'React, Node.js, Python'}</span>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex flex-wrap gap-2">
+                        {application.status === 'pending' && (
+                          <>
+                            <button
+                              onClick={() => handleUpdateApplicationStatus(selectedProject.id, application.id, 'accepted')}
+                              className="flex-1 px-3 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700 font-medium transition-colors"
+                            >
+                              ✓ Accept
+                            </button>
+                            <button
+                              onClick={() => handleUpdateApplicationStatus(selectedProject.id, application.id, 'rejected')}
+                              className="flex-1 px-3 py-2 bg-red-600 text-white rounded text-sm hover:bg-red-700 font-medium transition-colors"
+                            >
+                              ✕ Reject
+                            </button>
+                          </>
+                        )}
+                        
+                        <button 
+                          onClick={() => handleViewStudentProfile(application.email, application.studentName)}
+                          className="flex-1 px-3 py-2 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 font-medium transition-colors"
+                        >
+                          👤 Profile
+                        </button>
+                        <button 
+                          onClick={() => handleMessageStudent(application.email, application.studentName)}
+                          className="flex-1 px-3 py-2 bg-gray-600 text-white rounded text-sm hover:bg-gray-700 font-medium transition-colors"
+                        >
+                          💬 Message
+                        </button>
                       </div>
                     </div>
-                    
-                    <div className="flex space-x-2">
-                      {application.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(selectedProject.id, application.id, 'accepted')}
-                            className="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
-                          >
-                            Accept
-                          </button>
-                          <button
-                            onClick={() => handleUpdateApplicationStatus(selectedProject.id, application.id, 'rejected')}
-                            className="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-                                             <button 
-                         onClick={() => handleViewStudentProfile(application.email, application.studentName)}
-                         className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700"
-                       >
-                         View Profile
-                       </button>
-                       <button 
-                         onClick={() => handleMessageStudent(application.email, application.studentName)}
-                         className="px-3 py-1 bg-gray-600 text-white rounded text-sm hover:bg-gray-700"
-                       >
-                         Message
-                       </button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </div>
