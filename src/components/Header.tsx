@@ -4,9 +4,10 @@ import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
   showAuthButtons?: boolean;
+  homePath?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
+const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/preview" }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
 
@@ -29,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
         <div className="flex justify-between items-center h-24">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/preview" className="flex items-center space-x-2" onClick={closeMobileMenu}>
+            <Link to={homePath} className="flex items-center space-x-2" onClick={closeMobileMenu}>
               <img src="/litestart-logo.png" alt="LiteStart logo" className="h-64 w-auto bg-transparent" />
             </Link>
           </div>
@@ -38,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
           <nav className="hidden md:flex items-center space-x-8">
             <div className="flex space-x-8">
               <Link 
-                to="/preview" 
+                to={homePath} 
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
               >
                 Home
@@ -127,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true }) => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
               <Link 
-                to="/preview" 
+                to={homePath} 
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
               >

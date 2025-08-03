@@ -195,7 +195,7 @@ const SignupPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-50/30">
       <MouseTracker />
-      <Header showAuthButtons={false} />
+      <Header showAuthButtons={false} homePath="/" />
       
       {/* Hero Section */}
       <Hero onJoinWaitlist={handleJoinWaitlist} />

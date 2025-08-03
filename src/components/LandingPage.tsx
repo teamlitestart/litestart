@@ -200,7 +200,7 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-50/30">
       <MouseTracker />
-      <Header />
+      <Header homePath="/preview" />
       
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
