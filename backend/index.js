@@ -161,8 +161,9 @@ app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, userType } = req.body;
     
-    // Ensure MongoDB connection before proceeding
-    if (!mongoConnected) {
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for signup');
       const reconnected = await connectToMongo(3, 1000);
       if (!reconnected) {
         return res.status(503).json({ 
@@ -203,8 +204,9 @@ app.post('/api/signup', async (req, res) => {
 // Get all users (for admin purposes)
 app.get('/api/users', async (req, res) => {
   try {
-    // Ensure MongoDB connection before proceeding
-    if (!mongoConnected) {
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for /api/users');
       const reconnected = await connectToMongo(3, 1000);
       if (!reconnected) {
         return res.status(503).json({ 
@@ -227,8 +229,9 @@ app.delete('/api/users/:id', async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Ensure MongoDB connection before proceeding
-    if (!mongoConnected) {
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for delete user');
       const reconnected = await connectToMongo(3, 1000);
       if (!reconnected) {
         return res.status(503).json({ 
@@ -254,8 +257,9 @@ app.delete('/api/users/:id', async (req, res) => {
 // Delete all users (for testing/reset purposes)
 app.delete('/api/users', async (req, res) => {
   try {
-    // Ensure MongoDB connection before proceeding
-    if (!mongoConnected) {
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for delete all users');
       const reconnected = await connectToMongo(3, 1000);
       if (!reconnected) {
         return res.status(503).json({ 
