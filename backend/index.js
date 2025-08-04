@@ -16,25 +16,40 @@ app.use(express.json());
 // MongoDB connection with retry logic
 let mongoConnected = false;
 
-const connectToMongo = async (retries = 5, delay = 2000) => {
+const connectToMongo = async (retries = 10, delay = 1000) => {
   for (let i = 0; i < retries; i++) {
     try {
       console.log(`Attempting to connect to MongoDB (attempt ${i + 1}/${retries})...`);
+      
+      // Close any existing connections first
+      if (mongoose.connection.readyState !== 0) {
+        await mongoose.disconnect();
+      }
+      
       await mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 10000, // 10 second timeout
-        socketTimeoutMS: 45000, // 45 second timeout
+        serverSelectionTimeoutMS: 15000, // 15 second timeout
+        socketTimeoutMS: 60000, // 60 second timeout
+        connectTimeoutMS: 15000, // 15 second connection timeout
         bufferCommands: false, // Disable mongoose buffering
         bufferMaxEntries: 0, // Disable mongoose buffering
+        maxPoolSize: 10, // Connection pool size
+        minPoolSize: 1, // Minimum pool size
+        maxIdleTimeMS: 30000, // Max idle time
+        retryWrites: true,
+        w: 'majority'
       });
+      
       mongoConnected = true;
       console.log('✅ Successfully connected to MongoDB');
       return true;
     } catch (error) {
       console.error(`❌ MongoDB connection attempt ${i + 1} failed:`, error.message);
+      console.error('Full error:', error);
+      
       if (i < retries - 1) {
         console.log(`Retrying in ${delay}ms...`);
         await new Promise(resolve => setTimeout(resolve, delay));
-        delay *= 1.5; // Exponential backoff
+        delay = Math.min(delay * 1.2, 5000); // Cap delay at 5 seconds
       }
     }
   }
@@ -47,9 +62,27 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     mongoConnected: mongoConnected,
-    timestamp: new Date().toISOString()
+    mongoReadyState: mongoose.connection.readyState,
+    timestamp: new Date().toISOString(),
+    connectionAttempts: connectionAttempts || 0
   });
 });
+
+// Periodic reconnection attempt
+let connectionAttempts = 0;
+const attemptReconnection = async () => {
+  if (!mongoConnected) {
+    connectionAttempts++;
+    console.log(`🔄 Periodic reconnection attempt #${connectionAttempts}`);
+    const success = await connectToMongo(3, 2000);
+    if (success) {
+      console.log('✅ Periodic reconnection successful');
+    }
+  }
+};
+
+// Try to reconnect every 30 seconds if not connected
+setInterval(attemptReconnection, 30000);
 
 app.get('/', (req, res) => {
   res.send('API is running');

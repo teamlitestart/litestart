@@ -116,6 +116,13 @@ const SignupUsersAdmin: React.FC = () => {
     if (isAuthenticated) {
       checkBackendStatus();
       fetchUsers();
+      
+      // Set up periodic health checks every 10 seconds
+      const healthCheckInterval = setInterval(() => {
+        checkBackendStatus();
+      }, 10000);
+      
+      return () => clearInterval(healthCheckInterval);
     }
   }, [isAuthenticated]);
 
@@ -219,6 +226,15 @@ const SignupUsersAdmin: React.FC = () => {
                 <p className="text-sm text-blue-600">
                   🔄 MongoDB connection in progress... Data will sync automatically once connected.
                 </p>
+                <button
+                  onClick={() => {
+                    checkBackendStatus();
+                    fetchUsers();
+                  }}
+                  className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                >
+                  🔄 Retry Connection
+                </button>
               </div>
             )}
             {backendStatus === 'online' && (
