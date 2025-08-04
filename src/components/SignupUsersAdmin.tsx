@@ -17,7 +17,7 @@ const SignupUsersAdmin: React.FC = () => {
   const [error, setError] = useState('');
   const [userTypeFilter, setUserTypeFilter] = useState<'all' | 'startup' | 'student'>('all');
   const [nameFilter, setNameFilter] = useState('');
-  const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'checking'>('checking');
+  const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'waking' | 'checking'>('checking');
   // No password required - already authenticated from main dashboard
   const isAuthenticated = true;
 
@@ -30,8 +30,13 @@ const SignupUsersAdmin: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`);
-      setBackendStatus(response.ok ? 'online' : 'offline');
+      const health = await apiCall.checkHealth();
+      setBackendStatus(health.status);
+      
+      // If backend is online but MongoDB is not connected, show a special status
+      if (health.status === 'online' && !health.mongoConnected) {
+        setBackendStatus('waking'); // New status for when backend is up but MongoDB is connecting
+      }
     } catch (err) {
       setBackendStatus('offline');
     }
@@ -165,6 +170,8 @@ const SignupUsersAdmin: React.FC = () => {
           <div className={`mb-4 p-3 rounded-lg ${
             backendStatus === 'online' 
               ? 'bg-green-100 border border-green-400 text-green-700' 
+              : backendStatus === 'waking'
+              ? 'bg-blue-100 border border-blue-400 text-blue-700'
               : backendStatus === 'offline'
               ? 'bg-yellow-100 border border-yellow-400 text-yellow-700'
               : 'bg-gray-100 border border-gray-400 text-gray-700'
@@ -172,10 +179,12 @@ const SignupUsersAdmin: React.FC = () => {
             <div className="flex items-center space-x-2">
               <div className={`w-3 h-3 rounded-full ${
                 backendStatus === 'online' ? 'bg-green-500' : 
+                backendStatus === 'waking' ? 'bg-blue-500' :
                 backendStatus === 'offline' ? 'bg-yellow-500' : 'bg-gray-500'
               }`}></div>
               <span className="font-medium">
                 {backendStatus === 'online' ? '🟢 Render Backend Active - Connected to MongoDB' :
+                 backendStatus === 'waking' ? '🔵 Render Backend Active - Connecting to MongoDB...' :
                  backendStatus === 'offline' ? '🟡 Render Backend Sleeping - Using Local Storage' :
                  '⚪ Checking Render connection...'}
               </span>
@@ -193,6 +202,22 @@ const SignupUsersAdmin: React.FC = () => {
                 </p>
                 <p className="text-sm text-blue-600">
                   💡 This is normal for Render's free tier. Data will appear here once the backend is fully awake.
+                </p>
+              </div>
+            )}
+            {backendStatus === 'waking' && (
+              <div className="mt-2 space-y-2">
+                <p className="text-sm">
+                  <strong>🔵 Render Backend Status:</strong> Backend is awake but MongoDB is still connecting. This is normal after the backend wakes up from sleep.
+                </p>
+                <p className="text-sm">
+                  <strong>What's happening:</strong> The backend server is running, but it's still establishing the connection to MongoDB. This usually takes 5-15 seconds.
+                </p>
+                <p className="text-sm">
+                  <strong>Current data source:</strong> Local browser storage (showing cached data while MongoDB connects)
+                </p>
+                <p className="text-sm text-blue-600">
+                  🔄 MongoDB connection in progress... Data will sync automatically once connected.
                 </p>
               </div>
             )}
