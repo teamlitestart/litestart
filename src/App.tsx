@@ -347,6 +347,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<SignupPage />} />
+        <Route path="/preview-dev" element={<MainSite />} />
         <Route path="/preview" element={<MainSite />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupForm />} />
