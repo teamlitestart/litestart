@@ -17,6 +17,7 @@ const SignupUsersAdmin: React.FC = () => {
   const [error, setError] = useState('');
   const [userTypeFilter, setUserTypeFilter] = useState<'all' | 'startup' | 'student'>('all');
   const [nameFilter, setNameFilter] = useState('');
+  const [emailVerifiedFilter, setEmailVerifiedFilter] = useState<'all' | 'verified' | 'unverified'>('all');
   const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'waking' | 'checking'>('checking');
   // No password required - already authenticated from main dashboard
   const isAuthenticated = true;
@@ -25,7 +26,10 @@ const SignupUsersAdmin: React.FC = () => {
   const filteredUsers = users.filter(user => {
     const matchesType = userTypeFilter === 'all' || user.userType === userTypeFilter;
     const matchesName = user.name.toLowerCase().includes(nameFilter.toLowerCase());
-    return matchesType && matchesName;
+    const matchesEmailVerified = emailVerifiedFilter === 'all' || 
+      (emailVerifiedFilter === 'verified' && user.isEmailVerified) ||
+      (emailVerifiedFilter === 'unverified' && !user.isEmailVerified);
+    return matchesType && matchesName && matchesEmailVerified;
   });
 
   const checkBackendStatus = async () => {
@@ -286,6 +290,12 @@ const SignupUsersAdmin: React.FC = () => {
             <p className="text-green-700">
               Students: <span className="font-semibold">{users.filter(u => u.userType === 'student').length}</span>
             </p>
+            <p className="text-green-600">
+              Verified Emails: <span className="font-semibold">{users.filter(u => u.isEmailVerified).length}</span>
+            </p>
+            <p className="text-red-600">
+              Unverified Emails: <span className="font-semibold">{users.filter(u => !u.isEmailVerified).length}</span>
+            </p>
             <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
               <select
                 value={userTypeFilter}
@@ -295,6 +305,15 @@ const SignupUsersAdmin: React.FC = () => {
                 <option value="all">All Types</option>
                 <option value="startup">Startups</option>
                 <option value="student">Students</option>
+              </select>
+              <select
+                value={emailVerifiedFilter}
+                onChange={e => setEmailVerifiedFilter(e.target.value as 'all' | 'verified' | 'unverified')}
+                className="border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All Emails</option>
+                <option value="verified">Verified Only</option>
+                <option value="unverified">Unverified Only</option>
               </select>
               <input
                 type="text"
@@ -328,7 +347,7 @@ const SignupUsersAdmin: React.FC = () => {
                       Signup Date
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Email Verified
+                      Email Valid
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
@@ -362,7 +381,7 @@ const SignupUsersAdmin: React.FC = () => {
                             ? 'bg-green-100 text-green-800' 
                             : 'bg-red-100 text-red-800'
                         }`}>
-                          {user.isEmailVerified ? '✅ Verified' : '❌ Not Verified'}
+                          {user.isEmailVerified ? '✅ Valid Email' : '❌ Invalid Email'}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

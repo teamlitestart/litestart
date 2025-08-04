@@ -173,17 +173,17 @@ app.post('/api/signup', async (req, res) => {
       }
     }
     
-    // Create user in database
+    // Send thank you email first to validate email existence
+    const emailResult = await sendThankYouEmail({ name, email, userType });
+    
+    // Create user in database with email verification status based on email success
     const user = new User({
       name,
       email,
       userType,
-      isEmailVerified: true
+      isEmailVerified: emailResult.success // true if email sent successfully, false if failed
     });
     await user.save().catch(() => {}); // Ignore duplicate errors
-    
-    // Send thank you email
-    const emailResult = await sendThankYouEmail({ name, email, userType });
     
     res.status(201).json({ 
       message: 'Thank you for signing up! You have been added to the waitlist.',
@@ -191,9 +191,10 @@ app.post('/api/signup', async (req, res) => {
         name,
         email,
         userType,
-        isEmailVerified: true
+        isEmailVerified: emailResult.success
       },
-      emailSent: emailResult.success
+      emailSent: emailResult.success,
+      emailError: emailResult.success ? null : emailResult.error
     });
   } catch (error) {
     console.error('Signup error:', error);
