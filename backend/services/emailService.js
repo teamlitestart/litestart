@@ -1,5 +1,103 @@
 const nodemailer = require('nodemailer');
 
+// Email validation function
+const validateEmail = (email) => {
+  // Check for common fake email patterns
+  const fakePatterns = [
+    /^test@/i,
+    /^fake@/i,
+    /^temp@/i,
+    /^dummy@/i,
+    /^example@/i,
+    /^admin@/i,
+    /^user@/i,
+    /^info@/i,
+    /^noreply@/i,
+    /^no-reply@/i,
+    /^donotreply@/i,
+    /^do-not-reply@/i,
+    /^mail@/i,
+    /^email@/i,
+    /^contact@/i,
+    /^hello@/i,
+    /^hi@/i,
+    /^hey@/i,
+    /^support@/i,
+    /^help@/i,
+    /^sales@/i,
+    /^marketing@/i,
+    /^newsletter@/i,
+    /^updates@/i,
+    /^notifications@/i,
+    /^alerts@/i,
+    /^system@/i,
+    /^service@/i,
+    /^webmaster@/i,
+    /^postmaster@/i,
+    /^abuse@/i,
+    /^security@/i,
+    /^nobody@/i,
+    /^noreply@/i,
+    /^no-reply@/i,
+    /^donotreply@/i,
+    /^do-not-reply@/i,
+    /^mail@/i,
+    /^email@/i,
+    /^contact@/i,
+    /^hello@/i,
+    /^hi@/i,
+    /^hey@/i,
+    /^support@/i,
+    /^help@/i,
+    /^sales@/i,
+    /^marketing@/i,
+    /^newsletter@/i,
+    /^updates@/i,
+    /^notifications@/i,
+    /^alerts@/i,
+    /^system@/i,
+    /^service@/i,
+    /^webmaster@/i,
+    /^postmaster@/i,
+    /^abuse@/i,
+    /^security@/i,
+    /^nobody@/i
+  ];
+
+  // Check for random/fake email patterns
+  const randomPatterns = [
+    /^[a-z]{10,}@/i, // Very long random usernames
+    /^[a-z0-9]{15,}@/i, // Very long alphanumeric usernames
+    /^[a-z]{3,}[0-9]{5,}@/i, // Mix of letters and many numbers
+    /^test[a-z0-9]*@/i, // Test emails
+    /^fake[a-z0-9]*@/i, // Fake emails
+    /^temp[a-z0-9]*@/i, // Temporary emails
+    /^dummy[a-z0-9]*@/i, // Dummy emails
+    /^example[a-z0-9]*@/i, // Example emails
+  ];
+
+  // Check for suspicious patterns
+  for (const pattern of fakePatterns) {
+    if (pattern.test(email)) {
+      return { valid: false, reason: 'Common fake email pattern detected' };
+    }
+  }
+
+  for (const pattern of randomPatterns) {
+    if (pattern.test(email)) {
+      return { valid: false, reason: 'Random/fake email pattern detected' };
+    }
+  }
+
+  // Basic email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return { valid: false, reason: 'Invalid email format' };
+  }
+
+  return { valid: true };
+};
+
 // Create transporter for Mailgun SMTP
 const transporter = nodemailer.createTransport({
   host: 'smtp.eu.mailgun.org',
@@ -15,6 +113,13 @@ const transporter = nodemailer.createTransport({
 const sendThankYouEmail = async (userData) => {
   try {
     const { name, email, userType } = userData;
+    
+    // Validate email first
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      console.log(`Email validation failed for ${email}: ${emailValidation.reason}`);
+      return { success: false, error: emailValidation.reason };
+    }
     
     const mailOptions = {
       from: `"LiteStart" <${process.env.MAILGUN_FROM_EMAIL || 'noreply@litestart.co.uk'}>`,
@@ -80,5 +185,6 @@ const sendVerificationEmail = async (email, token) => {
 
 module.exports = {
   sendThankYouEmail,
-  sendVerificationEmail
+  sendVerificationEmail,
+  validateEmail
 }; 
