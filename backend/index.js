@@ -185,17 +185,31 @@ app.post('/api/signup', async (req, res) => {
     });
     await user.save().catch(() => {}); // Ignore duplicate errors
     
-    res.status(201).json({ 
-      message: 'Thank you for signing up! You have been added to the waitlist.',
-      user: {
-        name,
-        email,
-        userType,
-        isEmailVerified: emailResult.success
-      },
-      emailSent: emailResult.success,
-      emailError: emailResult.success ? null : emailResult.error
-    });
+    // Provide appropriate response based on email result
+    if (emailResult.success) {
+      res.status(201).json({ 
+        message: 'Thank you for signing up! You have been added to the waitlist.',
+        user: {
+          name,
+          email,
+          userType,
+          isEmailVerified: true
+        },
+        emailSent: true
+      });
+    } else {
+      res.status(201).json({ 
+        message: 'Thank you for signing up! However, we could not send a confirmation email. Please check your email address and try again.',
+        user: {
+          name,
+          email,
+          userType,
+          isEmailVerified: false
+        },
+        emailSent: false,
+        emailError: emailResult.error
+      });
+    }
   } catch (error) {
     console.error('Signup error:', error);
     res.status(201).json({ message: 'Thank you for signing up! You have been added to the waitlist.' });

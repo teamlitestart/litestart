@@ -2,8 +2,8 @@ const nodemailer = require('nodemailer');
 
 // Email validation function
 const validateEmail = (email) => {
-  // Check for common fake email patterns
-  const fakePatterns = [
+  // Check for obvious fake email patterns (less aggressive)
+  const obviousFakePatterns = [
     /^test@/i,
     /^fake@/i,
     /^temp@/i,
@@ -11,52 +11,12 @@ const validateEmail = (email) => {
     /^example@/i,
     /^admin@/i,
     /^user@/i,
-    /^info@/i,
     /^noreply@/i,
     /^no-reply@/i,
     /^donotreply@/i,
     /^do-not-reply@/i,
     /^mail@/i,
     /^email@/i,
-    /^contact@/i,
-    /^hello@/i,
-    /^hi@/i,
-    /^hey@/i,
-    /^support@/i,
-    /^help@/i,
-    /^sales@/i,
-    /^marketing@/i,
-    /^newsletter@/i,
-    /^updates@/i,
-    /^notifications@/i,
-    /^alerts@/i,
-    /^system@/i,
-    /^service@/i,
-    /^webmaster@/i,
-    /^postmaster@/i,
-    /^abuse@/i,
-    /^security@/i,
-    /^nobody@/i,
-    /^noreply@/i,
-    /^no-reply@/i,
-    /^donotreply@/i,
-    /^do-not-reply@/i,
-    /^mail@/i,
-    /^email@/i,
-    /^contact@/i,
-    /^hello@/i,
-    /^hi@/i,
-    /^hey@/i,
-    /^support@/i,
-    /^help@/i,
-    /^sales@/i,
-    /^marketing@/i,
-    /^newsletter@/i,
-    /^updates@/i,
-    /^notifications@/i,
-    /^alerts@/i,
-    /^system@/i,
-    /^service@/i,
     /^webmaster@/i,
     /^postmaster@/i,
     /^abuse@/i,
@@ -64,37 +24,42 @@ const validateEmail = (email) => {
     /^nobody@/i
   ];
 
-  // Check for random/fake email patterns
-  const randomPatterns = [
-    /^[a-z]{10,}@/i, // Very long random usernames
-    /^[a-z0-9]{15,}@/i, // Very long alphanumeric usernames
-    /^[a-z]{3,}[0-9]{5,}@/i, // Mix of letters and many numbers
-    /^test[a-z0-9]*@/i, // Test emails
-    /^fake[a-z0-9]*@/i, // Fake emails
-    /^temp[a-z0-9]*@/i, // Temporary emails
-    /^dummy[a-z0-9]*@/i, // Dummy emails
-    /^example[a-z0-9]*@/i, // Example emails
+  // Check for very obvious random/fake email patterns
+  const obviousRandomPatterns = [
+    /^[a-z]{15,}@/i, // Very long random usernames (15+ chars)
+    /^[a-z0-9]{20,}@/i, // Very long alphanumeric usernames (20+ chars)
+    /^[a-z]{3,}[0-9]{8,}@/i, // Mix of letters and many numbers (8+ numbers)
+    /^test[a-z0-9]{10,}@/i, // Test emails with long random suffix
+    /^fake[a-z0-9]{10,}@/i, // Fake emails with long random suffix
+    /^temp[a-z0-9]{10,}@/i, // Temporary emails with long random suffix
+    /^dummy[a-z0-9]{10,}@/i, // Dummy emails with long random suffix
+    /^example[a-z0-9]{10,}@/i, // Example emails with long random suffix
   ];
 
-  // Check for suspicious patterns
-  for (const pattern of fakePatterns) {
+  // Check for obvious fake patterns
+  for (const pattern of obviousFakePatterns) {
     if (pattern.test(email)) {
-      return { valid: false, reason: 'Common fake email pattern detected' };
+      console.log(`Email validation failed for ${email}: Obvious fake pattern detected`);
+      return { valid: false, reason: 'Obvious fake email pattern detected' };
     }
   }
 
-  for (const pattern of randomPatterns) {
+  // Check for obvious random patterns
+  for (const pattern of obviousRandomPatterns) {
     if (pattern.test(email)) {
-      return { valid: false, reason: 'Random/fake email pattern detected' };
+      console.log(`Email validation failed for ${email}: Obvious random pattern detected`);
+      return { valid: false, reason: 'Obvious random/fake email pattern detected' };
     }
   }
 
   // Basic email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
+    console.log(`Email validation failed for ${email}: Invalid email format`);
     return { valid: false, reason: 'Invalid email format' };
   }
 
+  console.log(`Email validation passed for ${email}: Appears to be valid`);
   return { valid: true };
 };
 
