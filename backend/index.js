@@ -95,6 +95,72 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
   return false;
 };
 
+// Email bounce webhook endpoint
+app.post('/api/email-bounce', async (req, res) => {
+  try {
+    const { recipient, event, reason } = req.body;
+    
+    console.log(`Email bounce detected for ${recipient}: ${event} - ${reason}`);
+    
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for email bounce');
+      const reconnected = await connectToMongo(3, 1000);
+      if (!reconnected) {
+        return res.status(503).json({ message: 'Database temporarily unavailable' });
+      }
+    }
+    
+    // Find and update the user's email verification status
+    const user = await User.findOne({ email: recipient });
+    if (user) {
+      user.isEmailVerified = false;
+      await user.save();
+      console.log(`Updated user ${user.name} (${recipient}) to unverified due to email bounce`);
+    } else {
+      console.log(`No user found with email ${recipient} for bounce update`);
+    }
+    
+    res.status(200).json({ message: 'Bounce processed successfully' });
+  } catch (error) {
+    console.error('Email bounce processing error:', error);
+    res.status(500).json({ message: 'Error processing bounce' });
+  }
+});
+
+// Email complaint webhook endpoint (for spam reports)
+app.post('/api/email-complaint', async (req, res) => {
+  try {
+    const { recipient, event, reason } = req.body;
+    
+    console.log(`Email complaint detected for ${recipient}: ${event} - ${reason}`);
+    
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for email complaint');
+      const reconnected = await connectToMongo(3, 1000);
+      if (!reconnected) {
+        return res.status(503).json({ message: 'Database temporarily unavailable' });
+      }
+    }
+    
+    // Find and update the user's email verification status
+    const user = await User.findOne({ email: recipient });
+    if (user) {
+      user.isEmailVerified = false;
+      await user.save();
+      console.log(`Updated user ${user.name} (${recipient}) to unverified due to email complaint`);
+    } else {
+      console.log(`No user found with email ${recipient} for complaint update`);
+    }
+    
+    res.status(200).json({ message: 'Complaint processed successfully' });
+  } catch (error) {
+    console.error('Email complaint processing error:', error);
+    res.status(500).json({ message: 'Error processing complaint' });
+  }
+});
+
 // Test MongoDB connection endpoint
 app.get('/test-mongo', async (req, res) => {
   try {

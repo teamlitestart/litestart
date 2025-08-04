@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
-// Email validation function
+// Email validation function - Much more lenient to allow bounce detection
 const validateEmail = (email) => {
-  // Check for obvious fake email patterns (less aggressive)
+  // Only check for the most obvious fake patterns
   const obviousFakePatterns = [
     /^test@/i,
     /^fake@/i,
@@ -24,31 +24,11 @@ const validateEmail = (email) => {
     /^nobody@/i
   ];
 
-  // Check for very obvious random/fake email patterns
-  const obviousRandomPatterns = [
-    /^[a-z]{15,}@/i, // Very long random usernames (15+ chars)
-    /^[a-z0-9]{20,}@/i, // Very long alphanumeric usernames (20+ chars)
-    /^[a-z]{3,}[0-9]{8,}@/i, // Mix of letters and many numbers (8+ numbers)
-    /^test[a-z0-9]{10,}@/i, // Test emails with long random suffix
-    /^fake[a-z0-9]{10,}@/i, // Fake emails with long random suffix
-    /^temp[a-z0-9]{10,}@/i, // Temporary emails with long random suffix
-    /^dummy[a-z0-9]{10,}@/i, // Dummy emails with long random suffix
-    /^example[a-z0-9]{10,}@/i, // Example emails with long random suffix
-  ];
-
-  // Check for obvious fake patterns
+  // Check for very obvious fake patterns only
   for (const pattern of obviousFakePatterns) {
     if (pattern.test(email)) {
       console.log(`Email validation failed for ${email}: Obvious fake pattern detected`);
       return { valid: false, reason: 'Obvious fake email pattern detected' };
-    }
-  }
-
-  // Check for obvious random patterns
-  for (const pattern of obviousRandomPatterns) {
-    if (pattern.test(email)) {
-      console.log(`Email validation failed for ${email}: Obvious random pattern detected`);
-      return { valid: false, reason: 'Obvious random/fake email pattern detected' };
     }
   }
 
@@ -59,7 +39,7 @@ const validateEmail = (email) => {
     return { valid: false, reason: 'Invalid email format' };
   }
 
-  console.log(`Email validation passed for ${email}: Appears to be valid`);
+  console.log(`Email validation passed for ${email}: Will attempt to send and monitor for bounces`);
   return { valid: true };
 };
 
