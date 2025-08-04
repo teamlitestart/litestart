@@ -20,30 +20,46 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
   for (let i = 0; i < retries; i++) {
     try {
       console.log(`Attempting to connect to MongoDB (attempt ${i + 1}/${retries})...`);
+      console.log('MongoDB URI:', process.env.MONGO_URI ? 'Present' : 'Missing');
       
       // Close any existing connections first
       if (mongoose.connection.readyState !== 0) {
+        console.log('Disconnecting existing connection...');
         await mongoose.disconnect();
       }
       
-      await mongoose.connect(process.env.MONGO_URI, {
-        serverSelectionTimeoutMS: 15000, // 15 second timeout
-        socketTimeoutMS: 60000, // 60 second timeout
-        connectTimeoutMS: 15000, // 15 second connection timeout
-        bufferCommands: false, // Disable mongoose buffering
-        bufferMaxEntries: 0, // Disable mongoose buffering
-        maxPoolSize: 10, // Connection pool size
-        minPoolSize: 1, // Minimum pool size
-        maxIdleTimeMS: 30000, // Max idle time
+      // Try a simpler connection first
+      const connectionOptions = {
+        serverSelectionTimeoutMS: 15000,
+        socketTimeoutMS: 60000,
+        connectTimeoutMS: 15000,
+        bufferCommands: false,
+        bufferMaxEntries: 0,
+        maxPoolSize: 5,
+        minPoolSize: 1,
+        maxIdleTimeMS: 30000,
         retryWrites: true,
-        w: 'majority'
-      });
+        w: 'majority',
+        // Add these for better compatibility with Render
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        // Disable SSL for testing (remove in production)
+        ssl: false,
+        sslValidate: false
+      };
+      
+      console.log('Connection options:', JSON.stringify(connectionOptions, null, 2));
+      
+      await mongoose.connect(process.env.MONGO_URI, connectionOptions);
       
       mongoConnected = true;
       console.log('✅ Successfully connected to MongoDB');
+      console.log('Connection state:', mongoose.connection.readyState);
       return true;
     } catch (error) {
       console.error(`❌ MongoDB connection attempt ${i + 1} failed:`, error.message);
+      console.error('Error name:', error.name);
+      console.error('Error code:', error.code);
       console.error('Full error:', error);
       
       if (i < retries - 1) {
@@ -56,6 +72,36 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
   console.error('❌ Failed to connect to MongoDB after all retries');
   return false;
 };
+
+// Test MongoDB connection endpoint
+app.get('/test-mongo', async (req, res) => {
+  try {
+    console.log('Testing MongoDB connection...');
+    console.log('MongoDB URI exists:', !!process.env.MONGO_URI);
+    
+    // Try a direct connection without retry logic
+    const testConnection = await mongoose.createConnection(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 30000,
+      connectTimeoutMS: 10000,
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    
+    console.log('Test connection successful!');
+    await testConnection.close();
+    res.json({ success: true, message: 'MongoDB connection test successful' });
+  } catch (error) {
+    console.error('MongoDB test connection failed:', error);
+    res.json({ 
+      success: false, 
+      error: error.message,
+      errorName: error.name,
+      errorCode: error.code,
+      fullError: error.toString()
+    });
+  }
+});
 
 // Health check endpoint
 app.get('/health', (req, res) => {
