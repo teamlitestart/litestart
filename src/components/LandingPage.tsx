@@ -203,7 +203,7 @@ const LandingPage: React.FC = () => {
       <Header homePath="/preview" />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden -mt-24 pt-24">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 

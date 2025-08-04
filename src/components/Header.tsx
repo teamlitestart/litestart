@@ -25,17 +25,17 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
   };
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="bg-white/50 backdrop-blur-sm shadow-sm border-b border-gray-200/50 fixed top-0 left-0 right-0 z-50">
+      <div className="w-full px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
-          {/* Logo */}
+          {/* Logo - Far Left */}
           <div className="flex items-center">
             <Link to={homePath} className="flex items-center space-x-2" onClick={closeMobileMenu}>
-              <img src="/litestart-logo.png" alt="LiteStart logo" className="h-64 w-auto bg-transparent" />
+              <img src="/litestart-logo.png" alt="LiteStart logo" className="h-20 w-auto bg-transparent" />
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Center */}
           <nav className="hidden md:flex items-center space-x-8">
             <div className="flex space-x-8">
               <Link 
@@ -63,47 +63,47 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 Contact
               </Link>
             </div>
-            
-            {/* Auth Buttons */}
-            {showAuthButtons && (
-              <div className="flex items-center space-x-4 ml-8">
-                {isAuthenticated ? (
-                  <>
-                    <Link 
-                      to="/dashboard" 
-                      className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
-                    >
-                      Dashboard
-                    </Link>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-sm text-gray-600">{user?.email}</span>
-                      <button
-                        onClick={handleLogout}
-                        className="text-gray-700 hover:text-red-600 px-4 py-2 text-lg font-medium transition-colors"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <Link 
-                      to="/login" 
-                      className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
-                    >
-                      Login
-                    </Link>
-                    <Link 
-                      to="/signup" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-lg font-medium transition-colors"
-                    >
-                      Sign Up
-                    </Link>
-                  </>
-                )}
-              </div>
-            )}
           </nav>
+            
+          {/* Auth Buttons - Far Right */}
+          {showAuthButtons && (
+            <div className="flex items-center space-x-4">
+              {isAuthenticated ? (
+                <>
+                  <Link 
+                    to="/dashboard" 
+                    className="text-gray-700 hover:text-blue-600 px-6 py-3 text-xl font-medium transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-sm text-gray-600">{user?.email}</span>
+                    <button
+                      onClick={handleLogout}
+                      className="text-gray-700 hover:text-red-600 px-6 py-3 text-xl font-medium transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    to="/login" 
+                    className="text-gray-700 hover:text-blue-600 px-6 py-3 text-xl font-medium transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link 
+                    to="/signup" 
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-xl font-medium transition-colors"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -126,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
         {/* Mobile Navigation Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-white/95 backdrop-blur-sm border-t border-gray-200/50">
               <Link 
                 to={homePath} 
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
@@ -158,7 +158,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
               
               {/* Mobile Auth Buttons */}
               {showAuthButtons && (
-                <div className="border-t border-gray-200 pt-4 mt-4">
+                <div className="border-t border-gray-200/50 pt-4 mt-4">
                   {isAuthenticated ? (
                     <>
                       <Link 
