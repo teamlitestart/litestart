@@ -19,6 +19,9 @@ const SignupUsersAdmin: React.FC = () => {
   const [nameFilter, setNameFilter] = useState('');
   const [emailVerifiedFilter, setEmailVerifiedFilter] = useState<'all' | 'verified' | 'unverified'>('all');
   const [backendStatus, setBackendStatus] = useState<'online' | 'offline' | 'waking' | 'checking'>('checking');
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false);
+  const [deleteAllSafetyCode, setDeleteAllSafetyCode] = useState('');
+  const [deleteAllStep, setDeleteAllStep] = useState<'confirm' | 'safety-code'>('confirm');
   // No password required - already authenticated from main dashboard
   const isAuthenticated = true;
 
@@ -98,34 +101,62 @@ const SignupUsersAdmin: React.FC = () => {
   };
 
   const deleteAllUsers = async () => {
-    if (!confirm('Are you sure you want to delete ALL signup users? This cannot be undone!')) {
+    // Start the safety process
+    setShowDeleteAllModal(true);
+    setDeleteAllStep('confirm');
+    setDeleteAllSafetyCode('');
+  };
+
+  const confirmDeleteAll = async () => {
+    if (deleteAllStep === 'confirm') {
+      // Move to safety code step
+      setDeleteAllStep('safety-code');
       return;
     }
 
-    try {
-      console.log('Deleting all signup users');
-      
-      if (backendStatus === 'online') {
-        // Call the backend API to delete all users
-        const response = await fetch(`${API_BASE_URL}/api/users`, {
-          method: 'DELETE',
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to delete all users');
-        }
-      } else {
-        // Clear local storage if backend is offline
-        localStorage.removeItem('litestart_users');
+    if (deleteAllStep === 'safety-code') {
+      // Check safety code
+      if (deleteAllSafetyCode !== 'DELETE_ALL_USERS') {
+        alert('Incorrect safety code. Please enter the exact code: DELETE_ALL_USERS');
+        return;
       }
-      
-      // Refresh the data to ensure consistency
-      await fetchUsers();
-      alert('All signup users deleted successfully!');
-    } catch (err) {
-      console.error('Delete all error:', err);
-      alert(err instanceof Error ? err.message : 'Failed to delete all users');
+
+      try {
+        console.log('Deleting all signup users with safety code verification');
+        
+        if (backendStatus === 'online') {
+          // Call the backend API to delete all users
+          const response = await fetch(`${API_BASE_URL}/api/users`, {
+            method: 'DELETE',
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to delete all users');
+          }
+        } else {
+          // Clear local storage if backend is offline
+          localStorage.removeItem('litestart_users');
+        }
+        
+        // Refresh the data to ensure consistency
+        await fetchUsers();
+        alert('All signup users deleted successfully!');
+        
+        // Close modal and reset
+        setShowDeleteAllModal(false);
+        setDeleteAllStep('confirm');
+        setDeleteAllSafetyCode('');
+      } catch (err) {
+        console.error('Delete all error:', err);
+        alert(err instanceof Error ? err.message : 'Failed to delete all users');
+      }
     }
+  };
+
+  const cancelDeleteAll = () => {
+    setShowDeleteAllModal(false);
+    setDeleteAllStep('confirm');
+    setDeleteAllSafetyCode('');
   };
 
   const handleLogout = () => {
@@ -396,6 +427,75 @@ const SignupUsersAdmin: React.FC = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
+          )}
+
+          {/* Delete All Safety Modal */}
+          {showDeleteAllModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                <div className="text-center">
+                  <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                    </svg>
+                  </div>
+                  
+                  {deleteAllStep === 'confirm' ? (
+                    <>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        ⚠️ Delete All Users
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        This will permanently delete <strong>ALL {users.length} signup users</strong> from the database. 
+                        This action cannot be undone.
+                      </p>
+                      <p className="text-sm text-red-600 mb-6 font-medium">
+                        Are you absolutely sure you want to continue?
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        🔒 Safety Code Required
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        To confirm deletion of all {users.length} users, please enter the safety code:
+                      </p>
+                      <p className="text-sm font-mono bg-gray-100 p-2 rounded mb-4">
+                        DELETE_ALL_USERS
+                      </p>
+                      <input
+                        type="text"
+                        value={deleteAllSafetyCode}
+                        onChange={(e) => setDeleteAllSafetyCode(e.target.value)}
+                        placeholder="Enter safety code..."
+                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 mb-4"
+                        autoFocus
+                      />
+                    </>
+                  )}
+                  
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={cancelDeleteAll}
+                      className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmDeleteAll}
+                      className={`flex-1 font-semibold py-2 px-4 rounded-lg transition-colors ${
+                        deleteAllStep === 'safety-code' && deleteAllSafetyCode === 'DELETE_ALL_USERS'
+                          ? 'bg-red-600 hover:bg-red-700 text-white'
+                          : 'bg-red-600 hover:bg-red-700 text-white'
+                      }`}
+                    >
+                      {deleteAllStep === 'confirm' ? 'Continue' : 'Delete All Users'}
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </div>
