@@ -16,6 +16,22 @@ app.use(express.json());
 // MongoDB connection with retry logic
 let mongoConnected = false;
 
+// Add connection event listeners
+mongoose.connection.on('connected', () => {
+  console.log('🟢 MongoDB connected');
+  mongoConnected = true;
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('🔴 MongoDB connection error:', err);
+  mongoConnected = false;
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('🟡 MongoDB disconnected');
+  mongoConnected = false;
+});
+
 const connectToMongo = async (retries = 10, delay = 1000) => {
   for (let i = 0; i < retries; i++) {
     try {
@@ -28,38 +44,28 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
         await mongoose.disconnect();
       }
       
-      // Use minimal connection options for better compatibility
+      // Use the same connection options that work in the test endpoint
       const connectionOptions = {
-        serverSelectionTimeoutMS: 30000, // 30 seconds
-        socketTimeoutMS: 45000, // 45 seconds
-        connectTimeoutMS: 30000, // 30 seconds
-        // Basic options that work with most MongoDB setups
+        serverSelectionTimeoutMS: 10000,
+        socketTimeoutMS: 30000,
+        connectTimeoutMS: 10000,
         useNewUrlParser: true,
-        useUnifiedTopology: true,
-        // Remove SSL restrictions that might cause issues
-        ssl: true,
-        sslValidate: false,
-        // Smaller pool size for Render
-        maxPoolSize: 1,
-        minPoolSize: 0,
-        // Retry settings
-        retryWrites: true,
-        w: 'majority'
+        useUnifiedTopology: true
       };
       
-      console.log('Attempting connection with options:', {
-        serverSelectionTimeoutMS: connectionOptions.serverSelectionTimeoutMS,
-        socketTimeoutMS: connectionOptions.socketTimeoutMS,
-        ssl: connectionOptions.ssl,
-        maxPoolSize: connectionOptions.maxPoolSize
-      });
+      console.log('Attempting connection with working options...');
       
       await mongoose.connect(process.env.MONGO_URI, connectionOptions);
       
-      mongoConnected = true;
-      console.log('✅ Successfully connected to MongoDB');
-      console.log('Connection state:', mongoose.connection.readyState);
-      return true;
+      // Verify connection is actually established
+      if (mongoose.connection.readyState === 1) {
+        mongoConnected = true;
+        console.log('✅ Successfully connected to MongoDB');
+        console.log('Connection state:', mongoose.connection.readyState);
+        return true;
+      } else {
+        throw new Error(`Connection failed - readyState: ${mongoose.connection.readyState}`);
+      }
     } catch (error) {
       console.error(`❌ MongoDB connection attempt ${i + 1} failed:`, error.message);
       console.error('Error name:', error.name);
