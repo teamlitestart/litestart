@@ -28,27 +28,31 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
         await mongoose.disconnect();
       }
       
-      // Try a simpler connection first
+      // Use minimal connection options for better compatibility
       const connectionOptions = {
-        serverSelectionTimeoutMS: 15000,
-        socketTimeoutMS: 60000,
-        connectTimeoutMS: 15000,
-        bufferCommands: false,
-        bufferMaxEntries: 0,
-        maxPoolSize: 5,
-        minPoolSize: 1,
-        maxIdleTimeMS: 30000,
-        retryWrites: true,
-        w: 'majority',
-        // Add these for better compatibility with Render
+        serverSelectionTimeoutMS: 30000, // 30 seconds
+        socketTimeoutMS: 45000, // 45 seconds
+        connectTimeoutMS: 30000, // 30 seconds
+        // Basic options that work with most MongoDB setups
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        // Disable SSL for testing (remove in production)
-        ssl: false,
-        sslValidate: false
+        // Remove SSL restrictions that might cause issues
+        ssl: true,
+        sslValidate: false,
+        // Smaller pool size for Render
+        maxPoolSize: 1,
+        minPoolSize: 0,
+        // Retry settings
+        retryWrites: true,
+        w: 'majority'
       };
       
-      console.log('Connection options:', JSON.stringify(connectionOptions, null, 2));
+      console.log('Attempting connection with options:', {
+        serverSelectionTimeoutMS: connectionOptions.serverSelectionTimeoutMS,
+        socketTimeoutMS: connectionOptions.socketTimeoutMS,
+        ssl: connectionOptions.ssl,
+        maxPoolSize: connectionOptions.maxPoolSize
+      });
       
       await mongoose.connect(process.env.MONGO_URI, connectionOptions);
       
@@ -60,6 +64,18 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
       console.error(`❌ MongoDB connection attempt ${i + 1} failed:`, error.message);
       console.error('Error name:', error.name);
       console.error('Error code:', error.code);
+      
+      // Log specific error details
+      if (error.code === 'ENOTFOUND') {
+        console.error('DNS resolution failed - check MongoDB URI');
+      } else if (error.code === 'ECONNREFUSED') {
+        console.error('Connection refused - check MongoDB Atlas IP whitelist');
+      } else if (error.code === 'ETIMEDOUT') {
+        console.error('Connection timeout - check network/firewall');
+      } else if (error.name === 'MongoServerSelectionError') {
+        console.error('Server selection failed - check MongoDB cluster status');
+      }
+      
       console.error('Full error:', error);
       
       if (i < retries - 1) {

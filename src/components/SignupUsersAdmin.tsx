@@ -46,11 +46,29 @@ const SignupUsersAdmin: React.FC = () => {
     try {
       setLoading(true);
       setError('');
+      
+      // Try to get users from backend first
       const data = await apiCall.getUsers();
       setUsers(data);
+      
+      // If we got data, backend is working
+      if (data && data.length >= 0) {
+        console.log('Successfully fetched users from backend:', data.length);
+      }
     } catch (err) {
       console.error('Fetch error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch users');
+      
+      // Fallback to local storage if backend fails
+      try {
+        const localUsers = JSON.parse(localStorage.getItem('litestart_users') || '[]');
+        console.log('Falling back to local storage users:', localUsers.length);
+        setUsers(localUsers);
+        setError('Using local storage data - backend unavailable');
+      } catch (localErr) {
+        console.error('Local storage fallback failed:', localErr);
+        setUsers([]);
+      }
     } finally {
       setLoading(false);
     }
