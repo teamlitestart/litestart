@@ -95,6 +95,61 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
   return false;
 };
 
+// Manual test endpoint to simulate a bounce (for testing)
+app.post('/api/simulate-bounce/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    console.log(`Simulating bounce for email: ${email}`);
+    
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for bounce simulation');
+      const reconnected = await connectToMongo(3, 1000);
+      if (!reconnected) {
+        return res.status(503).json({ message: 'Database temporarily unavailable' });
+      }
+    }
+    
+    // Find and update the user's email verification status
+    const user = await User.findOne({ email: email });
+    if (user) {
+      user.isEmailVerified = false;
+      await user.save();
+      console.log(`Updated user ${user.name} (${email}) to unverified due to simulated bounce`);
+      res.json({ 
+        success: true, 
+        message: `User ${user.name} marked as unverified due to simulated bounce`,
+        user: user
+      });
+    } else {
+      console.log(`No user found with email ${email} for bounce simulation`);
+      res.status(404).json({ 
+        success: false, 
+        message: `No user found with email ${email}` 
+      });
+    }
+  } catch (error) {
+    console.error('Bounce simulation error:', error);
+    res.status(500).json({ message: 'Error simulating bounce' });
+  }
+});
+
+// Test webhook endpoint to verify Mailgun configuration
+app.post('/api/test-webhook', async (req, res) => {
+  try {
+    console.log('Test webhook received:', JSON.stringify(req.body, null, 2));
+    res.status(200).json({ 
+      message: 'Test webhook received successfully',
+      timestamp: new Date().toISOString(),
+      body: req.body
+    });
+  } catch (error) {
+    console.error('Test webhook error:', error);
+    res.status(500).json({ message: 'Test webhook error' });
+  }
+});
+
 // Email bounce webhook endpoint
 app.post('/api/email-bounce', async (req, res) => {
   try {
