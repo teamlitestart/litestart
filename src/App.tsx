@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { ArrowRight, Clock, CheckCircle, Briefcase, Users, Target } from 'lucide-react';
 import LandingPage from './components/LandingPage';
 import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
@@ -21,6 +22,160 @@ import MouseTracker from './components/MouseTracker';
 import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import CookiePolicy from './components/CookiePolicy';
+import EmailDeliveryMonitor from './components/EmailDeliveryMonitor';
+
+// Student and Startup Signup Pages
+const StudentSignupPage: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0); // Start at welcome screen
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left');
+  
+  const handleClose = () => {
+    window.location.href = '/preview';
+  };
+
+  const handleNext = () => {
+    setSlideDirection('left');
+    setCurrentStep(prev => prev + 1);
+  };
+
+  const handleBack = () => {
+    setSlideDirection('right');
+    setCurrentStep(prev => prev - 1);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
+      {currentStep === 0 ? (
+        <div className={`min-h-screen flex items-center justify-center p-4 animate-fade-in`}>
+          <div className="max-w-2xl w-full text-center space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Join LiteStart as a Student
+              </h1>
+              <p className="text-xl text-gray-600">
+                Create your account in just 2 minutes and unlock exciting opportunities with innovative startups.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-6">
+              <div className="flex items-center space-x-8 text-gray-500">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-5 h-5" />
+                  <span>2 min setup</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-5 h-5" />
+                  <span>Free to join</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Briefcase className="w-5 h-5" />
+                  <span>Real projects</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleNext}
+                className="group bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3"
+              >
+                <span>Get Started</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <p className="text-sm text-gray-500">
+                Already have an account? <Link to="/login" className="text-blue-600 hover:underline">Login here</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={`animate-slide-${slideDirection}`}>
+          <StudentOnboarding 
+            isOpen={true} 
+            onClose={handleClose} 
+            currentStep={currentStep} 
+            onBack={handleBack}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const StartupSignupPage: React.FC = () => {
+  const [currentStep, setCurrentStep] = useState(0); // Start at welcome screen
+  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('left');
+  
+  const handleClose = () => {
+    window.location.href = '/preview';
+  };
+
+  const handleNext = () => {
+    setSlideDirection('left');
+    setCurrentStep(prev => prev + 1);
+  };
+
+  const handleBack = () => {
+    setSlideDirection('right');
+    setCurrentStep(prev => prev - 1);
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 overflow-hidden">
+      {currentStep === 0 ? (
+        <div className={`min-h-screen flex items-center justify-center p-4 animate-fade-in`}>
+          <div className="max-w-2xl w-full text-center space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+                Join LiteStart as a Startup
+              </h1>
+              <p className="text-xl text-gray-600">
+                Create your account in just 2 minutes and connect with talented university students.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center space-y-6">
+              <div className="flex items-center space-x-8 text-gray-500">
+                <div className="flex items-center space-x-2">
+                  <Clock className="w-5 h-5" />
+                  <span>2 min setup</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Users className="w-5 h-5" />
+                  <span>Access talent</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Target className="w-5 h-5" />
+                  <span>Fast results</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleNext}
+                className="group bg-teal-600 hover:bg-teal-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3"
+              >
+                <span>Get Started</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <p className="text-sm text-gray-500">
+                Already have an account? <Link to="/login" className="text-teal-600 hover:underline">Login here</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className={`animate-slide-${slideDirection}`}>
+          <StartupOnboarding 
+            isOpen={true} 
+            onClose={handleClose} 
+            currentStep={currentStep} 
+            onBack={handleBack}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
 
 // FAQs Page Component
 const FAQsPage: React.FC = () => {
@@ -48,7 +203,7 @@ const AboutPage: React.FC = () => {
       <Header showAuthButtons={isPreviewRoute} homePath={isPreviewRoute ? "/preview" : "/"} />
     
     {/* Header Section */}
-    <section className="relative py-20 bg-gradient-to-br from-blue-50 via-white to-teal-50 overflow-hidden">
+    <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-50 via-white to-teal-50 overflow-hidden">
       {/* Background Graphics */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200 rounded-full blur-xl"></div>
@@ -199,27 +354,75 @@ const ContactPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header showAuthButtons={isPreviewRoute} homePath={isPreviewRoute ? "/preview" : "/"} />
-    <div className="max-w-4xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">Contact Us</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <h2 className="text-2xl font-semibold mb-4">Get in Touch</h2>
-          <p className="text-gray-600 mb-4">
-            Have questions about LiteStart? We'd love to hear from you.
-          </p>
-          <div className="space-y-2">
-            <p className="text-gray-600">
-              <strong>Email:</strong> info@litestart.com
+      
+      {/* Main Content */}
+      <div className="pt-32 pb-16">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Contact Us</h1>
+            <p className="text-xl text-gray-600">
+              Have questions about LiteStart? We'd love to hear from you.
             </p>
-            <p className="text-gray-600">
-              <strong>Location:</strong> Bristol, UK
-            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-4">Get in Touch</h2>
+                <p className="text-gray-600 mb-6">
+                  Whether you're a student looking for opportunities or a startup seeking talent, 
+                  we're here to help connect you with the right match.
+                </p>
+                
+                <div className="space-y-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <span className="text-blue-600 font-semibold">@</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Email</p>
+                      <p className="text-gray-600">info@litestart.com</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                      <span className="text-teal-600 font-semibold">📍</span>
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">Location</p>
+                      <p className="text-gray-600">Bristol, UK</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-8">
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Response</h3>
+              <p className="text-gray-600 mb-6">
+                Send us an email and we'll get back to you within 24 hours. 
+                We're excited to hear about your project or answer any questions!
+              </p>
+              
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-4">
+                  <p className="text-sm font-medium text-gray-900 mb-1">For Students</p>
+                  <p className="text-sm text-gray-600">Questions about opportunities, applications, or getting started</p>
+                </div>
+                
+                <div className="bg-white rounded-lg p-4">
+                  <p className="text-sm font-medium text-gray-900 mb-1">For Startups</p>
+                  <p className="text-sm text-gray-600">Partnership inquiries, posting projects, or finding talent</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
-    <Footer />
-  </div>
   );
 };
 
@@ -350,8 +553,11 @@ function App() {
         <Route path="/preview" element={<MainSite />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/signup/student" element={<StudentSignupPage />} />
+        <Route path="/signup/startup" element={<StartupSignupPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/email-monitor" element={<EmailDeliveryMonitor />} />
         <Route path="/verify-email" element={<EmailVerification />} />
         <Route path="/faqs" element={<FAQsPage />} />
         <Route path="/about" element={<AboutPage />} />

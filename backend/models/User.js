@@ -20,7 +20,28 @@ const userSchema = new mongoose.Schema({
   },
   isEmailVerified: {
     type: Boolean,
-    default: true
+    default: false
+  },
+  emailDeliveryStatus: {
+    type: String,
+    enum: ['pending', 'sent', 'delivered', 'bounced', 'failed', 'complained'],
+    default: 'pending'
+  },
+  emailBounceReason: {
+    type: String,
+    default: null
+  },
+  emailBounceDate: {
+    type: Date,
+    default: null
+  },
+  emailSentDate: {
+    type: Date,
+    default: null
+  },
+  emailVerifiedDate: {
+    type: Date,
+    default: null
   },
   signupDate: {
     type: Date,

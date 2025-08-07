@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowRight, Users, Clock, Target, Briefcase, Star, Quote, CheckCircle, Search, ChevronLeft, ChevronRight, Zap, Award, Globe, Shield } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
@@ -135,36 +136,31 @@ const LandingPage: React.FC = () => {
     }
   ];
 
-  const stats = [
-    { number: "500+", label: "Students Connected" },
-    { number: "150+", label: "Startups Partnered" },
-    { number: "95%", label: "Satisfaction Rate" },
-    { number: "£2.5K", label: "Avg. Project Value" }
-  ];
+
 
   const features = [
     {
       icon: Clock,
-      title: "⏱️ Micro-internships",
-      description: "Short, structured placements that fit around student schedules — typically 1 to 3 weeks.",
+      title: "⚡ Fast & Efficient",
+      description: "Get skilled students working on your projects in days, not months. Boost productivity while students gain real experience.",
       color: "blue"
     },
     {
       icon: Target,
-      title: "📋 Project-based",
-      description: "Each opportunity is outcome-focused and time-bound — clear scope and expectations.",
+      title: "🎯 High-Impact Results",
+      description: "Outcome-focused projects deliver measurable ROI. Students build portfolios while you achieve your goals.",
       color: "teal"
     },
     {
       icon: Users,
-      title: "🤝 Win-win model",
-      description: "Students gain experience. Startups get real support. Both sides grow together.",
+      title: "🚀 Grow Together",
+      description: "Access fresh talent and innovative thinking. Students gain career-defining experience. Let's build success together.",
       color: "purple"
     },
     {
       icon: Briefcase,
-      title: "📍 UK ecosystem",
-      description: "Born from the Bristol entrepreneurial community, with strong university networks.",
+      title: "💡 Smart Investment",
+      description: "Cost-effective access to university talent. Students earn while they learn. Maximum value for everyone.",
       color: "orange"
     }
   ];
@@ -172,20 +168,26 @@ const LandingPage: React.FC = () => {
   const steps = [
     {
       icon: Search,
-      title: "Browse Projects",
-      description: "Discover exciting, real-world projects from innovative startups looking for student talent.",
+      title: "Discover Opportunities",
+      description: "Find projects that accelerate your career growth. Real companies, real impact, real learning.",
       color: "blue"
     },
     {
       icon: Zap,
-      title: "Get Matched",
-      description: "Our AI matches you with the perfect project based on your skills and interests.",
+      title: "Get Matched Smart",
+      description: "Our AI connects you with projects that build your skills and help startups achieve their goals faster.",
       color: "teal"
     },
     {
+      icon: Briefcase,
+      title: "Apply & Connect",
+      description: "Join innovative teams ready to invest in your growth. Show your potential, land the opportunity.",
+      color: "purple"
+    },
+    {
       icon: CheckCircle,
-      title: "Build & Earn",
-      description: "Collaborate with founders, gain hands-on experience, and get paid for your work.",
+      title: "Learn & Deliver",
+      description: "Build your portfolio while delivering results. Gain experience, earn money, launch your career.",
       color: "orange"
     }
   ];
@@ -198,12 +200,12 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-50/30 w-full">
       <MouseTracker />
       <Header homePath="/preview" />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden -mt-24 pt-24">
+      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <img 
@@ -226,25 +228,9 @@ const LandingPage: React.FC = () => {
                       Real Projects. Real Startups. Real Impact.
                     </span>
                   </h1>
-                  <p className="text-xl md:text-2xl text-gray-800 mb-8 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-sm">
-                    The AI-powered platform connecting elite university students with early-stage startups for high-impact freelance work.
+                  <p className="text-xl md:text-2xl text-gray-800 mb-12 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-sm">
+                    The AI-powered platform connecting university students with startups and SMEs for high-impact microinternships.
                   </p>
-                  
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-4xl mx-auto">
-                    {stats.map((stat, index) => (
-                      <AnimatedSection key={index} delay={index * 200}>
-                        <div className="text-center">
-                          <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-1">
-                            {stat.number}
-                          </div>
-                          <div className="text-sm md:text-base text-gray-600">
-                            {stat.label}
-                          </div>
-                        </div>
-                      </AnimatedSection>
-                    ))}
-                  </div>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
                     <button 
@@ -268,16 +254,46 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-white">
+      {/* Journey Introduction - Quote Section */}
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-teal-600 relative overflow-hidden">
+        {/* Flowing background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+          <AnimatedSection>
+            <div className="mb-4">
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm font-medium">
+                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                <span>Your Journey Begins Here</span>
+              </div>
+            </div>
+            <blockquote className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
+              "LiteStart connects innovative startups with talented students for short, impactful projects — fast, affordable, and mutually beneficial."
+            </blockquote>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Journey Stage 1: Why Choose This Path */}
+      <section className="py-24 bg-white relative">
+        {/* Journey connector line */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-teal-600 to-transparent"></div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
+              <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 text-blue-600 text-sm font-medium mb-4">
+                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                <span>Step 1: Discover the Opportunity</span>
+              </div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Why LiteStart Works
+                Built for Success Together
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our platform is designed around the real needs of students and startups, creating meaningful connections that benefit everyone.
+                Startups get skilled talent fast. Students gain career-defining experience. Everyone wins when we work together.
               </p>
             </div>
           </AnimatedSection>
@@ -306,38 +322,56 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 bg-gray-50">
+      {/* Journey Stage 2: The Path Forward */}
+      <section id="how-it-works" className="py-24 bg-gray-50 relative">
+        {/* Journey connector line */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-white to-gray-300"></div>
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-gray-300 to-white"></div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
+              <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 text-gray-700 text-sm font-medium mb-4 shadow-sm">
+                <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
+                <span>Step 2: Navigate Your Journey</span>
+              </div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                How LiteStart Works
+                Your Success Starts Here
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Get started in minutes and find your perfect match in just three simple steps.
+                Follow this proven path to unlock opportunities, drive results, and build your future together.
               </p>
             </div>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 relative">
             {steps.map((step, index) => (
               <AnimatedSection key={index} delay={index * 300}>
-                <div className="text-center group">
+                <div className="text-center group relative">
                   <div className="relative mb-6">
-                    <div className={`w-20 h-20 mx-auto rounded-full ${colorClasses[step.color]} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                      <step.icon className="w-10 h-10" />
+                    <div className={`w-20 h-20 mx-auto rounded-full ${colorClasses[step.color]} flex items-center justify-center group-hover:scale-125 group-hover:-translate-y-2 transition-all duration-500 shadow-lg group-hover:shadow-xl relative z-10`}>
+                      <step.icon className="w-10 h-10 group-hover:scale-110 transition-transform duration-300" />
                     </div>
+                    
+                    {/* Step Number */}
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-sm font-bold text-gray-700 border-2 border-gray-200 group-hover:scale-110 transition-transform duration-300">
+                      {index + 1}
+                    </div>
+
+                    {/* Connecting Arrow (except for last item) */}
                     {index < steps.length - 1 && (
-                      <div className="hidden md:block absolute top-10 left-full w-full h-0.5 bg-gradient-to-r from-gray-300 to-gray-100 transform translate-x-4"></div>
+                      <div className="hidden lg:block absolute top-10 left-full w-12 h-0.5 bg-gradient-to-r from-gray-300 to-transparent transform -translate-y-1/2 animate-pulse"></div>
                     )}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
                     {step.description}
                   </p>
+                  
+                  {/* Animated background on hover */}
+                  <div className="absolute inset-0 bg-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg -z-10 -m-4"></div>
                 </div>
               </AnimatedSection>
             ))}
@@ -345,16 +379,23 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-24 bg-white">
+      {/* Journey Stage 3: Proof of Success */}
+      <section className="py-24 bg-white relative">
+        {/* Journey connector line */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-gray-300 to-transparent"></div>
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
+              <div className="inline-flex items-center space-x-2 bg-green-50 rounded-full px-4 py-2 text-green-600 text-sm font-medium mb-4">
+                <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                <span>Step 3: See Real Results</span>
+              </div>
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                What Our Community Says
+                Success Stories We're Proud Of
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Join hundreds of students and startups who are already building their futures together.
+                Others have walked this path and achieved amazing results. Your success story is next.
               </p>
             </div>
           </AnimatedSection>
@@ -422,86 +463,59 @@ const LandingPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Signup Section */}
-      <section id="signup" className="py-24 bg-gradient-to-br from-blue-600 to-teal-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* Journey Destination: Take Action */}
+      <section id="signup" className="py-24 bg-gradient-to-br from-blue-600 to-teal-600 relative overflow-hidden">
+        {/* Journey connector line */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-white to-blue-500"></div>
+        
+        {/* Celebration elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-3 h-3 bg-white/30 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
+          <div className="absolute top-20 right-20 w-2 h-2 bg-white/40 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-20 left-20 w-4 h-4 bg-white/20 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-32 right-16 w-2 h-2 bg-white/35 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <AnimatedSection>
+            <div className="mb-6">
+              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm font-medium">
+                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                <span>Final Step: Join the Journey</span>
+              </div>
+            </div>
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to Get Started?
+              Let's Build Success Together
             </h2>
             <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
-              Join the future of student-startup collaboration. Sign up today and start building your future.
+              Your journey to success starts with a single step. Students: Launch your career with real experience. Startups: Access fresh talent fast.
             </p>
           </AnimatedSection>
           
-          {!submitted ? (
-            <AnimatedSection delay={200}>
-              <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Your name"
-                    className="w-full px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                    required
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="Your email"
-                    className="w-full px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                    required
-                  />
-                </div>
-                
-                <select
-                  name="userType"
-                  value={form.userType}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white focus:ring-opacity-50"
-                >
-                  <option value="student">I'm a student looking for opportunities</option>
-                  <option value="startup">I'm a startup looking for talent</option>
-                </select>
-                
-                {error && (
-                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                    {error}
-                  </div>
-                )}
-                
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full bg-white text-blue-600 hover:bg-gray-50 font-semibold py-3 px-6 rounded-lg transition-colors disabled:opacity-50"
-                >
-                  {loading ? 'Signing up...' : 'Get Started Free'}
-                </button>
-              </form>
-            </AnimatedSection>
-          ) : (
-            <AnimatedSection delay={200}>
-              <div className="bg-white rounded-2xl p-8 max-w-md mx-auto">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Welcome to LiteStart!</h3>
-                <p className="text-gray-600 mb-6">
-                  We've sent you a confirmation email. Check your inbox to complete your registration and start exploring opportunities.
-                </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                >
-                  Sign Up Another Account
-                </button>
-              </div>
-            </AnimatedSection>
-          )}
+                      <AnimatedSection delay={200}>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-3xl mx-auto">
+              <Link 
+                to="/signup/student"
+                className="group bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3 shadow-lg w-full sm:w-auto justify-center"
+              >
+                <Users className="w-6 h-6" />
+                <span>Sign Up as Student</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link 
+                to="/signup/startup"
+                className="group border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center space-x-3 w-full sm:w-auto justify-center"
+              >
+                <Briefcase className="w-6 h-6" />
+                <span>Sign Up as Startup</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            
+            <div className="mt-8 text-blue-100 text-sm">
+              <p>Already have an account? <Link to="/login" className="underline hover:text-white transition-colors">Login here</Link></p>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 

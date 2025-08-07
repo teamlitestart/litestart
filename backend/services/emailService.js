@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 
-// Email validation function - Much more lenient to allow bounce detection
+// Enhanced email validation function
 const validateEmail = (email) => {
-  // Only check for the most obvious fake patterns
+  // Check for obvious fake patterns
   const obviousFakePatterns = [
     /^test@/i,
     /^fake@/i,
@@ -24,7 +24,7 @@ const validateEmail = (email) => {
     /^nobody@/i
   ];
 
-  // Check for very obvious fake patterns only
+  // Check for very obvious fake patterns
   for (const pattern of obviousFakePatterns) {
     if (pattern.test(email)) {
       console.log(`Email validation failed for ${email}: Obvious fake pattern detected`);
@@ -32,11 +32,31 @@ const validateEmail = (email) => {
     }
   }
 
-  // Basic email format validation
+  // Enhanced email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     console.log(`Email validation failed for ${email}: Invalid email format`);
     return { valid: false, reason: 'Invalid email format' };
+  }
+
+  // Check for disposable email domains (common ones)
+  const disposableDomains = [
+    'tempmail.org',
+    '10minutemail.com',
+    'guerrillamail.com',
+    'mailinator.com',
+    'yopmail.com',
+    'temp-mail.org',
+    'sharklasers.com',
+    'getairmail.com',
+    'mailnesia.com',
+    'trashmail.com'
+  ];
+
+  const domain = email.split('@')[1]?.toLowerCase();
+  if (disposableDomains.includes(domain)) {
+    console.log(`Email validation failed for ${email}: Disposable email domain detected`);
+    return { valid: false, reason: 'Disposable email domains are not allowed' };
   }
 
   console.log(`Email validation passed for ${email}: Will attempt to send and monitor for bounces`);
@@ -54,7 +74,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// Send thank you email to new signups
+// Send thank you email to new signups with enhanced tracking
 const sendThankYouEmail = async (userData) => {
   try {
     const { name, email, userType } = userData;
@@ -63,7 +83,12 @@ const sendThankYouEmail = async (userData) => {
     const emailValidation = validateEmail(email);
     if (!emailValidation.valid) {
       console.log(`Email validation failed for ${email}: ${emailValidation.reason}`);
-      return { success: false, error: emailValidation.reason };
+      return { 
+        success: false, 
+        error: emailValidation.reason,
+        deliveryStatus: 'failed',
+        reason: emailValidation.reason
+      };
     }
     
     const mailOptions = {
@@ -114,10 +139,56 @@ const sendThankYouEmail = async (userData) => {
 
     const info = await transporter.sendMail(mailOptions);
     console.log('Thank you email sent:', info.messageId);
-    return { success: true, messageId: info.messageId };
+    
+    return { 
+      success: true, 
+      messageId: info.messageId,
+      deliveryStatus: 'sent',
+      sentDate: new Date()
+    };
   } catch (error) {
     console.error('Email sending error:', error);
-    return { success: false, error: error.message };
+    return { 
+      success: false, 
+      error: error.message,
+      deliveryStatus: 'failed',
+      reason: error.message
+    };
+  }
+};
+
+// Enhanced email verification function
+const verifyEmailDelivery = async (email) => {
+  try {
+    // This would integrate with Mailgun's API to check delivery status
+    // For now, we'll return a basic check
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.valid) {
+      return {
+        verified: false,
+        status: 'invalid',
+        reason: emailValidation.reason
+      };
+    }
+    
+    // In a real implementation, you would:
+    // 1. Check Mailgun's API for delivery status
+    // 2. Check for bounces
+    // 3. Check for complaints
+    // 4. Verify the email actually exists
+    
+    return {
+      verified: true,
+      status: 'valid',
+      reason: 'Email format is valid'
+    };
+  } catch (error) {
+    console.error('Email verification error:', error);
+    return {
+      verified: false,
+      status: 'error',
+      reason: error.message
+    };
   }
 };
 
@@ -131,5 +202,6 @@ const sendVerificationEmail = async (email, token) => {
 module.exports = {
   sendThankYouEmail,
   sendVerificationEmail,
-  validateEmail
+  validateEmail,
+  verifyEmailDelivery
 }; 

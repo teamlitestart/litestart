@@ -283,7 +283,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Admin Panels */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Signup Users Admin */}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="p-6">
@@ -363,6 +363,50 @@ const AdminDashboard: React.FC = () => {
                 <span>Manage Platform Users</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
+            </div>
+          </div>
+
+          {/* Email Monitor */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                  <BarChart3 className="h-6 w-6 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">Email Monitor</h3>
+                  <p className="text-sm text-gray-600">Track delivery & bounces</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3 mb-6">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Valid Emails:</span>
+                  <span className="font-medium text-green-600">
+                    {loading ? '...' : signupUsers.filter(u => u.isEmailVerified).length}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Bounced:</span>
+                  <span className="font-medium text-red-600">
+                    {loading ? '...' : signupUsers.filter(u => u.emailDeliveryStatus === 'bounced').length}
+                  </span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Failed:</span>
+                  <span className="font-medium text-yellow-600">
+                    {loading ? '...' : signupUsers.filter(u => u.emailDeliveryStatus === 'failed').length}
+                  </span>
+                </div>
+              </div>
+
+              <a
+                href="/email-monitor"
+                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center space-x-2"
+              >
+                <span>View Email Monitor</span>
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
           </div>
         </div>

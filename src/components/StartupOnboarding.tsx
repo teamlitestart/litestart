@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, X, Upload, Check, Building, Target, Users, Briefcase, Globe, DollarSign } from 'lucide-react';
+import { ArrowRight, ArrowLeft, X, Upload, Check, Building, Target, Users, Briefcase, Globe, DollarSign, User, CheckCircle } from 'lucide-react';
 
 interface StartupOnboardingProps {
   isOpen: boolean;
   onClose: () => void;
+  currentStep?: number;
+  onBack?: () => void;
 }
 
-const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose, currentStep: externalStep, onBack }) => {
+  const [internalStep, setInternalStep] = useState(1);
+  const currentStep = externalStep || internalStep;
   const [formData, setFormData] = useState({
     companyName: '',
     founderName: '',
@@ -15,20 +18,13 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }
     website: '',
     industry: '',
     companySize: '',
-    projectTitle: '',
-    projectDescription: '',
-    projectGoals: '',
-    requiredSkills: [] as string[],
-    projectDuration: '',
-    budget: '',
-    timeline: '',
-    teamSize: '',
-    mentorship: false,
-    equity: false,
-    stipend: false
+    description: '',
+    location: '',
+    linkedIn: '',
+    foundingYear: ''
   });
 
-  const totalSteps = 5;
+  const totalSteps = 3;
 
   const industryOptions = [
     'Technology', 'Healthcare', 'Finance', 'Education', 'E-commerce',
@@ -47,24 +43,21 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleSkillToggle = (skill: string) => {
-    setFormData(prev => ({
-      ...prev,
-      requiredSkills: prev.requiredSkills.includes(skill)
-        ? prev.requiredSkills.filter(s => s !== skill)
-        : [...prev.requiredSkills, skill]
-    }));
-  };
+
 
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+      setInternalStep(currentStep + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      if (onBack && currentStep === 1) {
+        onBack();
+      } else {
+        setInternalStep(currentStep - 1);
+      }
     }
   };
 
@@ -81,17 +74,10 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }
       website: '',
       industry: '',
       companySize: '',
-      projectTitle: '',
-      projectDescription: '',
-      projectGoals: '',
-      requiredSkills: [],
-      projectDuration: '',
-      budget: '',
-      timeline: '',
-      teamSize: '',
-      mentorship: false,
-      equity: false,
-      stipend: false
+      description: '',
+      location: '',
+      linkedIn: '',
+      foundingYear: ''
     });
   };
 
@@ -196,6 +182,28 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }
                 <option value="50+">50+ employees</option>
               </select>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Company Location</label>
+              <input
+                type="text"
+                value={formData.location}
+                onChange={(e) => handleInputChange('location', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="London, UK"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Founding Year</label>
+              <input
+                type="text"
+                value={formData.foundingYear}
+                onChange={(e) => handleInputChange('foundingYear', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                placeholder="2024"
+              />
+            </div>
           </div>
         );
 
@@ -204,191 +212,47 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }
           <div className="space-y-6">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Briefcase className="w-8 h-8 text-green-600" />
+                <User className="w-8 h-8 text-green-600" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Project Details</h3>
-              <p className="text-gray-600">Describe the project you need help with</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Additional Information</h3>
+              <p className="text-gray-600">Help us create your complete profile</p>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Project Title</label>
-              <input
-                type="text"
-                value={formData.projectTitle}
-                onChange={(e) => handleInputChange('projectTitle', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="e.g., Mobile App Development for E-commerce Platform"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Project Description</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Company Description</label>
               <textarea
-                value={formData.projectDescription}
-                onChange={(e) => handleInputChange('projectDescription', e.target.value)}
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="Describe your project in detail, including the problem you're solving and the solution you're building..."
+                placeholder="Describe your company, what you do, and your mission..."
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Project Goals</label>
-              <textarea
-                value={formData.projectGoals}
-                onChange={(e) => handleInputChange('projectGoals', e.target.value)}
-                rows={3}
+              <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn Profile (Optional)</label>
+              <input
+                type="url"
+                value={formData.linkedIn}
+                onChange={(e) => handleInputChange('linkedIn', e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                placeholder="What do you hope to achieve with this project? What are your key milestones?"
+                placeholder="https://linkedin.com/in/yourprofile"
               />
             </div>
-          </div>
-        );
 
-      case 4:
-        return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-green-600" />
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="flex items-center">
+                <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                <span className="text-green-800 font-medium">Almost done!</span>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Team Requirements</h3>
-              <p className="text-gray-600">What skills and team size do you need?</p>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-4">Required Skills (select all that apply)</label>
-              <div className="grid grid-cols-2 gap-3">
-                {skillOptions.map((skill) => (
-                  <button
-                    key={skill}
-                    onClick={() => handleSkillToggle(skill)}
-                    className={`p-3 text-left rounded-lg border-2 transition-all duration-300 ${
-                      formData.requiredSkills.includes(skill)
-                        ? 'border-green-500 bg-green-50 text-green-700'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">{skill}</span>
-                      {formData.requiredSkills.includes(skill) && (
-                        <Check className="w-4 h-4 text-green-600" />
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Team Size Needed</label>
-              <select
-                value={formData.teamSize}
-                onChange={(e) => handleInputChange('teamSize', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value="">Select team size</option>
-                <option value="1">1 student</option>
-                <option value="2-3">2-3 students</option>
-                <option value="4-5">4-5 students</option>
-                <option value="6+">6+ students</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Project Duration</label>
-              <select
-                value={formData.projectDuration}
-                onChange={(e) => handleInputChange('projectDuration', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value="">Select duration</option>
-                <option value="1-2 months">1-2 months</option>
-                <option value="3-4 months">3-4 months</option>
-                <option value="5-6 months">5-6 months</option>
-                <option value="6+ months">6+ months</option>
-              </select>
+              <p className="text-green-700 text-sm mt-1">
+                You can post projects and find students after completing your account setup.
+              </p>
             </div>
           </div>
         );
 
-      case 5:
-        return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <DollarSign className="w-8 h-8 text-green-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Compensation & Timeline</h3>
-              <p className="text-gray-600">What can you offer to students?</p>
-            </div>
-            
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-gray-700 mb-3">Compensation Options</label>
-              <div className="space-y-3">
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    checked={formData.stipend}
-                    onChange={(e) => handleInputChange('stipend', e.target.checked)}
-                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                  />
-                  <span className="text-sm text-gray-700">Stipend/Payment</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    checked={formData.equity}
-                    onChange={(e) => handleInputChange('equity', e.target.checked)}
-                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                  />
-                  <span className="text-sm text-gray-700">Equity/Stock Options</span>
-                </label>
-                <label className="flex items-center space-x-3">
-                  <input
-                    type="checkbox"
-                    checked={formData.mentorship}
-                    onChange={(e) => handleInputChange('mentorship', e.target.checked)}
-                    className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                  />
-                  <span className="text-sm text-gray-700">Mentorship & Learning Opportunities</span>
-                </label>
-              </div>
-            </div>
-            
-            {formData.stipend && (
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Budget Range (if offering stipend)</label>
-                <select
-                  value={formData.budget}
-                  onChange={(e) => handleInputChange('budget', e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                >
-                  <option value="">Select budget range</option>
-                  <option value="$500-$1000">$500 - $1,000</option>
-                  <option value="$1000-$2500">$1,000 - $2,500</option>
-                  <option value="$2500-$5000">$2,500 - $5,000</option>
-                  <option value="$5000+">$5,000+</option>
-                </select>
-              </div>
-            )}
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Project Timeline</label>
-              <select
-                value={formData.timeline}
-                onChange={(e) => handleInputChange('timeline', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              >
-                <option value="">Select timeline</option>
-                <option value="immediate">Start immediately</option>
-                <option value="1-2 weeks">Start in 1-2 weeks</option>
-                <option value="1 month">Start in 1 month</option>
-                <option value="flexible">Flexible start date</option>
-              </select>
-            </div>
-          </div>
-        );
+
 
       default:
         return null;
@@ -402,7 +266,7 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen, onClose }
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Post Your Project</h2>
+              <h2 className="text-3xl font-bold text-gray-900">Create Your Account</h2>
               <p className="text-gray-600 mt-1">Step {currentStep} of {totalSteps}</p>
             </div>
             <button

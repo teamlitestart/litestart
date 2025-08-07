@@ -99,8 +99,9 @@ const connectToMongo = async (retries = 10, delay = 1000) => {
 app.post('/api/simulate-bounce/:email', async (req, res) => {
   try {
     const { email } = req.params;
+    const { reason = 'Simulated bounce for testing' } = req.body;
     
-    console.log(`Simulating bounce for email: ${email}`);
+    console.log(`Simulating bounce for email: ${email} with reason: ${reason}`);
     
     // Force a fresh connection attempt
     if (!mongoConnected || mongoose.connection.readyState !== 1) {
@@ -115,8 +116,11 @@ app.post('/api/simulate-bounce/:email', async (req, res) => {
     const user = await User.findOne({ email: email });
     if (user) {
       user.isEmailVerified = false;
+      user.emailDeliveryStatus = 'bounced';
+      user.emailBounceReason = reason;
+      user.emailBounceDate = new Date();
       await user.save();
-      console.log(`Updated user ${user.name} (${email}) to unverified due to simulated bounce`);
+      console.log(`Updated user ${user.name} (${email}) to unverified due to simulated bounce: ${reason}`);
       res.json({ 
         success: true, 
         message: `User ${user.name} marked as unverified due to simulated bounce`,
@@ -135,6 +139,41 @@ app.post('/api/simulate-bounce/:email', async (req, res) => {
   }
 });
 
+// Endpoint to get email delivery statistics
+app.get('/api/email-stats', async (req, res) => {
+  try {
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for email stats');
+      const reconnected = await connectToMongo(3, 1000);
+      if (!reconnected) {
+        return res.status(503).json({ message: 'Database temporarily unavailable' });
+      }
+    }
+    
+    const totalUsers = await User.countDocuments();
+    const verifiedUsers = await User.countDocuments({ isEmailVerified: true });
+    const bouncedUsers = await User.countDocuments({ emailDeliveryStatus: 'bounced' });
+    const failedUsers = await User.countDocuments({ emailDeliveryStatus: 'failed' });
+    const complainedUsers = await User.countDocuments({ emailDeliveryStatus: 'complained' });
+    const sentUsers = await User.countDocuments({ emailDeliveryStatus: 'sent' });
+    
+    res.json({
+      total: totalUsers,
+      verified: verifiedUsers,
+      bounced: bouncedUsers,
+      failed: failedUsers,
+      complained: complainedUsers,
+      sent: sentUsers,
+      unverified: totalUsers - verifiedUsers,
+      deliveryRate: totalUsers > 0 ? ((verifiedUsers / totalUsers) * 100).toFixed(2) : 0
+    });
+  } catch (error) {
+    console.error('Email stats error:', error);
+    res.status(500).json({ message: 'Error getting email stats' });
+  }
+});
+
 // Test webhook endpoint to verify Mailgun configuration
 app.post('/api/test-webhook', async (req, res) => {
   try {
@@ -150,10 +189,10 @@ app.post('/api/test-webhook', async (req, res) => {
   }
 });
 
-// Email bounce webhook endpoint
+// Enhanced email bounce webhook endpoint
 app.post('/api/email-bounce', async (req, res) => {
   try {
-    const { recipient, event, reason } = req.body;
+    const { recipient, event, reason, timestamp } = req.body;
     
     console.log(`Email bounce detected for ${recipient}: ${event} - ${reason}`);
     
@@ -170,8 +209,11 @@ app.post('/api/email-bounce', async (req, res) => {
     const user = await User.findOne({ email: recipient });
     if (user) {
       user.isEmailVerified = false;
+      user.emailDeliveryStatus = 'bounced';
+      user.emailBounceReason = reason || 'Email bounced';
+      user.emailBounceDate = timestamp ? new Date(timestamp * 1000) : new Date();
       await user.save();
-      console.log(`Updated user ${user.name} (${recipient}) to unverified due to email bounce`);
+      console.log(`Updated user ${user.name} (${recipient}) to unverified due to email bounce: ${reason}`);
     } else {
       console.log(`No user found with email ${recipient} for bounce update`);
     }
@@ -183,10 +225,10 @@ app.post('/api/email-bounce', async (req, res) => {
   }
 });
 
-// Email complaint webhook endpoint (for spam reports)
+// Enhanced email complaint webhook endpoint (for spam reports)
 app.post('/api/email-complaint', async (req, res) => {
   try {
-    const { recipient, event, reason } = req.body;
+    const { recipient, event, reason, timestamp } = req.body;
     
     console.log(`Email complaint detected for ${recipient}: ${event} - ${reason}`);
     
@@ -203,8 +245,11 @@ app.post('/api/email-complaint', async (req, res) => {
     const user = await User.findOne({ email: recipient });
     if (user) {
       user.isEmailVerified = false;
+      user.emailDeliveryStatus = 'complained';
+      user.emailBounceReason = reason || 'Email marked as spam';
+      user.emailBounceDate = timestamp ? new Date(timestamp * 1000) : new Date();
       await user.save();
-      console.log(`Updated user ${user.name} (${recipient}) to unverified due to email complaint`);
+      console.log(`Updated user ${user.name} (${recipient}) to unverified due to email complaint: ${reason}`);
     } else {
       console.log(`No user found with email ${recipient} for complaint update`);
     }
@@ -213,6 +258,49 @@ app.post('/api/email-complaint', async (req, res) => {
   } catch (error) {
     console.error('Email complaint processing error:', error);
     res.status(500).json({ message: 'Error processing complaint' });
+  }
+});
+
+// New endpoint to manually verify email delivery status
+app.post('/api/verify-email/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    // Force a fresh connection attempt
+    if (!mongoConnected || mongoose.connection.readyState !== 1) {
+      console.log('Forcing fresh MongoDB connection for email verification');
+      const reconnected = await connectToMongo(3, 1000);
+      if (!reconnected) {
+        return res.status(503).json({ message: 'Database temporarily unavailable' });
+      }
+    }
+    
+    // Find the user
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Verify email delivery
+    const { verifyEmailDelivery } = require('./services/emailService');
+    const verificationResult = await verifyEmailDelivery(email);
+    
+    // Update user based on verification result
+    user.isEmailVerified = verificationResult.verified;
+    user.emailDeliveryStatus = verificationResult.status;
+    if (verificationResult.verified) {
+      user.emailVerifiedDate = new Date();
+    }
+    await user.save();
+    
+    res.json({
+      success: true,
+      user: user,
+      verification: verificationResult
+    });
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.status(500).json({ message: 'Error verifying email' });
   }
 });
 
@@ -297,24 +385,28 @@ app.post('/api/signup', async (req, res) => {
     // Send thank you email first to validate email existence
     const emailResult = await sendThankYouEmail({ name, email, userType });
     
-    // Create user in database with email verification status based on email success
+    // Create user in database with enhanced email verification tracking
     const user = new User({
       name,
       email,
       userType,
-      isEmailVerified: emailResult.success // true if email sent successfully, false if failed
+      isEmailVerified: emailResult.success && emailResult.deliveryStatus === 'sent',
+      emailDeliveryStatus: emailResult.deliveryStatus || 'failed',
+      emailSentDate: emailResult.sentDate || null,
+      emailVerifiedDate: emailResult.success ? new Date() : null
     });
     await user.save().catch(() => {}); // Ignore duplicate errors
     
     // Provide appropriate response based on email result
-    if (emailResult.success) {
+    if (emailResult.success && emailResult.deliveryStatus === 'sent') {
       res.status(201).json({ 
         message: 'Thank you for signing up! You have been added to the waitlist.',
         user: {
           name,
           email,
           userType,
-          isEmailVerified: true
+          isEmailVerified: true,
+          emailDeliveryStatus: 'sent'
         },
         emailSent: true
       });
@@ -325,10 +417,11 @@ app.post('/api/signup', async (req, res) => {
           name,
           email,
           userType,
-          isEmailVerified: false
+          isEmailVerified: false,
+          emailDeliveryStatus: emailResult.deliveryStatus || 'failed'
         },
         emailSent: false,
-        emailError: emailResult.error
+        emailError: emailResult.error || emailResult.reason
       });
     }
   } catch (error) {

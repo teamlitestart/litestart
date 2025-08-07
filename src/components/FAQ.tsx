@@ -7,27 +7,31 @@ const FAQ = () => {
   const faqs = [
     {
       question: "How do you ensure the quality of student work?",
-      answer: "We rigorously vet all students through technical assessments, portfolio reviews, and interviews. Only the top 5% of applicants from elite universities are accepted. Additionally, all work is backed by our quality guarantee."
+      answer: "We verify students through their university emails to ensure they attend reputable institutions. Additionally, we provide comprehensive training and a resource library to help students deliver quality work."
     },
     {
       question: "What's the typical turnaround time for projects?",
-      answer: "Turnaround times vary by package: Starter (5 days), Pro (3 days), Growth (2 days). Our AI matching ensures students are available and committed to your timeline before assignment."
+      answer: "Project timelines are set by the startup based on their specific requirements and scope. Students apply to projects with clear timelines already established by the company."
     },
     {
       question: "How does your pricing compare to traditional freelancers?",
-      answer: "Our pricing is competitive with premium freelance platforms, but you get access to elite university talent with proven academic excellence. Plus, our AI matching reduces time-to-hire significantly."
+      answer: "Our pricing is competitive with premium freelance platforms, and you get access to university student talent. Our AI can help suggest potential matches, but startups should conduct their own evaluation and selection process."
     },
     {
       question: "Can I work with the same students on multiple projects?",
-      answer: "Absolutely! Many founders build ongoing relationships with talented students. You can request specific students for future projects, and we offer discounted rates for repeat collaborations."
+      answer: "Absolutely! Many founders build ongoing relationships with talented students. You can request specific students for future projects."
     },
     {
       question: "What if I'm not satisfied with the work delivered?",
-      answer: "We stand behind our quality with a satisfaction guarantee. If you're not happy with the initial delivery, we'll provide additional revisions or match you with different students at no extra cost."
+      answer: "As a platform connecting students and startups, we facilitate the initial connection and matching. Any work quality discussions would be handled directly between the student and startup."
+    },
+    {
+      question: "How does the application process work?",
+      answer: "Each startup determines their own application stages and selection criteria. Our AI may suggest potential student matches, but startups conduct their own due diligence and choose the best candidates for their specific needs."
     },
     {
       question: "Do students work individually or in teams?",
-      answer: "Both! Depending on your project complexity and chosen package, you might work with an individual student (Starter) or a curated team of 2-5 students (Pro/Growth packages) with complementary skills."
+      answer: "Both! The startup determines how many students they need based on their project requirements. You can choose to work with an individual student or a team of students with complementary skills."
     }
   ];
 

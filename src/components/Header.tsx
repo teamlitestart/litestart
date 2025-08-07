@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
@@ -9,7 +9,30 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/preview" }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { isAuthenticated, user, logout } = useAuth();
+
+  // Handle scroll events to hide/show header
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Show header when scrolling up, hide when scrolling down
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // Scrolling down and past 100px
+        setIsHeaderVisible(false);
+      } else {
+        // Scrolling up or at top
+        setIsHeaderVisible(true);
+      }
+      
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -25,13 +48,15 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
   };
 
   return (
-    <header className="bg-white/50 backdrop-blur-sm shadow-sm border-b border-gray-200/50 fixed top-0 left-0 right-0 z-50">
+    <header className={`bg-white/30 backdrop-blur-sm shadow-sm border-b border-gray-200/30 fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+      isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+    }`}>
       <div className="w-full px-6 lg:px-8">
         <div className="flex justify-between items-center h-24">
           {/* Logo - Far Left */}
           <div className="flex items-center">
             <Link to={homePath} className="flex items-center space-x-2" onClick={closeMobileMenu}>
-              <img src="/litestart-logo.png" alt="LiteStart logo" className="h-20 w-auto bg-transparent" />
+              <img src="/litestart_logo_clear2.png?v=3" alt="LiteStart logo" className="w-auto bg-transparent" style={{ height: '260px' }} />
             </Link>
           </div>
 
