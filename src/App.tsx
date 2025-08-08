@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { ArrowRight, Clock, CheckCircle, Briefcase, Users, Target } from 'lucide-react';
 import LandingPage from './components/LandingPage';
 import SignupPage from './components/SignupPage';
 import LoginPage from './components/LoginPage';
 import SignupForm from './components/SignupForm';
+import SignupSelection from './components/SignupSelection';
 import Dashboard from './components/Dashboard';
 import Hero from './components/Hero';
 import HowItWorks from './components/HowItWorks';
@@ -23,6 +24,30 @@ import PrivacyPolicy from './components/PrivacyPolicy';
 import TermsOfService from './components/TermsOfService';
 import CookiePolicy from './components/CookiePolicy';
 import EmailDeliveryMonitor from './components/EmailDeliveryMonitor';
+import StudentDashboard from './components/StudentDashboard';
+import StartupDashboard from './components/StartupDashboard';
+import DashboardRedirect from './components/DashboardRedirect';
+import { AuthProvider } from './contexts/AuthContext';
+
+// Signup Selection Page
+const SignupSelectionPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleSelectStudent = () => {
+    navigate('/signup/student');
+  };
+
+  const handleSelectStartup = () => {
+    navigate('/signup/startup');
+  };
+
+  return (
+    <SignupSelection 
+      onSelectStudent={handleSelectStudent}
+      onSelectStartup={handleSelectStartup}
+    />
+  );
+};
 
 // Student and Startup Signup Pages
 const StudentSignupPage: React.FC = () => {
@@ -88,14 +113,11 @@ const StudentSignupPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className={`animate-slide-${slideDirection}`}>
-          <StudentOnboarding 
-            isOpen={true} 
-            onClose={handleClose} 
-            currentStep={currentStep} 
-            onBack={handleBack}
-          />
-        </div>
+        <StudentOnboarding 
+          currentStep={currentStep} 
+          onBack={handleBack}
+          onNext={handleNext}
+        />
       )}
     </div>
   );
@@ -164,14 +186,11 @@ const StartupSignupPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className={`animate-slide-${slideDirection}`}>
-          <StartupOnboarding 
-            isOpen={true} 
-            onClose={handleClose} 
-            currentStep={currentStep} 
-            onBack={handleBack}
-          />
-        </div>
+        <StartupOnboarding 
+          currentStep={currentStep} 
+          onBack={handleBack}
+          onNext={handleNext}
+        />
       )}
     </div>
   );
@@ -547,29 +566,33 @@ function MainSite() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<SignupPage />} />
-        <Route path="/preview" element={<MainSite />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupForm />} />
-        <Route path="/signup/student" element={<StudentSignupPage />} />
-        <Route path="/signup/startup" element={<StartupSignupPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/email-monitor" element={<EmailDeliveryMonitor />} />
-        <Route path="/verify-email" element={<EmailVerification />} />
-        <Route path="/faqs" element={<FAQsPage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/preview/faqs" element={<FAQsPage />} />
-        <Route path="/preview/about" element={<AboutPage />} />
-        <Route path="/preview/contact" element={<ContactPage />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/cookie" element={<CookiePolicy />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<SignupPage />} />
+          <Route path="/preview" element={<MainSite />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupSelectionPage />} />
+          <Route path="/signup/student" element={<StudentSignupPage />} />
+          <Route path="/signup/startup" element={<StartupSignupPage />} />
+          <Route path="/dashboard/student" element={<StudentDashboard />} />
+          <Route path="/dashboard/startup" element={<StartupDashboard />} />
+          <Route path="/dashboard" element={<DashboardRedirect />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/email-monitor" element={<EmailDeliveryMonitor />} />
+          <Route path="/verify-email" element={<EmailVerification />} />
+          <Route path="/faqs" element={<FAQsPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/preview/faqs" element={<FAQsPage />} />
+          <Route path="/preview/about" element={<AboutPage />} />
+          <Route path="/preview/contact" element={<ContactPage />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/cookie" element={<CookiePolicy />} />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

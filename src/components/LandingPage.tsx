@@ -241,7 +241,7 @@ const LandingPage: React.FC = () => {
                       <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                     </button>
                     <button 
-                      onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}
+                      onClick={() => document.getElementById('journey-begins')?.scrollIntoView({ behavior: 'smooth' })}
                       className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center space-x-2"
                     >
                       <span>Learn How It Works</span>
@@ -255,7 +255,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Journey Introduction - Quote Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-teal-600 relative overflow-hidden">
+      <section id="journey-begins" className="py-16 bg-gradient-to-r from-blue-600 to-teal-600 relative overflow-hidden">
         {/* Flowing background elements */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
@@ -495,19 +495,11 @@ const LandingPage: React.FC = () => {
                       <AnimatedSection delay={200}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-3xl mx-auto">
               <Link 
-                to="/signup/student"
+                to="/signup"
                 className="group bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3 shadow-lg w-full sm:w-auto justify-center"
               >
                 <Users className="w-6 h-6" />
-                <span>Sign Up as Student</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link 
-                to="/signup/startup"
-                className="group border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:scale-105 flex items-center space-x-3 w-full sm:w-auto justify-center"
-              >
-                <Briefcase className="w-6 h-6" />
-                <span>Sign Up as Startup</span>
+                <span>Sign Up Now</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>

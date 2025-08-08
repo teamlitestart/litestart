@@ -50,8 +50,12 @@ const LoginPage: React.FC = () => {
         // Use the auth context to login with the correct userType
         login(formData.email, userType);
         
-        // Redirect to dashboard
-        navigate('/dashboard');
+        // Redirect to appropriate dashboard based on user type
+        if (userType === 'startup') {
+          navigate('/dashboard/startup');
+        } else {
+          navigate('/dashboard/student');
+        }
       } else {
         setError('Please enter both email and password');
       }
@@ -66,7 +70,7 @@ const LoginPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
       <Header />
       
-      <div className="flex items-center justify-center min-h-screen px-4 py-12">
+      <div className="flex items-center justify-center min-h-screen px-4 py-12 pt-32">
         <div className="max-w-md w-full">
           {/* Login Form Card */}
           <div className="bg-white rounded-2xl shadow-xl p-8">

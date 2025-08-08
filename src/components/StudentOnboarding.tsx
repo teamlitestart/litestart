@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowLeft, X, Upload, Check, User, GraduationCap, Code, Briefcase } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface StudentOnboardingProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen?: boolean;
+  onClose?: () => void;
   currentStep?: number;
   onBack?: () => void;
+  onNext?: () => void;
 }
 
-const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, currentStep: externalStep, onBack }) => {
-  const [internalStep, setInternalStep] = useState(1);
-  const currentStep = externalStep || internalStep;
+const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, onClose, currentStep: externalStep, onBack, onNext }) => {
+  const currentStep = externalStep || 1;
   const [customSkill, setCustomSkill] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -28,11 +29,178 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
   const totalSteps = 4;
 
   const skillOptions = [
-    'Full-Stack Development', 'Frontend Development', 'Backend Development',
-    'Mobile Development', 'AI/ML', 'Data Science', 'UI/UX Design',
-    'Product Design', 'Digital Marketing', 'Content Creation',
-    'Business Analysis', 'Project Management'
+    'Web Development', 'Mobile Development', 'Data Science', 'AI/ML',
+    'UI/UX Design', 'Digital Marketing', 'Financial Analysis',
+    'Business Strategy', 'Project Management', 'Research & Development',
+    'Content Creation', 'Sales', 'Cybersecurity', 'Cloud Computing',
+    'Business Intelligence', 'Market Research', 'Brand Management', 'Consulting'
   ];
+
+
+  const validateUniversityEmail = (email: string): boolean => {
+    // Comprehensive list of university domain patterns worldwide
+    const universityDomainPatterns = [
+      // UK and Commonwealth
+      '.ac.uk', '.edu.uk', '.sch.uk',
+      
+      // United States
+      '.edu',
+      
+      // Australia and New Zealand
+      '.edu.au', '.ac.au', '.edu.nz', '.ac.nz',
+      
+      // Canada
+      '.ca', '.qc.ca', '.on.ca', '.bc.ca', '.ab.ca', '.mb.ca', '.sk.ca', '.ns.ca', '.nb.ca', '.pe.ca', '.nl.ca', '.nt.ca', '.nu.ca', '.yt.ca',
+      
+      // South Africa
+      '.ac.za', '.edu.za',
+      
+      // India
+      '.ac.in', '.edu.in', '.res.in', '.ernet.in',
+      
+      // Singapore
+      '.edu.sg', '.ac.sg',
+      
+      // Malaysia
+      '.edu.my', '.ac.my', '.my',
+      
+      // Thailand
+      '.ac.th', '.edu.th',
+      
+      // Indonesia
+      '.ac.id', '.edu.id', '.sch.id',
+      
+      // Philippines
+      '.edu.ph', '.ph',
+      
+      // Japan
+      '.ac.jp', '.edu.jp', '.jp',
+      
+      // South Korea
+      '.ac.kr', '.edu.kr', '.kr',
+      
+      // China
+      '.edu.cn', '.ac.cn', '.cn',
+      
+      // Taiwan
+      '.edu.tw', '.ac.tw', '.tw',
+      
+      // Hong Kong
+      '.edu.hk', '.ac.hk', '.hk',
+      
+      // Europe - Germany
+      '.de', '.uni.de', '.tu.de', '.fh.de',
+      
+      // Europe - France
+      '.fr', '.univ.fr', '.ens.fr', '.polytechnique.fr',
+      
+      // Europe - Italy
+      '.it', '.unibo.it', '.unimi.it', '.polimi.it',
+      
+      // Europe - Spain
+      '.es', '.upc.es', '.uc3m.es', '.upf.edu',
+      
+      // Europe - Netherlands
+      '.nl', '.tudelft.nl', '.uva.nl', '.leiden.edu',
+      
+      // Europe - Sweden
+      '.se', '.kth.se', '.uu.se', '.lu.se',
+      
+      // Europe - Norway
+      '.no', '.uio.no', '.ntnu.no',
+      
+      // Europe - Denmark
+      '.dk', '.ku.dk', '.dtu.dk',
+      
+      // Europe - Finland
+      '.fi', '.helsinki.fi', '.aalto.fi',
+      
+      // Europe - Switzerland
+      '.ch', '.ethz.ch', '.epfl.ch',
+      
+      // Europe - Austria
+      '.at', '.univie.ac.at', '.tuwien.ac.at',
+      
+      // Europe - Belgium
+      '.be', '.kuleuven.be', '.ulb.ac.be',
+      
+      // Europe - Ireland
+      '.ie', '.tcd.ie', '.ucd.ie',
+      
+      // Europe - Poland
+      '.pl', '.uw.edu.pl', '.pw.edu.pl',
+      
+      // Europe - Czech Republic
+      '.cz', '.cuni.cz', '.cvut.cz',
+      
+      // Europe - Hungary
+      '.hu', '.elte.hu', '.bme.hu',
+      
+      // Europe - Greece
+      '.gr', '.uoa.gr', '.ntua.gr',
+      
+      // Europe - Portugal
+      '.pt', '.up.pt', '.ist.utl.pt',
+      
+      // Europe - Russia
+      '.ru', '.msu.ru', '.spbu.ru',
+      
+      // Middle East - Israel
+      '.il', '.ac.il', '.technion.ac.il',
+      
+      // Middle East - Turkey
+      '.tr', '.edu.tr', '.metu.edu.tr',
+      
+      // Middle East - UAE
+      '.ae', '.ac.ae', '.uaeu.ac.ae',
+      
+      // Africa - Nigeria
+      '.ng', '.edu.ng', '.ui.edu.ng',
+      
+      // Africa - Kenya
+      '.ke', '.ac.ke', '.uonbi.ac.ke',
+      
+      // Africa - Ghana
+      '.gh', '.edu.gh', '.ug.edu.gh',
+      
+      // Africa - Egypt
+      '.eg', '.edu.eg', '.cairo.edu.eg',
+      
+      // South America - Brazil
+      '.br', '.edu.br', '.usp.br',
+      
+      // South America - Argentina
+      '.ar', '.edu.ar', '.uba.ar',
+      
+      // South America - Chile
+      '.cl', '.edu.cl', '.uchile.cl',
+      
+      // South America - Colombia
+      '.co', '.edu.co', '.unal.edu.co',
+      
+      // South America - Mexico
+      '.mx', '.edu.mx', '.unam.mx',
+      
+      // Central America - Costa Rica
+      '.cr', '.ac.cr', '.ucr.ac.cr',
+      
+      // Central America - Panama
+      '.pa', '.ac.pa', '.up.ac.pa'
+    ];
+    
+    const domain = email.split('@')[1]?.toLowerCase();
+    if (!domain) return false;
+    
+    // Check if domain ends with any university pattern or matches exactly
+    return universityDomainPatterns.some(pattern => {
+      // For exact matches (like .edu, .ac.uk)
+      if (pattern.startsWith('.')) {
+        return domain.endsWith(pattern);
+      }
+      // For specific domains (like .ca, .jp, etc.)
+      return domain === pattern || domain.endsWith('.' + pattern);
+    });
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -64,18 +232,50 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
     }));
   };
 
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        if (!formData.firstName?.trim() || !formData.lastName?.trim() || !formData.email?.trim()) {
+          return false;
+        }
+        if (!validateUniversityEmail(formData.email)) {
+          alert('Please use your university email address (e.g., .edu, .ac.uk, .edu.au, etc.)');
+          return false;
+        }
+        return true;
+      case 2:
+        return !!(formData.university && formData.university.trim() &&
+                 formData.major && formData.major.trim() &&
+                 formData.graduationYear);
+      case 3:
+        return !!(formData.skills.length > 0 &&
+                 formData.experience && formData.experience.trim());
+      case 4:
+        return !!(formData.availability);
+      default:
+        return true;
+    }
+  };
+
   const nextStep = () => {
     if (currentStep < totalSteps) {
-      setInternalStep(currentStep + 1);
+      if (validateStep(currentStep)) {
+        // Call onNext to go to next step
+        if (onNext) {
+          onNext();
+        }
+      } else {
+        // Show validation error
+        alert('Please fill in all required fields before continuing.');
+      }
     }
   };
 
   const prevStep = () => {
     if (currentStep > 1) {
-      if (onBack && currentStep === 1) {
+      // Call onBack to go to previous step (App.tsx will handle the step decrement)
+      if (onBack) {
         onBack();
-      } else {
-        setInternalStep(currentStep - 1);
       }
     }
   };
@@ -83,24 +283,16 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
   const handleSubmit = () => {
     // Handle form submission
     console.log('Form submitted:', formData);
-    onClose();
-    // Reset form
-    setCurrentStep(1);
-    setFormData({
-      firstName: '',
-      lastName: '',
-      email: '',
-      university: '',
-      major: '',
-      graduationYear: '',
-      skills: [],
-      experience: '',
-      portfolio: '',
-      availability: ''
-    });
+    
+    // Store user data for login system
+    localStorage.setItem('userEmail', formData.email);
+    localStorage.setItem('userType', 'student');
+    localStorage.setItem('authToken', 'demo-token');
+    
+    alert('Registration successful! Welcome to LiteStart!');
+    // Redirect to student dashboard
+    window.location.href = '/dashboard/student';
   };
-
-  if (!isOpen) return null;
 
   const renderStep = () => {
     switch (currentStep) {
@@ -108,45 +300,51 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-12 hover:rotate-0 transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-12 hover:rotate-0 transition-all duration-300">
                 <User className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Personal Information</h3>
-              <p className="text-blue-100">Let's start with the basics</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Personal Information</h3>
+              <p className="text-gray-700 font-medium">Let's start with the basics</p>
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-blue-100 mb-2">First Name</label>
+                <label className="block text-sm font-semibold text-gray-800 mb-2">First Name <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50"
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
                   placeholder="John"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-blue-100 mb-2">Last Name</label>
+                <label className="block text-sm font-semibold text-gray-800 mb-2">Last Name <span className="text-red-500">*</span></label>
                 <input
                   type="text"
                   value={formData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50"
+                  className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
                   placeholder="Doe"
+                  required
                 />
               </div>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-blue-100 mb-2">Email Address</label>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">University Email Address <span className="text-red-500">*</span></label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50"
-                placeholder="john.doe@university.edu"
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
+                placeholder="your.email@university.ac.uk"
+                required
               />
+              <p className="text-sm text-gray-600 mt-2">
+                Please use your university email address (e.g., .edu, .ac.uk, .edu.au, etc.)
+              </p>
             </div>
           </div>
         );
@@ -155,47 +353,50 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transform -rotate-12 hover:rotate-0 transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 transform -rotate-12 hover:rotate-0 transition-all duration-300">
                 <GraduationCap className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Academic Background</h3>
-              <p className="text-blue-100">Tell us about your education</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Academic Background</h3>
+              <p className="text-gray-700 font-medium">Tell us about your education</p>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-blue-100 mb-2">University</label>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">University <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={formData.university}
                 onChange={(e) => handleInputChange('university', e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50"
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
                 placeholder="Stanford University"
+                required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-blue-100 mb-2">Major/Field of Study</label>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">Major/Field of Study <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={formData.major}
                 onChange={(e) => handleInputChange('major', e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50"
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
                 placeholder="Computer Science"
+                required
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-blue-100 mb-2">Expected Graduation Year</label>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">Expected Graduation Year <span className="text-red-500">*</span></label>
               <select
                 value={formData.graduationYear}
                 onChange={(e) => handleInputChange('graduationYear', e.target.value)}
-                className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium"
+                required
               >
-                <option value="" className="bg-gray-900">Select year</option>
-                <option value="2025" className="bg-gray-900">2025</option>
-                <option value="2026" className="bg-gray-900">2026</option>
-                <option value="2027" className="bg-gray-900">2027</option>
-                <option value="2028" className="bg-gray-900">2028</option>
+                <option value="" className="bg-white text-gray-900">Select year</option>
+                <option value="2025" className="bg-white text-gray-900">2025</option>
+                <option value="2026" className="bg-white text-gray-900">2026</option>
+                <option value="2027" className="bg-white text-gray-900">2027</option>
+                <option value="2028" className="bg-white text-gray-900">2028</option>
               </select>
             </div>
           </div>
@@ -205,81 +406,80 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-12 hover:rotate-0 transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-12 hover:rotate-0 transition-all duration-300">
                 <Code className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Skills & Expertise</h3>
-              <p className="text-blue-100">Select your areas of expertise</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Skills & Experience</h3>
+              <p className="text-gray-700 font-medium">What can you bring to the table?</p>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-blue-100 mb-4">Select your skills (choose all that apply)</label>
-              <div className="grid grid-cols-2 gap-3 mb-6">
+              <label className="block text-sm font-semibold text-gray-800 mb-4">Select Your Skills <span className="text-red-500">*</span></label>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
                 {skillOptions.map((skill) => (
                   <button
                     key={skill}
                     onClick={() => handleSkillToggle(skill)}
-                    className={`p-3 text-left rounded-xl border-2 transition-all duration-300 ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
                       formData.skills.includes(skill)
-                        ? 'border-blue-400 bg-blue-400/20 text-white'
-                        : 'border-white/20 hover:border-white/40 text-white/70 hover:text-white'
+                        ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
                     }`}
                   >
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">{skill}</span>
-                      {formData.skills.includes(skill) && (
-                        <Check className="w-4 h-4 text-blue-400" />
-                      )}
-                    </div>
+                    {skill}
                   </button>
                 ))}
               </div>
-
-              {/* Custom Skills Input */}
-              <div className="border-t border-white/10 pt-6">
-                <label className="block text-sm font-medium text-blue-100 mb-2">Add Custom Skills</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={customSkill}
-                    onChange={(e) => setCustomSkill(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddCustomSkill()}
-                    className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-white/50"
-                    placeholder="Type a skill and press Enter"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddCustomSkill}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25"
-                  >
-                    Add
-                  </button>
-                </div>
+              
+              <div className="flex space-x-2 mb-4">
+                <input
+                  type="text"
+                  value={customSkill}
+                  onChange={(e) => setCustomSkill(e.target.value)}
+                  placeholder="Add custom skill"
+                  className="flex-1 px-4 py-2 bg-white border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
+                />
+                <button
+                  onClick={handleAddCustomSkill}
+                  className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg hover:from-blue-600 hover:to-blue-800 transition-all duration-300 font-medium"
+                >
+                  Add
+                </button>
               </div>
-
-              {/* Selected Skills Display */}
+              
               {formData.skills.length > 0 && (
-                <div className="mt-6">
-                  <label className="block text-sm font-medium text-blue-100 mb-3">Selected Skills</label>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">Selected Skills</label>
                   <div className="flex flex-wrap gap-2">
                     {formData.skills.map((skill) => (
-                      <span
+                      <div
                         key={skill}
-                        className="inline-flex items-center px-4 py-2 rounded-xl text-sm bg-blue-400/20 text-white border border-blue-400/30"
+                        className="flex items-center space-x-2 bg-blue-100 border border-blue-300 px-3 py-1 rounded-full text-blue-800 text-sm font-medium"
                       >
-                        {skill}
+                        <span>{skill}</span>
                         <button
-                          type="button"
                           onClick={() => handleRemoveSkill(skill)}
-                          className="ml-2 text-white/70 hover:text-white"
+                          className="text-blue-600 hover:text-blue-800"
                         >
-                          <X className="w-3 h-3" />
+                          <X className="w-4 h-4" />
                         </button>
-                      </span>
+                      </div>
                     ))}
                   </div>
                 </div>
               )}
+            </div>
+            
+            <div>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">Brief Experience Summary <span className="text-red-500">*</span></label>
+              <textarea
+                value={formData.experience}
+                onChange={(e) => handleInputChange('experience', e.target.value)}
+                rows={3}
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium resize-none"
+                placeholder="Tell us about your relevant experience, projects, or achievements..."
+                required
+              />
             </div>
           </div>
         );
@@ -288,51 +488,48 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-violet-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transform -rotate-12 hover:rotate-0 transition-all duration-300">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-6 transform -rotate-12 hover:rotate-0 transition-all duration-300">
                 <Briefcase className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Experience & Portfolio</h3>
-              <p className="text-blue-100">Show us what you've built</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Final Details</h3>
+              <p className="text-gray-700 font-medium">Almost there! Let's get you ready for opportunities</p>
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Experience Level</label>
-              <select
-                value={formData.experience}
-                onChange={(e) => handleInputChange('experience', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="">Select experience level</option>
-                <option value="beginner">Beginner (0-1 years)</option>
-                <option value="intermediate">Intermediate (1-3 years)</option>
-                <option value="advanced">Advanced (3+ years)</option>
-              </select>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Portfolio/GitHub URL</label>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">Portfolio/Projects Link (Optional)</label>
               <input
                 type="url"
                 value={formData.portfolio}
                 onChange={(e) => handleInputChange('portfolio', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="https://github.com/johndoe or https://portfolio.com"
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium"
+                placeholder="https://github.com/yourusername or portfolio link"
               />
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Weekly Availability</label>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">Availability <span className="text-red-500">*</span></label>
               <select
                 value={formData.availability}
                 onChange={(e) => handleInputChange('availability', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 font-medium"
+                required
               >
-                <option value="">Select availability</option>
-                <option value="5-10">5-10 hours/week</option>
-                <option value="10-20">10-20 hours/week</option>
-                <option value="20-30">20-30 hours/week</option>
-                <option value="30+">30+ hours/week</option>
+                <option value="" className="bg-white text-gray-900">Select availability</option>
+                <option value="5-10 hours/week" className="bg-white text-gray-900">5-10 hours/week</option>
+                <option value="10-15 hours/week" className="bg-white text-gray-900">10-15 hours/week</option>
+                <option value="15-20 hours/week" className="bg-white text-gray-900">15-20 hours/week</option>
+                <option value="20+ hours/week" className="bg-white text-gray-900">20+ hours/week</option>
               </select>
+            </div>
+            
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+              <h4 className="text-gray-900 font-semibold mb-2">What happens next?</h4>
+              <ul className="text-gray-700 text-sm space-y-1">
+                <li>• You'll get access to our platform with all available opportunities</li>
+                <li>• Browse and apply for jobs that match your skills and interests</li>
+                <li>• Start working on real projects with innovative startups</li>
+                <li>• Build your portfolio and earn while you learn</li>
+              </ul>
             </div>
           </div>
         );
@@ -343,49 +540,51 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-blue-900/90 via-indigo-900/90 to-violet-900/90 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob"></div>
-        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-violet-400 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-1/3 right-1/3 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-200 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob animation-delay-4000"></div>
       </div>
 
-      <div className="bg-white/10 backdrop-blur-xl rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden border border-white/20 shadow-2xl">
-        <div className="p-8 md:p-12">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-12">
-            <div className="space-y-2">
-              <h2 className="text-4xl font-bold text-white">
-                <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
-                  Create Your Future
-                </span>
-              </h2>
-              <p className="text-blue-100">Step {currentStep} of {totalSteps}</p>
-            </div>
-            <button
-              onClick={onClose}
-              className="text-white/70 hover:text-white transition-colors duration-300"
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 md:p-8">
+          <div className="space-y-2">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+                Create Your Future
+              </span>
+            </h2>
+            <p className="text-gray-600">Step {currentStep} of {totalSteps}</p>
+          </div>
+          {onClose && (
+            <Link
+              to="/preview"
+              className="text-gray-400 hover:text-gray-600 transition-colors duration-300"
             >
               <X className="w-6 h-6" />
-            </button>
-          </div>
+            </Link>
+          )}
+        </div>
 
-          {/* Progress Steps */}
-          <div className="relative mb-12">
-            <div className="absolute h-1 bg-gradient-to-r from-blue-500 to-violet-500 transition-all duration-500"
+        {/* Progress Steps */}
+        <div className="px-6 md:px-8 mb-8">
+          <div className="relative max-w-2xl mx-auto">
+            <div className="absolute h-1 bg-gradient-to-r from-blue-500 to-blue-700 transition-all duration-500"
                  style={{ width: `${(currentStep / totalSteps) * 100}%`, top: '50%', transform: 'translateY(-50%)', zIndex: 0 }}></div>
-            <div className="absolute h-1 bg-white/10 w-full top-1/2 transform -translate-y-1/2"></div>
+            <div className="absolute h-1 bg-gray-200 w-full top-1/2 transform -translate-y-1/2"></div>
             <div className="relative flex justify-between">
               {Array.from({ length: totalSteps }, (_, i) => (
                 <div
                   key={i}
                   className={`w-12 h-12 rounded-xl flex items-center justify-center text-lg font-semibold relative z-10 transition-all duration-500 ${
                     i + 1 === currentStep
-                      ? 'bg-gradient-to-r from-blue-500 to-violet-500 text-white scale-110 shadow-xl shadow-blue-500/25'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white scale-110 shadow-xl shadow-blue-500/25'
                       : i + 1 < currentStep
-                      ? 'bg-gradient-to-r from-blue-500 to-violet-500 text-white'
-                      : 'bg-white/10 text-white/70'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-700 text-white'
+                      : 'bg-gray-100 text-gray-400 border border-gray-200'
                   }`}
                 >
                   {i + 1 < currentStep ? <Check className="w-6 h-6" /> : i + 1}
@@ -393,23 +592,25 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Content Card */}
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 transition-all duration-500">
-            <div className="max-w-2xl mx-auto">
-              {renderStep()}
-            </div>
+        {/* Main Content */}
+        <div className="flex-1 flex items-center justify-center px-6 md:px-8 pb-8">
+          <div className="w-full max-w-2xl">
+            {renderStep()}
           </div>
+        </div>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/10">
+        {/* Navigation */}
+        <div className="px-6 md:px-8 pb-8">
+          <div className="flex items-center justify-between max-w-2xl mx-auto pt-6 border-t border-gray-200">
             <button
               onClick={prevStep}
               disabled={currentStep === 1}
               className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 currentStep === 1
-                  ? 'text-white/30 cursor-not-allowed'
-                  : 'text-white hover:bg-white/10'
+                  ? 'text-gray-300 cursor-not-allowed'
+                  : 'text-gray-600 hover:bg-gray-50'
               }`}
             >
               <ArrowLeft className="w-5 h-5" />
@@ -419,7 +620,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
             {currentStep === totalSteps ? (
               <button
                 onClick={handleSubmit}
-                className="bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 flex items-center space-x-2"
+                className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 flex items-center space-x-2"
               >
                 <span>Complete Application</span>
                 <Check className="w-5 h-5" />
@@ -427,7 +628,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen, onClose, 
             ) : (
               <button
                 onClick={nextStep}
-                className="bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 flex items-center space-x-2"
+                className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25 hover:scale-105 flex items-center space-x-2"
               >
                 <span>Next</span>
                 <ArrowRight className="w-5 h-5" />
