@@ -52,7 +52,7 @@ const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string;
 const SignupPage: React.FC = () => {
   const [form, setForm] = useState({ name: '', email: '' });
   const [submitted, setSubmitted] = useState(false);
-  const [userType, setUserType] = useState<'startup' | 'student'>('startup');
+  const [userType, setUserType] = useState<'startup' | 'student' | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -336,6 +336,11 @@ const SignupPage: React.FC = () => {
                         {feature.description}
                     </p>
                   </div>
+                  {userType === null && (
+                    <p className="text-sm text-red-500 text-left">
+                      Please select whether you are a student or startup
+                    </p>
+                  )}
                 </div>
               </div>
             </AnimatedSection>
@@ -618,6 +623,8 @@ const SignupPage: React.FC = () => {
                     className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
                       userType === 'student'
                         ? 'bg-blue-600 text-white border-blue-600'
+                        : userType === null
+                        ? 'bg-gray-100 text-gray-400 border-gray-300 cursor-pointer hover:bg-gray-200'
                         : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
                     }`}
                   >
@@ -629,6 +636,8 @@ const SignupPage: React.FC = () => {
                     className={`flex-1 py-3 px-4 rounded-lg font-semibold text-lg transition-all duration-200 border-2 ${
                       userType === 'startup'
                         ? 'bg-teal-600 text-white border-teal-600'
+                        : userType === null
+                        ? 'bg-gray-100 text-gray-400 border-gray-300 cursor-pointer hover:bg-gray-200'
                         : 'bg-white text-teal-600 border-teal-600 hover:bg-teal-50'
                     }`}
                   >
@@ -645,14 +654,14 @@ const SignupPage: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || userType === null}
                     className={`flex-1 font-semibold py-3 rounded-lg text-lg transition-all duration-300 shadow-md ${
-                      loading 
+                      loading || userType === null
                         ? 'bg-gray-400 cursor-not-allowed' 
                         : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg hover:scale-105'
                     }`}
                   >
-                    {loading ? 'Signing up...' : `Join Waitlist`}
+                    {loading ? 'Signing up...' : userType === null ? 'Select User Type' : 'Join Waitlist'}
                   </button>
                 </div>
               </form>
