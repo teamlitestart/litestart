@@ -661,7 +661,7 @@ const SignupPage: React.FC = () => {
                         : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg hover:scale-105'
                     }`}
                   >
-                    {loading ? 'Signing up...' : userType === null ? 'Select User Type' : 'Join Waitlist'}
+                    {loading ? 'Signing up...' : 'Join Waitlist'}
                   </button>
                 </div>
               </form>
