@@ -4,7 +4,7 @@
 export const GOOGLE_ANALYTICS_CONFIG = {
   // Your Google Analytics Measurement ID (starts with "G-")
   // Get this from: https://analytics.google.com/ → Admin → Data Streams → Web Stream
-  measurementId: 'GA_MEASUREMENT_ID', // Replace with your actual ID like 'G-XXXXXXXXXX'
+  measurementId: 'G-58H4ZEV8NP', // Your actual Google Analytics ID
   
   // Your Google Analytics Property ID (starts with "properties/")
   // Get this from: https://analytics.google.com/ → Admin → Property Settings
@@ -17,10 +17,6 @@ export const GOOGLE_ANALYTICS_CONFIG = {
 
 // Initialize Google Analytics service with your config
 export const initializeGoogleAnalytics = () => {
-  // This will be called when you have your real GA credentials
-  // For now, it's commented out until you get your credentials
-  
-  /*
   import { googleAnalyticsService } from '../services/googleAnalytics';
   
   googleAnalyticsService.initialize({
@@ -28,5 +24,4 @@ export const initializeGoogleAnalytics = () => {
     apiKey: GOOGLE_ANALYTICS_CONFIG.apiKey,
     propertyId: GOOGLE_ANALYTICS_CONFIG.propertyId,
   });
-  */
 }; 
