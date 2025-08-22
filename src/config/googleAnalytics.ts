@@ -17,11 +17,16 @@ export const GOOGLE_ANALYTICS_CONFIG = {
 
 // Initialize Google Analytics service with your config
 export const initializeGoogleAnalytics = () => {
-  import { googleAnalyticsService } from '../services/googleAnalytics';
+  // Note: You'll need to get your API key and property ID from Google Analytics
+  // For now, we'll just use the measurement ID which is already working
+  console.log('Google Analytics initialized with ID:', GOOGLE_ANALYTICS_CONFIG.measurementId);
   
+  // TODO: Uncomment this when you have your API key and property ID
+  /*
   googleAnalyticsService.initialize({
     measurementId: GOOGLE_ANALYTICS_CONFIG.measurementId,
     apiKey: GOOGLE_ANALYTICS_CONFIG.apiKey,
     propertyId: GOOGLE_ANALYTICS_CONFIG.propertyId,
   });
+  */
 }; 

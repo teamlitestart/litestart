@@ -29,7 +29,6 @@ import StartupDashboard from './components/StartupDashboard';
 import DashboardRedirect from './components/DashboardRedirect';
 import { AuthProvider } from './contexts/AuthContext';
 import { trackPageView } from './services/googleAnalytics';
-import { initializeGoogleAnalytics } from './config/googleAnalytics';
 
 // Page View Tracker Component
 const PageViewTracker: React.FC = () => {
@@ -579,11 +578,6 @@ function MainSite() {
 }
 
 function App() {
-  // Initialize Google Analytics when the app starts
-  useEffect(() => {
-    initializeGoogleAnalytics();
-  }, []);
-
   return (
     <AuthProvider>
       <BrowserRouter>
