@@ -84,8 +84,10 @@ const AdminDashboard: React.FC = () => {
 
   const fetchWebsiteViews = async () => {
     try {
+      console.log('Fetching website views...');
       // Try to get real data from Google Analytics service
       const views = await googleAnalyticsService.getWebsiteViews();
+      console.log('Received website views:', views);
       setWebsiteViews(views);
     } catch (err) {
       console.error('Failed to fetch website views:', err);
@@ -570,8 +572,12 @@ const AdminDashboard: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={() => {
-                      fetchWebsiteViews();
-                      fetchSignupUsers();
+                      // Force cache refresh
+                      setWebsiteViews({ today: 0, thisMonth: 0, thisYear: 0, total: 0 });
+                      setTimeout(() => {
+                        fetchWebsiteViews();
+                        fetchSignupUsers();
+                      }, 100);
                     }}
                     className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200 transition-colors"
                   >
