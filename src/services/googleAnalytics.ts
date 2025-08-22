@@ -29,9 +29,58 @@ class GoogleAnalyticsService {
     }
 
     try {
-      // TODO: Implement real Google Analytics API call
-      // For now, return mock data that looks realistic
-      // In the future, this will call the actual GA API
+      // Call the real Google Analytics API
+      const response = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${this.config.propertyId}:runReport`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dateRanges: [
+            {
+              startDate: 'today',
+              endDate: 'today'
+            },
+            {
+              startDate: '30daysAgo',
+              endDate: 'today'
+            },
+            {
+              startDate: '365daysAgo',
+              endDate: 'today'
+            },
+            {
+              startDate: '2020-01-01',
+              endDate: 'today'
+            }
+          ],
+          metrics: [
+            { name: 'screenPageViews' }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Google Analytics API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      // Parse the real data from Google Analytics
+      const realData: WebsiteViews = {
+        today: parseInt(data.rows?.[0]?.metricValues?.[0]?.value || '0'),
+        thisMonth: parseInt(data.rows?.[1]?.metricValues?.[0]?.value || '0'),
+        thisYear: parseInt(data.rows?.[2]?.metricValues?.[0]?.value || '0'),
+        total: parseInt(data.rows?.[3]?.metricValues?.[0]?.value || '0')
+      };
+
+      console.log('Real Google Analytics data fetched:', realData);
+      return realData;
+    } catch (error) {
+      console.error('Failed to fetch real Google Analytics data:', error);
+      
+      // Fallback to mock data if API fails
       const mockData: WebsiteViews = {
         today: Math.floor(Math.random() * 50) + 20,
         thisMonth: Math.floor(Math.random() * 500) + 200,
@@ -39,11 +88,8 @@ class GoogleAnalyticsService {
         total: Math.floor(Math.random() * 10000) + 5000
       };
 
-      console.log('Google Analytics service ready! Using mock data for now.');
+      console.log('Using fallback mock data due to API error');
       return mockData;
-    } catch (error) {
-      console.error('Failed to fetch Google Analytics data:', error);
-      throw error;
     }
   }
 

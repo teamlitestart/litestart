@@ -1,5 +1,6 @@
 // Google Analytics Configuration
 // Replace these placeholder values with your actual Google Analytics credentials
+import { googleAnalyticsService } from '../services/googleAnalytics';
 
 export const GOOGLE_ANALYTICS_CONFIG = {
   // Your Google Analytics Measurement ID (starts with "G-")
@@ -14,21 +15,11 @@ export const GOOGLE_ANALYTICS_CONFIG = {
 
 // Initialize Google Analytics service with your config
 export const initializeGoogleAnalytics = () => {
-  // Note: The service will be initialized when needed
-  // For now, we'll just log that we have the credentials
-  console.log('Google Analytics credentials loaded:', {
-    measurementId: GOOGLE_ANALYTICS_CONFIG.measurementId,
-    propertyId: GOOGLE_ANALYTICS_CONFIG.propertyId,
-    apiKey: GOOGLE_ANALYTICS_CONFIG.apiKey ? 'API Key Loaded' : 'No API Key'
-  });
-  
-  // TODO: When you're ready to implement real API calls,
-  // uncomment this and implement the actual Google Analytics API integration
-  /*
   googleAnalyticsService.initialize({
     measurementId: GOOGLE_ANALYTICS_CONFIG.measurementId,
     apiKey: GOOGLE_ANALYTICS_CONFIG.apiKey,
     propertyId: GOOGLE_ANALYTICS_CONFIG.propertyId,
   });
-  */
+  
+  console.log('Google Analytics service initialized with real credentials!');
 }; 
