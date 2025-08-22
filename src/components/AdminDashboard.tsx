@@ -89,14 +89,13 @@ const AdminDashboard: React.FC = () => {
       setWebsiteViews(views);
     } catch (err) {
       console.error('Failed to fetch website views:', err);
-      // Fallback to mock data if service fails
-      const mockViews = {
-        today: Math.floor(Math.random() * 50) + 20,
-        thisMonth: Math.floor(Math.random() * 500) + 200,
-        thisYear: Math.floor(Math.random() * 5000) + 2000,
-        total: Math.floor(Math.random() * 10000) + 5000
-      };
-      setWebsiteViews(mockViews);
+      // Set to zeros instead of random data
+      setWebsiteViews({
+        today: 0,
+        thisMonth: 0,
+        thisYear: 0,
+        total: 0
+      });
     }
   };
 

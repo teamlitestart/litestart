@@ -89,8 +89,8 @@ class GoogleAnalyticsService {
   // Get real-time visitor count
   async getRealTimeVisitors(): Promise<number> {
     // This would call Google Analytics Real-Time API
-    // For now, return mock data
-    return Math.floor(Math.random() * 10) + 1;
+    // For now, return 0 until we implement OAuth2
+    return 0;
   }
 }
 
