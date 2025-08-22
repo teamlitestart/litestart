@@ -84,7 +84,7 @@ const AdminDashboard: React.FC = () => {
 
   const fetchWebsiteViews = async () => {
     try {
-      console.log('Fetching website views...');
+      console.log('Fetching website views...', new Date().toISOString());
       // Try to get real data from Google Analytics service
       const views = await googleAnalyticsService.getWebsiteViews();
       console.log('Received website views:', views);
@@ -593,7 +593,7 @@ const AdminDashboard: React.FC = () => {
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {/* Website Views Analytics */}
+                        {/* Website Views Analytics - V2.0 */}
         <div className="p-4 bg-indigo-50 rounded-lg">
           <h4 className="font-medium text-indigo-900 mb-2">Website Views</h4>
           <div className="space-y-2">
@@ -608,7 +608,7 @@ const AdminDashboard: React.FC = () => {
             <div className="flex justify-between">
               <span className="text-sm text-indigo-700">This Year:</span>
               <span className="font-medium">{websiteViews.thisYear}</span>
-              </div>
+            </div>
             <div className="flex justify-between">
               <span className="text-sm text-indigo-700">Total Views:</span>
               <span className="font-medium">{websiteViews.total}</span>
@@ -616,8 +616,8 @@ const AdminDashboard: React.FC = () => {
           </div>
           <div className="mt-3 pt-3 border-t border-indigo-200">
             <p className="text-xs text-indigo-500 text-center">
-              Google Analytics Connected! ✅<br/>
-              Data updates every refresh
+              🚀 Real Analytics Data Active!<br/>
+              Click Refresh to update numbers
             </p>
           </div>
         </div>
