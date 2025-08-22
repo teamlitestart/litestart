@@ -3,25 +3,27 @@
 
 export const GOOGLE_ANALYTICS_CONFIG = {
   // Your Google Analytics Measurement ID (starts with "G-")
-  // Get this from: https://analytics.google.com/ → Admin → Data Streams → Web Stream
   measurementId: 'G-58H4ZEV8NP', // Your actual Google Analytics ID
   
   // Your Google Analytics Property ID (starts with "properties/")
-  // Get this from: https://analytics.google.com/ → Admin → Property Settings
-  propertyId: 'properties/XXXXXXXXXX', // Replace with your actual property ID
+  propertyId: 'properties/502275674', // Your actual Property ID
   
   // Your Google Analytics API Key
-  // Get this from: https://console.developers.google.com/ → APIs & Services → Credentials
-  apiKey: 'YOUR_API_KEY', // Replace with your actual API key
+  apiKey: 'AIzaSyDzEikj7zGIBYUQknOWDkt59-2A0xulbmY', // Your actual API Key
 };
 
 // Initialize Google Analytics service with your config
 export const initializeGoogleAnalytics = () => {
-  // Note: You'll need to get your API key and property ID from Google Analytics
-  // For now, we'll just use the measurement ID which is already working
-  console.log('Google Analytics initialized with ID:', GOOGLE_ANALYTICS_CONFIG.measurementId);
+  // Note: The service will be initialized when needed
+  // For now, we'll just log that we have the credentials
+  console.log('Google Analytics credentials loaded:', {
+    measurementId: GOOGLE_ANALYTICS_CONFIG.measurementId,
+    propertyId: GOOGLE_ANALYTICS_CONFIG.propertyId,
+    apiKey: GOOGLE_ANALYTICS_CONFIG.apiKey ? 'API Key Loaded' : 'No API Key'
+  });
   
-  // TODO: Uncomment this when you have your API key and property ID
+  // TODO: When you're ready to implement real API calls,
+  // uncomment this and implement the actual Google Analytics API integration
   /*
   googleAnalyticsService.initialize({
     measurementId: GOOGLE_ANALYTICS_CONFIG.measurementId,

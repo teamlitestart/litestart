@@ -29,8 +29,9 @@ class GoogleAnalyticsService {
     }
 
     try {
-      // For now, return mock data
-      // In production, this would call the Google Analytics API
+      // TODO: Implement real Google Analytics API call
+      // For now, return mock data that looks realistic
+      // In the future, this will call the actual GA API
       const mockData: WebsiteViews = {
         today: Math.floor(Math.random() * 50) + 20,
         thisMonth: Math.floor(Math.random() * 500) + 200,
@@ -38,6 +39,7 @@ class GoogleAnalyticsService {
         total: Math.floor(Math.random() * 10000) + 5000
       };
 
+      console.log('Google Analytics service ready! Using mock data for now.');
       return mockData;
     } catch (error) {
       console.error('Failed to fetch Google Analytics data:', error);
