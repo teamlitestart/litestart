@@ -28,6 +28,19 @@ import StudentDashboard from './components/StudentDashboard';
 import StartupDashboard from './components/StartupDashboard';
 import DashboardRedirect from './components/DashboardRedirect';
 import { AuthProvider } from './contexts/AuthContext';
+import { trackPageView } from './services/googleAnalytics';
+
+// Page View Tracker Component
+const PageViewTracker: React.FC = () => {
+  const location = useLocation();
+  
+  useEffect(() => {
+    // Track page view when location changes
+    trackPageView(location.pathname, document.title);
+  }, [location]);
+  
+  return null;
+};
 
 // Signup Selection Page
 const SignupSelectionPage: React.FC = () => {
@@ -568,6 +581,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <PageViewTracker />
         <Routes>
           <Route path="/" element={<SignupPage />} />
           <Route path="/preview" element={<MainSite />} />

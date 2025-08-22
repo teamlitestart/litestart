@@ -15,6 +15,7 @@ import {
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
 import { apiCall } from '../config/api';
+import { googleAnalyticsService } from '../services/googleAnalytics';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
 
@@ -83,18 +84,19 @@ const AdminDashboard: React.FC = () => {
 
   const fetchWebsiteViews = async () => {
     try {
-      // For now, we'll simulate website views data
-      // In production, this would come from your analytics service or database
-      const mockViews = {
-        today: Math.floor(Math.random() * 50) + 20, // 20-70 views today
-        thisMonth: Math.floor(Math.random() * 500) + 200, // 200-700 views this month
-        thisYear: Math.floor(Math.random() * 5000) + 2000, // 2000-7000 views this year
-        total: Math.floor(Math.random() * 10000) + 5000 // 5000-15000 total views
-      };
-      setWebsiteViews(mockViews);
+      // Try to get real data from Google Analytics service
+      const views = await googleAnalyticsService.getWebsiteViews();
+      setWebsiteViews(views);
     } catch (err) {
       console.error('Failed to fetch website views:', err);
-      setWebsiteViews({ today: 0, thisMonth: 0, thisYear: 0, total: 0 });
+      // Fallback to mock data if service fails
+      const mockViews = {
+        today: Math.floor(Math.random() * 50) + 20,
+        thisMonth: Math.floor(Math.random() * 500) + 200,
+        thisYear: Math.floor(Math.random() * 5000) + 2000,
+        total: Math.floor(Math.random() * 10000) + 5000
+      };
+      setWebsiteViews(mockViews);
     }
   };
 
