@@ -336,11 +336,6 @@ const SignupPage: React.FC = () => {
                         {feature.description}
                     </p>
                   </div>
-                  {userType === null && (
-                    <p className="text-sm text-red-500 text-left">
-                      Please select whether you are a student or startup
-                    </p>
-                  )}
                 </div>
               </div>
             </AnimatedSection>
