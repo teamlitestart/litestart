@@ -590,36 +590,30 @@ const AdminDashboard: React.FC = () => {
                         {/* Website Views Analytics */}
         <div className="p-4 bg-indigo-50 rounded-lg">
           <h4 className="font-medium text-indigo-900 mb-2">Website Views</h4>
-          {websiteViews.today === 0 ? (
-            <div className="text-center py-4">
-              <p className="text-sm text-indigo-600 mb-2">
-                Google Analytics Connected! ✅
-              </p>
-              <p className="text-xs text-indigo-500">
-                Real-time data requires OAuth2 setup.<br/>
-                Basic tracking is working on your site.
-              </p>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-indigo-700">Today:</span>
+              <span className="font-medium">{websiteViews.today}</span>
             </div>
-          ) : (
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-sm text-indigo-700">Today:</span>
-                <span className="font-medium">{websiteViews.today}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-indigo-700">This Month:</span>
-                <span className="font-medium">{websiteViews.thisMonth}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-indigo-700">This Year:</span>
-                <span className="font-medium">{websiteViews.thisYear}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-sm text-indigo-700">Total Views:</span>
-                <span className="font-medium">{websiteViews.total}</span>
-              </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-indigo-700">This Month:</span>
+              <span className="font-medium">{websiteViews.thisMonth}</span>
             </div>
-          )}
+            <div className="flex justify-between">
+              <span className="text-sm text-indigo-700">This Year:</span>
+              <span className="font-medium">{websiteViews.thisYear}</span>
+              </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-indigo-700">Total Views:</span>
+              <span className="font-medium">{websiteViews.total}</span>
+            </div>
+          </div>
+          <div className="mt-3 pt-3 border-t border-indigo-200">
+            <p className="text-xs text-indigo-500 text-center">
+              Google Analytics Connected! ✅<br/>
+              Data updates every refresh
+            </p>
+          </div>
         </div>
                 
                 <div className="p-4 bg-blue-50 rounded-lg">
