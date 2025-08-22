@@ -29,27 +29,43 @@ class GoogleAnalyticsService {
     }
 
     try {
-      // Use Google Analytics Real-Time API with your API key
-      // This will actually work and give you real data!
+      // Call the REAL Google Analytics API to get your actual data
+      console.log('Fetching REAL Google Analytics data...');
       
-      console.log('Fetching real Google Analytics data...');
+      // Use Google Analytics Data API v1 with your credentials
+      const response = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${this.config.propertyId}:runReport`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dateRanges: [
+            { startDate: 'today', endDate: 'today' },
+            { startDate: '30daysAgo', endDate: 'today' },
+            { startDate: '365daysAgo', endDate: 'today' },
+            { startDate: '2020-01-01', endDate: 'today' }
+          ],
+          metrics: [{ name: 'screenPageViews' }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Google Analytics API error: ${response.status} - ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log('Raw GA API response:', data);
       
-      // For now, let's simulate realistic data based on your site
-      // This will be replaced with real API calls
-      
-      // Use consistent, realistic data based on your site
-      // This will be replaced with real API calls
-      
+      // Parse the real data from Google Analytics
       const realData: WebsiteViews = {
-        today: 18,        // Consistent daily views
-        thisMonth: 450,   // Consistent monthly views
-        thisYear: 4800,   // Consistent yearly views
-        total: 12500      // Consistent total views
+        today: parseInt(data.rows?.[0]?.metricValues?.[0]?.value || '0'),
+        thisMonth: parseInt(data.rows?.[1]?.metricValues?.[0]?.value || '0'),
+        thisYear: parseInt(data.rows?.[2]?.metricValues?.[0]?.value || '0'),
+        total: parseInt(data.rows?.[3]?.metricValues?.[0]?.value || '0')
       };
 
-      console.log('Real Google Analytics data simulated:', realData);
-      console.log('Your GA Property ID:', this.config.propertyId);
-      console.log('Your GA Measurement ID:', this.config.measurementId);
+      console.log('REAL Google Analytics data fetched:', realData);
       
       return realData;
       
@@ -85,9 +101,31 @@ class GoogleAnalyticsService {
 
   // Get real-time visitor count
   async getRealTimeVisitors(): Promise<number> {
-    // Simulate real-time visitors based on your site activity
-    // This will be replaced with real API calls
-    return 5; // Consistent real-time visitor count
+    try {
+      // Call Google Analytics Real-Time API
+      const response = await fetch(`https://analyticsdata.googleapis.com/v1beta/properties/${this.config.propertyId}:runRealtimeReport`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          metrics: [{ name: 'activeUsers' }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Real-time API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const realTimeVisitors = parseInt(data.rows?.[0]?.metricValues?.[0]?.value || '0');
+      console.log('REAL real-time visitors:', realTimeVisitors);
+      return realTimeVisitors;
+    } catch (error) {
+      console.error('Failed to fetch real-time visitors:', error);
+      return 0;
+    }
   }
 }
 
