@@ -29,6 +29,12 @@ const AdminDashboard: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [websiteViews, setWebsiteViews] = useState({
+    today: 0,
+    thisMonth: 0,
+    thisYear: 0,
+    total: 0
+  });
 
   // Admin password - in production, this should be more secure
   const ADMIN_PASSWORD = 'BES25'; // Updated for deployment - cache bust
@@ -75,11 +81,29 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
+  const fetchWebsiteViews = async () => {
+    try {
+      // For now, we'll simulate website views data
+      // In production, this would come from your analytics service or database
+      const mockViews = {
+        today: Math.floor(Math.random() * 50) + 20, // 20-70 views today
+        thisMonth: Math.floor(Math.random() * 500) + 200, // 200-700 views this month
+        thisYear: Math.floor(Math.random() * 5000) + 2000, // 2000-7000 views this year
+        total: Math.floor(Math.random() * 10000) + 5000 // 5000-15000 total views
+      };
+      setWebsiteViews(mockViews);
+    } catch (err) {
+      console.error('Failed to fetch website views:', err);
+      setWebsiteViews({ today: 0, thisMonth: 0, thisYear: 0, total: 0 });
+    }
+  };
+
   // Fetch data when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       checkBackendStatus();
       fetchSignupUsers();
+      fetchWebsiteViews();
     }
   }, [isAuthenticated]);
 
@@ -542,15 +566,49 @@ const AdminDashboard: React.FC = () => {
             <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Platform Analytics</h3>
-                <button 
-                  onClick={() => setShowAnalyticsModal(false)}
-                  className="text-gray-400 hover:text-gray-600"
-                >
-                  <X className="h-5 w-5" />
-                </button>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => {
+                      fetchWebsiteViews();
+                      fetchSignupUsers();
+                    }}
+                    className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm hover:bg-blue-200 transition-colors"
+                  >
+                    Refresh Data
+                  </button>
+                  <button 
+                    onClick={() => setShowAnalyticsModal(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Website Views Analytics */}
+                <div className="p-4 bg-indigo-50 rounded-lg">
+                  <h4 className="font-medium text-indigo-900 mb-2">Website Views</h4>
+                  <div className="space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-sm text-indigo-700">Today:</span>
+                      <span className="font-medium">{websiteViews.today}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-indigo-700">This Month:</span>
+                      <span className="font-medium">{websiteViews.thisMonth}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-indigo-700">This Year:</span>
+                      <span className="font-medium">{websiteViews.thisYear}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-indigo-700">Total Views:</span>
+                      <span className="font-medium">{websiteViews.total}</span>
+                    </div>
+                  </div>
+                </div>
+                
                 <div className="p-4 bg-blue-50 rounded-lg">
                   <h4 className="font-medium text-blue-900 mb-2">Signup Analytics</h4>
                   <div className="space-y-2">
