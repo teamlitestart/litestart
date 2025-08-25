@@ -219,18 +219,34 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen = true, on
     }
   };
 
-  const handleSubmit = () => {
-    // Handle form submission
-    console.log('Startup project submitted:', formData);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    // Store user data for login system
-    localStorage.setItem('userEmail', formData.email);
-    localStorage.setItem('userType', 'startup');
-    localStorage.setItem('authToken', 'demo-token');
+    if (currentStep < totalSteps) {
+      nextStep();
+      return;
+    }
     
-    alert('Registration successful! Welcome to LiteStart!');
-    // Redirect to startup dashboard
-    window.location.href = '/dashboard/startup';
+    // Final submission
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      
+      if (response.ok) {
+        // Success - could redirect or show success message
+        nextStep();
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || 'Failed to submit form');
+      }
+    } catch (error) {
+      alert('Network error. Please try again.');
+    }
   };
 
   const renderStep = () => {

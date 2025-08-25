@@ -88,7 +88,6 @@ const AdminPanel: React.FC = () => {
       const data = await apiCall.getUsers();
       setUsers(data);
     } catch (err) {
-      console.error('Fetch error:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch users');
     } finally {
       setLoading(false);
@@ -101,15 +100,12 @@ const AdminPanel: React.FC = () => {
     }
 
     try {
-      console.log('Deleting user with ID:', id);
       const result = await apiCall.deleteUser(id);
-      console.log('Delete result:', result);
-
+      
       // Refresh the data to ensure consistency
       await fetchUsers();
       alert('User deleted successfully!');
     } catch (err) {
-      console.error('Delete error:', err);
       alert(err instanceof Error ? err.message : 'Failed to delete user');
     }
   };
@@ -125,13 +121,11 @@ const AdminPanel: React.FC = () => {
       }
       
       const result = await response.json();
-      console.log('Email verification result:', result);
       
       // Refresh the data to show updated status
       await fetchUsers();
       alert('Email verification completed!');
     } catch (err) {
-      console.error('Email verification error:', err);
       alert(err instanceof Error ? err.message : 'Failed to verify email');
     }
   };
@@ -142,8 +136,6 @@ const AdminPanel: React.FC = () => {
     }
 
     try {
-      console.log('Deleting all users');
-      
       if (backendStatus === 'online') {
         // Call the backend API to delete all users
         const response = await fetch(`${API_BASE_URL}/api/users`, {
@@ -162,7 +154,6 @@ const AdminPanel: React.FC = () => {
       await fetchUsers();
       alert('All users deleted successfully!');
     } catch (err) {
-      console.error('Delete all error:', err);
       alert(err instanceof Error ? err.message : 'Failed to delete all users');
     }
   };

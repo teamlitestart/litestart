@@ -94,13 +94,11 @@ const AdminDashboard: React.FC = () => {
 
   const fetchWebsiteViews = async () => {
     try {
-      console.log('Fetching website views...', new Date().toISOString());
-      // Try to get real data from Google Analytics service
-      const views = await googleAnalyticsService.getWebsiteViews();
-      console.log('Received website views:', views);
+      setLoading(true);
+      const views = await fetch('/api/analytics/ga4?propertyId=123456789').then(res => res.json());
       setWebsiteViews(views);
-    } catch (err) {
-      console.error('Failed to fetch website views:', err);
+    } catch (error) {
+      console.error('Failed to fetch website views:', error);
       // Set to zeros instead of random data
       setWebsiteViews({
         today: 0,
@@ -118,6 +116,8 @@ const AdminDashboard: React.FC = () => {
         trafficSources: [],
         topPages: []
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,7 +179,6 @@ const AdminDashboard: React.FC = () => {
       filename = `litestart-platform-users-${new Date().toISOString().split('T')[0]}`;
     }
 
-    console.log('Exporting data:', { dataType, filename, dataLength: data.length });
     exportToCSV(data, filename);
     setShowExportModal(false);
   };

@@ -170,16 +170,10 @@ const AnalyticsDashboard: React.FC = () => {
       setLoading(true);
       setError(null);
       
-      console.log('Fetching analytics data...');
-      console.log('Service initialized status:', googleAnalyticsService.isInitialized());
-      
       // Add a small delay to ensure Google Analytics service is fully initialized
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      console.log('After delay, service initialized status:', googleAnalyticsService.isInitialized());
-      
       const data = await googleAnalyticsService.getWebsiteViews();
-      console.log('Frontend received analytics data:', data);
       
       // Validate that we have real data (not mock data)
       if (data.today === 0 && data.thisMonth === 0 && data.thisYear === 0) {

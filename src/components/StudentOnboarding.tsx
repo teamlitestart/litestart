@@ -282,7 +282,6 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
 
   const handleSubmit = () => {
     // Handle form submission
-    console.log('Form submitted:', formData);
     
     // Store user data for login system
     localStorage.setItem('userEmail', formData.email);

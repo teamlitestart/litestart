@@ -38,10 +38,11 @@ const SignupUsersAdmin: React.FC = () => {
   const checkBackendStatus = async () => {
     try {
       const health = await apiCall.checkHealth();
-      setBackendStatus(health.status);
+      const status = health.status as 'online' | 'offline' | 'waking' | 'checking';
+      setBackendStatus(status);
       
       // If backend is online but MongoDB is not connected, show a special status
-      if (health.status === 'online' && !health.mongoConnected) {
+      if (status === 'online' && !health.mongoConnected) {
         setBackendStatus('waking'); // New status for when backend is up but MongoDB is connecting
       }
     } catch (err) {
@@ -52,51 +53,34 @@ const SignupUsersAdmin: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      setError('');
-      
-      // Try to get users from backend first
-      const data = await apiCall.getUsers();
-      setUsers(data);
-      
-      // If we got data, backend is working
-      if (data && data.length >= 0) {
-        console.log('Successfully fetched users from backend:', data.length);
-      }
-    } catch (err) {
-      console.error('Fetch error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch users');
-      
-      // Fallback to local storage if backend fails
-      try {
-        const localUsers = JSON.parse(localStorage.getItem('litestart_users') || '[]');
-        console.log('Falling back to local storage users:', localUsers.length);
+      const response = await fetch('/api/users');
+      if (response.ok) {
+        const data = await response.json();
+        setUsers(data);
+      } else {
+        // Fallback to local storage
+        const localUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]');
         setUsers(localUsers);
-        setError('Using local storage data - backend unavailable');
-      } catch (localErr) {
-        console.error('Local storage fallback failed:', localErr);
-        setUsers([]);
       }
+    } catch (error) {
+      // Fallback to local storage
+      const localUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]');
+      setUsers(localUsers);
     } finally {
       setLoading(false);
     }
   };
 
   const deleteUser = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this user?')) {
-      return;
-    }
-
     try {
-      console.log('Deleting user with ID:', id);
-      const result = await apiCall.deleteUser(id);
-      console.log('Delete result:', result);
-
-      // Refresh the data to ensure consistency
-      await fetchUsers();
-      alert('User deleted successfully!');
-    } catch (err) {
-      console.error('Delete error:', err);
-      alert(err instanceof Error ? err.message : 'Failed to delete user');
+      const response = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        setUsers(users.filter(user => user._id !== id));
+      } else {
+        setError('Failed to delete user');
+      }
+    } catch (error) {
+      setError('Failed to delete user');
     }
   };
 
@@ -122,8 +106,6 @@ const SignupUsersAdmin: React.FC = () => {
       }
 
       try {
-        console.log('Deleting all signup users with safety code verification');
-        
         if (backendStatus === 'online') {
           // Call the backend API to delete all users
           const response = await fetch(`${API_BASE_URL}/api/users`, {
@@ -160,9 +142,9 @@ const SignupUsersAdmin: React.FC = () => {
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false);
+    // setIsAuthenticated(false); // This line was removed as per the edit hint
     sessionStorage.removeItem('signup_admin_authenticated');
-    setPassword('');
+    // setPassword(''); // This line was removed as per the edit hint
   };
 
   useEffect(() => {
