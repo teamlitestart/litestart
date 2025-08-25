@@ -11,4 +11,6 @@ services:
       - key: NODE_ENV
         value: production
       - key: PORT
-        value: 10000 
+        value: 10000
+      - key: GOOGLE_SERVICE_ACCOUNT_KEY
+        sync: false 
