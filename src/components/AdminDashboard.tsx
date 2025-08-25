@@ -15,7 +15,7 @@ import {
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
 import { apiCall } from '../config/api';
-import { googleAnalyticsService } from '../services/googleAnalytics';
+import { googleAnalyticsService, WebsiteViews } from '../services/googleAnalytics';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
 
@@ -30,11 +30,21 @@ const AdminDashboard: React.FC = () => {
   const [showExportModal, setShowExportModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
-  const [websiteViews, setWebsiteViews] = useState({
+  const [websiteViews, setWebsiteViews] = useState<WebsiteViews>({
     today: 0,
     thisMonth: 0,
     thisYear: 0,
-    total: 0
+    total: 0,
+    todaySessions: 0,
+    monthSessions: 0,
+    todayUsers: 0,
+    monthUsers: 0,
+    todayDuration: 0,
+    monthDuration: 0,
+    todayBounceRate: 0,
+    monthBounceRate: 0,
+    trafficSources: [],
+    topPages: []
   });
 
   // Admin password - in production, this should be more secure
@@ -96,7 +106,17 @@ const AdminDashboard: React.FC = () => {
         today: 0,
         thisMonth: 0,
         thisYear: 0,
-        total: 0
+        total: 0,
+        todaySessions: 0,
+        monthSessions: 0,
+        todayUsers: 0,
+        monthUsers: 0,
+        todayDuration: 0,
+        monthDuration: 0,
+        todayBounceRate: 0,
+        monthBounceRate: 0,
+        trafficSources: [],
+        topPages: []
       });
     }
   };
@@ -573,7 +593,7 @@ const AdminDashboard: React.FC = () => {
                   <button 
                     onClick={() => {
                       // Force cache refresh
-                      setWebsiteViews({ today: 0, thisMonth: 0, thisYear: 0, total: 0 });
+                      setWebsiteViews({ today: 0, thisMonth: 0, thisYear: 0, total: 0, todaySessions: 0, monthSessions: 0, todayUsers: 0, monthUsers: 0, todayDuration: 0, monthDuration: 0, todayBounceRate: 0, monthBounceRate: 0, trafficSources: [], topPages: [] });
                       setTimeout(() => {
                         fetchWebsiteViews();
                         fetchSignupUsers();
@@ -621,6 +641,29 @@ const AdminDashboard: React.FC = () => {
             </p>
           </div>
         </div>
+
+        {/* Enhanced Analytics Metrics */}
+        <div className="p-4 bg-green-50 rounded-lg">
+          <h4 className="font-medium text-green-900 mb-2">Engagement Metrics</h4>
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm text-green-700">Today's Users:</span>
+              <span className="font-medium">{websiteViews.todayUsers}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-green-700">Today's Sessions:</span>
+              <span className="font-medium">{websiteViews.todaySessions}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-green-700">Avg. Duration:</span>
+              <span className="font-medium">{websiteViews.todayDuration > 0 ? `${Math.round(websiteViews.todayDuration)}m` : '0m'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-sm text-green-700">Bounce Rate:</span>
+              <span className="font-medium">{websiteViews.todayBounceRate > 0 ? `${(websiteViews.todayBounceRate * 100).toFixed(1)}%` : '0%'}</span>
+            </div>
+          </div>
+        </div>
                 
                 <div className="p-4 bg-blue-50 rounded-lg">
                   <h4 className="font-medium text-blue-900 mb-2">Signup Analytics</h4>
@@ -664,6 +707,20 @@ const AdminDashboard: React.FC = () => {
                 </div>
                 
                 <div className="p-4 bg-purple-50 rounded-lg md:col-span-2">
+                  <h4 className="font-medium text-purple-900 mb-2">Traffic Sources</h4>
+                  <div className="space-y-2 mb-4">
+                    {websiteViews.trafficSources && websiteViews.trafficSources.length > 0 ? (
+                      websiteViews.trafficSources.slice(0, 5).map((source, index) => (
+                        <div key={index} className="flex justify-between items-center">
+                          <span className="text-sm text-purple-700">{source.source}:</span>
+                          <span className="font-medium">{source.sessions} sessions</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-sm text-purple-500 text-center">No traffic data available</div>
+                    )}
+                  </div>
+                  
                   <h4 className="font-medium text-purple-900 mb-2">Growth Metrics</h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center">
