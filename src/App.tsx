@@ -16,6 +16,7 @@ import Footer from './components/Footer';
 import StudentOnboarding from './components/StudentOnboarding';
 import StartupOnboarding from './components/StartupOnboarding';
 import AdminDashboard from './components/AdminDashboard';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 import EmailVerification from './components/EmailVerification';
 import LitestartFeatures from './components/LitestartFeatures';
 import Header from './components/Header';
@@ -599,6 +600,7 @@ function App() {
           <Route path="/dashboard/startup" element={<StartupDashboard />} />
           <Route path="/dashboard" element={<DashboardRedirect />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/analytics" element={<AnalyticsDashboard />} />
           <Route path="/email-monitor" element={<EmailDeliveryMonitor />} />
           <Route path="/verify-email" element={<EmailVerification />} />
           <Route path="/faqs" element={<FAQsPage />} />

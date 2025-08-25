@@ -485,13 +485,13 @@ const AdminDashboard: React.FC = () => {
             </button>
             
             <button 
-              onClick={() => setShowAnalyticsModal(true)}
+              onClick={() => window.open('/analytics', '_blank')}
               className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >
               <Activity className="h-5 w-5 text-green-600 mr-3" />
               <div className="text-left">
                 <p className="font-medium text-gray-900">Analytics</p>
-                <p className="text-sm text-gray-600">View platform metrics</p>
+                <p className="text-sm text-gray-600">View full analytics dashboard</p>
               </div>
             </button>
           </div>
