@@ -17,9 +17,85 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Minus,
-  Tablet
+  Tablet,
+  Info
 } from 'lucide-react';
 import { googleAnalyticsService, WebsiteViews } from '../services/googleAnalytics';
+
+// Professional Tooltip Component
+interface TooltipProps {
+  children: React.ReactNode;
+  definition: string;
+  position?: 'top' | 'bottom' | 'left' | 'right';
+}
+
+const Tooltip: React.FC<TooltipProps> = ({ children, definition, position = 'bottom' }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState<'top' | 'bottom' | 'left' | 'right'>(position);
+
+  const handleMouseEnter = () => {
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
+  const getPositionClasses = (pos: string) => {
+    switch (pos) {
+      case 'top':
+        return 'bottom-full mb-2 left-1/2 transform -translate-x-1/2';
+      case 'bottom':
+        return 'top-full mt-2 left-1/2 transform -translate-x-1/2';
+      case 'left':
+        return 'right-full mr-2 top-1/2 transform -translate-y-1/2';
+      case 'right':
+        return 'left-full ml-2 top-1/2 transform -translate-y-1/2';
+      default:
+        return 'top-full mt-2 left-1/2 transform -translate-x-1/2';
+    }
+  };
+
+  const getArrowClasses = (pos: string) => {
+    switch (pos) {
+      case 'top':
+        return 'top-full left-1/2 transform -translate-x-1/2 border-t-gray-200';
+      case 'bottom':
+        return 'bottom-full left-1/2 transform -translate-x-1/2 border-b-gray-200';
+      case 'left':
+        return 'left-full top-1/2 transform -translate-y-1/2 border-l-gray-200';
+      case 'right':
+        return 'right-full top-1/2 transform -translate-y-1/2 border-r-gray-200';
+      default:
+        return 'bottom-full left-1/2 transform -translate-x-1/2 border-b-gray-200';
+    }
+  };
+
+  return (
+    <div className="relative inline-block">
+      <div
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="cursor-help inline-flex items-center gap-1"
+      >
+        {children}
+        <Info className="h-3 w-3 text-gray-400 hover:text-gray-600 transition-colors" />
+      </div>
+      {showTooltip && (
+        <div 
+          className={`absolute z-50 px-3 py-2 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg shadow-lg max-w-[280px] ${getPositionClasses(tooltipPosition)} transition-opacity duration-200`}
+          style={{ 
+            animation: 'fadeIn 0.2s ease-in-out',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+          }}
+        >
+          <div className="text-gray-700 text-sm leading-relaxed">{definition}</div>
+          <div className={`absolute w-0 h-0 border-4 border-transparent ${getArrowClasses(tooltipPosition)}`}></div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 // Helper function to calculate percentage change with proper fallback
 const calculatePercentageChange = (current: number, previous: number): { 
@@ -281,23 +357,33 @@ const AnalyticsDashboard: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Users</span>
+                <Tooltip definition="Unique visitors who accessed your website today. Each person is counted only once, regardless of how many times they visit.">
+                  <span className="text-sm text-gray-600">Users</span>
+                </Tooltip>
                 <span className="text-lg font-bold text-gray-900">{analyticsData.todayUsers}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Sessions</span>
+                <Tooltip definition="A session is a group of user interactions with your website that take place within a given time frame. A session ends after 30 minutes of inactivity.">
+                  <span className="text-sm text-gray-600">Sessions</span>
+                </Tooltip>
                 <span className="text-lg font-bold text-gray-900">{analyticsData.todaySessions}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Page Views</span>
+                <Tooltip definition="Total number of pages viewed by all users today. A single user can generate multiple page views during their visit.">
+                  <span className="text-sm text-gray-600">Page Views</span>
+                </Tooltip>
                 <span className="text-lg font-bold text-gray-900">{analyticsData.today}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Avg. Duration</span>
+                <Tooltip definition="Average time users spend on your website during a single session. This indicates how engaging your content is.">
+                  <span className="text-sm text-gray-600">Avg. Duration</span>
+                </Tooltip>
                 <span className="text-lg font-bold text-gray-900">{formatDuration(analyticsData.todayDuration)}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Bounce Rate</span>
+                <Tooltip definition="Percentage of visitors who leave your website after viewing only one page. Lower bounce rates typically indicate better engagement.">
+                  <span className="text-sm text-gray-600">Bounce Rate</span>
+                </Tooltip>
                 <span className="text-lg font-bold text-gray-900">{formatPercentage(analyticsData.todayBounceRate)}</span>
               </div>
             </div>
@@ -311,7 +397,9 @@ const AnalyticsDashboard: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Users</span>
+                <Tooltip definition="Total unique visitors to your website this month. This metric helps understand your monthly reach and audience size.">
+                  <span className="text-sm text-gray-600">Users</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthUsers}</span>
                   <span className={`text-xs ${getChangeColor(monthChanges.users)}`}>
@@ -320,7 +408,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Sessions</span>
+                <Tooltip definition="Total number of user sessions this month. A session represents a period of user activity and ends after 30 minutes of inactivity.">
+                  <span className="text-sm text-gray-600">Sessions</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthSessions}</span>
                   <span className={`text-xs ${getChangeColor(monthChanges.sessions)}`}>
@@ -329,7 +419,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Page Views</span>
+                <Tooltip definition="Total pages viewed by all users this month. Higher page views indicate more content consumption and engagement.">
+                  <span className="text-sm text-gray-600">Page Views</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.thisMonth}</span>
                   <span className={`text-xs ${getChangeColor(monthChanges.pageViews)}`}>
@@ -338,7 +430,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Avg. Duration</span>
+                <Tooltip definition="Average time users spend on your website per session this month. Longer durations suggest better content engagement.">
+                  <span className="text-sm text-gray-600">Avg. Duration</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatDuration(analyticsData.monthDuration)}</span>
                   <span className={`text-xs ${getChangeColor(monthChanges.duration)}`}>
@@ -347,7 +441,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Bounce Rate</span>
+                <Tooltip definition="Monthly average of single-page sessions. Lower rates suggest users are exploring multiple pages on your site.">
+                  <span className="text-sm text-gray-600">Bounce Rate</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatPercentage(analyticsData.monthBounceRate)}</span>
                   <span className={`text-xs ${getChangeColor(monthChanges.bounceRate)}`}>
@@ -366,7 +462,9 @@ const AnalyticsDashboard: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Users</span>
+                <Tooltip definition="Total unique visitors to your website this year. This metric shows your annual audience growth and reach.">
+                  <span className="text-sm text-gray-600">Users</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthUsers}</span>
                   <span className={`text-xs ${getChangeColor(yearChanges.users)}`}>
@@ -375,7 +473,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Sessions</span>
+                <Tooltip definition="Total number of user sessions this year. A session represents a period of user activity and ends after 30 minutes of inactivity.">
+                  <span className="text-sm text-gray-600">Sessions</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthSessions}</span>
                   <span className={`text-xs ${getChangeColor(yearChanges.sessions)}`}>
@@ -384,7 +484,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Page Views</span>
+                <Tooltip definition="Total pages viewed by all users this year. This indicates your annual content consumption and user engagement levels.">
+                  <span className="text-sm text-gray-600">Page Views</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.thisYear}</span>
                   <span className={`text-xs ${getChangeColor(yearChanges.pageViews)}`}>
@@ -393,7 +495,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Avg. Duration</span>
+                <Tooltip definition="Average time users spend on your website per session this year. Longer durations indicate sustained content engagement.">
+                  <span className="text-sm text-gray-600">Avg. Duration</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatDuration(analyticsData.monthDuration)}</span>
                   <span className={`text-xs ${getChangeColor(yearChanges.duration)}`}>
@@ -402,7 +506,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Bounce Rate</span>
+                <Tooltip definition="Yearly average of single-page sessions. Lower rates suggest users are consistently exploring multiple pages on your site.">
+                  <span className="text-sm text-gray-600">Bounce Rate</span>
+                </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatPercentage(analyticsData.monthBounceRate)}</span>
                   <span className={`text-xs ${getChangeColor(yearChanges.bounceRate)}`}>
@@ -420,7 +526,9 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Daily Trends Chart */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Daily Trends (Last 30 Days)</h3>
+              <Tooltip definition="Visual representation of your website's daily performance over the last 30 days. Shows trends in page views, sessions, and user engagement patterns.">
+                <h3 className="text-lg font-semibold text-gray-900">Daily Trends (Last 30 Days)</h3>
+              </Tooltip>
               <TrendingUp className="h-5 w-5 text-gray-600" />
             </div>
             <div className="h-64">
@@ -448,7 +556,9 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Monthly Trends Chart */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Monthly Trends (Jan-Dec)</h3>
+              <Tooltip definition="Monthly performance overview showing how your website metrics change throughout the year. Helps identify seasonal patterns and long-term growth trends.">
+                <h3 className="text-lg font-semibold text-gray-900">Monthly Trends (Jan-Dec)</h3>
+              </Tooltip>
               <Calendar className="h-5 w-5 text-gray-600" />
             </div>
             <div className="h-64">
@@ -481,7 +591,9 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Traffic Sources */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Traffic Sources</h3>
+              <Tooltip definition="Channels through which visitors find your website. Includes organic search, direct traffic, social media, referrals, and other sources. Understanding this helps optimize your marketing strategy.">
+                <h3 className="text-lg font-semibold text-gray-900">Traffic Sources</h3>
+              </Tooltip>
               <Globe className="h-5 w-5 text-gray-600" />
             </div>
             {analyticsData.trafficSources && analyticsData.trafficSources.length > 0 ? (
@@ -498,8 +610,12 @@ const AnalyticsDashboard: React.FC = () => {
                       <span className="text-sm font-medium text-gray-900">{source.source}</span>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-bold text-gray-900">{formatNumber(source.sessions)}</div>
-                      <div className="text-xs text-gray-500">sessions</div>
+                      <Tooltip definition="The number of user sessions attributed to this traffic source. A session represents a period of user activity and helps measure source effectiveness.">
+                        <div className="text-sm font-bold text-gray-900">{formatNumber(source.sessions)}</div>
+                      </Tooltip>
+                      <Tooltip definition="A session is a group of user interactions with your website that take place within a given time frame. A session ends after 30 minutes of inactivity.">
+                        <div className="text-xs text-gray-500">sessions</div>
+                      </Tooltip>
                     </div>
                   </div>
                 ))}
@@ -515,7 +631,9 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Device Breakdown */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Device Breakdown</h3>
+              <Tooltip definition="Distribution of website visitors by device type (desktop, mobile, tablet). This helps optimize your website design and user experience for different screen sizes.">
+                <h3 className="text-lg font-semibold text-gray-900">Device Breakdown</h3>
+              </Tooltip>
               <div className="flex gap-1">
                 <Monitor className="h-4 w-4 text-gray-600" />
                 <Smartphone className="h-4 w-4 text-gray-600" />
@@ -526,17 +644,23 @@ const AnalyticsDashboard: React.FC = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <Monitor className="h-4 w-4 text-gray-600 mr-2" />
-                  <span className="text-sm text-gray-600">Desktop</span>
+                  <Tooltip definition="Website visitors using desktop or laptop computers. These users typically have larger screens and may engage differently with your content compared to mobile users.">
+                    <span className="text-sm text-gray-600">Desktop</span>
+                  </Tooltip>
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">65%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
+                  <Tooltip definition="The portion of your total website visitors that come from this specific source or device type. Traffic distribution helps understand your audience composition.">
+                    <div className="text-xs text-gray-500">of traffic</div>
+                  </Tooltip>
                 </div>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <Smartphone className="h-4 w-4 text-gray-600 mr-2" />
-                  <span className="text-sm text-gray-600">Mobile</span>
+                  <Tooltip definition="Website visitors using mobile phones. Mobile users often have different browsing patterns and may prefer different content formats than desktop users.">
+                    <span className="text-sm text-gray-600">Mobile</span>
+                  </Tooltip>
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">30%</div>
@@ -546,7 +670,9 @@ const AnalyticsDashboard: React.FC = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <Tablet className="h-4 w-4 text-gray-600 mr-2" />
-                  <span className="text-sm text-gray-600">Tablet</span>
+                  <Tooltip definition="Website visitors using tablet devices. Tablets offer a middle ground between mobile and desktop experiences, with touch interfaces but larger screens than phones.">
+                    <span className="text-sm text-gray-600">Tablet</span>
+                  </Tooltip>
                 </div>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">5%</div>
@@ -559,40 +685,52 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Geography */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Top Countries</h3>
+              <Tooltip definition="Geographic distribution of your website visitors. Shows which countries generate the most traffic, helping you understand your global reach and optimize content for different regions.">
+                <h3 className="text-lg font-semibold text-gray-900">Top Countries</h3>
+              </Tooltip>
               <MapPin className="h-5 w-5 text-gray-600" />
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">United States</span>
+                <Tooltip definition="Visitors from the United States. This represents your largest geographic audience segment, indicating strong local market presence.">
+                  <span className="text-sm text-gray-600">United States</span>
+                </Tooltip>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">45%</div>
                   <div className="text-xs text-gray-500">of traffic</div>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">United Kingdom</span>
+                <Tooltip definition="Visitors from the United Kingdom. This represents your second-largest geographic audience, showing international reach beyond your primary market.">
+                  <span className="text-sm text-gray-600">United Kingdom</span>
+                </Tooltip>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">25%</div>
                   <div className="text-xs text-gray-500">of traffic</div>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Canada</span>
+                <Tooltip definition="Visitors from Canada. This represents a significant portion of your North American audience, indicating strong regional presence.">
+                  <span className="text-sm text-gray-600">Canada</span>
+                </Tooltip>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">15%</div>
                   <div className="text-xs text-gray-500">of traffic</div>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Australia</span>
+                <Tooltip definition="Visitors from Australia. This represents your Pacific region audience, showing global reach and potential for international expansion.">
+                  <span className="text-sm text-gray-600">Australia</span>
+                </Tooltip>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">10%</div>
                   <div className="text-xs text-gray-500">of traffic</div>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Other</span>
+                <Tooltip definition="Visitors from all other countries not individually listed. This category represents your global reach and diverse international audience.">
+                  <span className="text-sm text-gray-600">Other</span>
+                </Tooltip>
                 <div className="text-right">
                   <div className="text-sm font-bold text-gray-900">5%</div>
                   <div className="text-xs text-gray-500">of traffic</div>
@@ -608,7 +746,9 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Top Pages */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Top Pages</h3>
+              <Tooltip definition="Most visited pages on your website ranked by page views. This helps identify your most popular content and understand what resonates with your audience.">
+                <h3 className="text-lg font-semibold text-gray-900">Top Pages</h3>
+              </Tooltip>
               <FileText className="h-5 w-5 text-gray-600" />
             </div>
             {analyticsData.topPages && analyticsData.topPages.length > 0 ? (
@@ -628,7 +768,9 @@ const AnalyticsDashboard: React.FC = () => {
                     </div>
                     <div className="text-right">
                       <div className="text-sm font-bold text-gray-900">{formatNumber(page.views)}</div>
-                      <div className="text-xs text-gray-500">views</div>
+                      <Tooltip definition="The number of times this specific page was viewed by users. Page views indicate content popularity and user engagement with specific pages.">
+                        <div className="text-xs text-gray-500">views</div>
+                      </Tooltip>
                     </div>
                   </div>
                 ))}
@@ -644,23 +786,31 @@ const AnalyticsDashboard: React.FC = () => {
           {/* Engagement Metrics */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-gray-900">Engagement Metrics</h3>
+              <Tooltip definition="Key metrics that measure how users interact with your website content. These indicators help assess user engagement, content quality, and overall website effectiveness.">
+                <h3 className="text-lg font-semibold text-gray-900">Engagement Metrics</h3>
+              </Tooltip>
               <Activity className="h-5 w-5 text-gray-600" />
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Pages per Session</span>
+                <Tooltip definition="Average number of pages viewed during a single user session. Higher numbers indicate users are exploring more of your content, suggesting good site navigation and engaging content.">
+                  <span className="text-sm text-gray-600">Pages per Session</span>
+                </Tooltip>
                 <div className="text-right">
                   <span className="text-lg font-bold text-gray-900">
                     {analyticsData.thisMonth > 0 && analyticsData.monthSessions > 0 
                       ? (analyticsData.thisMonth / analyticsData.monthSessions).toFixed(1) 
                       : '0.0'}
                   </span>
-                  <div className="text-xs text-gray-500">average</div>
+                  <Tooltip definition="The mean value calculated by dividing total page views by total sessions. This average helps understand typical user engagement per visit.">
+                    <div className="text-xs text-gray-500">average</div>
+                  </Tooltip>
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">Exit Rate</span>
+                <Tooltip definition="Percentage of sessions that end on a specific page. This helps identify which pages cause users to leave your website, indicating areas for improvement.">
+                  <span className="text-sm text-gray-600">Exit Rate</span>
+                </Tooltip>
                 <div className="text-right">
                   <span className="text-lg font-bold text-gray-900">
                     {((1 - analyticsData.monthBounceRate) * 100).toFixed(1)}%
@@ -669,7 +819,9 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600">New Users</span>
+                <Tooltip definition="Percentage of users visiting your website for the first time. Higher percentages indicate successful acquisition of new audiences.">
+                  <span className="text-sm text-gray-600">New Users</span>
+                </Tooltip>
                 <div className="text-right">
                   <span className="text-lg font-bold text-gray-900">
                     {analyticsData.monthUsers > 0 
@@ -686,7 +838,9 @@ const AnalyticsDashboard: React.FC = () => {
         {/* 5. Performance Summary (Bottom Row) */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-semibold text-gray-900">Performance Summary</h3>
+            <Tooltip definition="Comprehensive overview of your website's performance trends. Compares current metrics against previous periods to show growth patterns and identify areas for improvement.">
+              <h3 className="text-xl font-semibold text-gray-900">Performance Summary</h3>
+            </Tooltip>
             <div className="flex gap-2">
               <TrendingUp className="h-5 w-5 text-gray-600" />
               <TrendingDown className="h-5 w-5 text-gray-600" />
@@ -697,7 +851,9 @@ const AnalyticsDashboard: React.FC = () => {
             
             {/* Monthly Growth Summary */}
             <div>
-              <h4 className="text-lg font-medium text-gray-900 mb-4">Monthly Growth (vs Last Month)</h4>
+              <Tooltip definition="Comparison of current month's performance against the previous month. Shows percentage changes in key metrics to track month-over-month growth trends.">
+                <h4 className="text-lg font-medium text-gray-900 mb-4">Monthly Growth (vs Last Month)</h4>
+              </Tooltip>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Users</span>
@@ -740,7 +896,9 @@ const AnalyticsDashboard: React.FC = () => {
 
             {/* Yearly Growth Summary */}
             <div>
-              <h4 className="text-lg font-medium text-gray-900 mb-4">Yearly Growth (vs Last Year)</h4>
+              <Tooltip definition="Comparison of current year's performance against the same period last year. Shows percentage changes to track long-term growth and identify annual trends.">
+                <h4 className="text-lg font-medium text-gray-900 mb-4">Yearly Growth (vs Last Year)</h4>
+              </Tooltip>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Users</span>
@@ -789,7 +947,9 @@ const AnalyticsDashboard: React.FC = () => {
                 <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
               </div>
               <div>
-                <h5 className="font-medium text-blue-900 mb-1">Key Insights</h5>
+                <Tooltip definition="Automatically generated insights based on your analytics data. These highlight key trends, improvements, and areas that need attention in your website performance.">
+                  <h5 className="font-medium text-blue-900 mb-1">Key Insights</h5>
+                </Tooltip>
                 <p className="text-sm text-blue-800">
                   {generateKeyInsights()}
                 </p>
