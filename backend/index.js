@@ -638,7 +638,7 @@ app.get('/api/analytics/ga4', async (req, res) => {
     const today = parseInt(todayData.metricValues?.[0]?.value || '0');
     const todaySessions = parseInt(todayData.metricValues?.[1]?.value || '0');
     const todayUsers = parseInt(todayData.metricValues?.[2]?.value || '0');
-    const todayDuration = parseFloat(todayData.metricValues?.[3]?.value || '0') / 60; // Convert to minutes
+    const todayDuration = Math.round((parseFloat(todayData.metricValues?.[3]?.value || '0') / 60) * 10) / 10; // Convert to minutes and round to 1 decimal
     const todayBounceRate = parseFloat(todayData.metricValues?.[4]?.value || '0');
 
     // Process month's data
@@ -646,7 +646,7 @@ app.get('/api/analytics/ga4', async (req, res) => {
     const thisMonth = parseInt(monthData.metricValues?.[0]?.value || '0');
     const monthSessions = parseInt(monthData.metricValues?.[1]?.value || '0');
     const monthUsers = parseInt(monthData.metricValues?.[2]?.value || '0');
-    const monthDuration = parseFloat(monthData.metricValues?.[3]?.value || '0') / 60; // Convert to minutes
+    const monthDuration = Math.round((parseFloat(monthData.metricValues?.[3]?.value || '0') / 60) * 10) / 10; // Convert to minutes and round to 1 decimal
     const monthBounceRate = parseFloat(monthData.metricValues?.[4]?.value || '0');
 
     // Process year's data
