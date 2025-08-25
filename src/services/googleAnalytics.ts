@@ -44,12 +44,26 @@ class GoogleAnalyticsService {
 
   // Initialize the service with your GA credentials
   initialize(config: GoogleAnalyticsConfig) {
+    console.log('GoogleAnalyticsService.initialize called with config:', config);
     this.config = config;
+    console.log('Config set successfully, new config value:', this.config);
+  }
+
+  // Check if the service is initialized
+  isInitialized(): boolean {
+    const initialized = !!this.config;
+    console.log('isInitialized check:', initialized, 'config:', this.config);
+    return initialized;
   }
 
   // Get website views data from Google Analytics
   async getWebsiteViews(): Promise<WebsiteViews> {
+    console.log('getWebsiteViews called, config status:', !!this.config);
+    console.log('Config details:', this.config);
+    
     if (!this.config) {
+      console.error('Google Analytics service not initialized!');
+      console.error('Current config:', this.config);
       throw new Error('Google Analytics not initialized. Please call initialize() first.');
     }
 
