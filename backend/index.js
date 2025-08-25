@@ -7,8 +7,24 @@ require('dotenv').config();
 const User = require('./models/User');
 const { sendThankYouEmail } = require('./services/emailService');
 
+// Google Analytics setup
+const { google } = require('googleapis');
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Google Analytics service account credentials
+const SERVICE_ACCOUNT_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_KEY ? 
+  JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY) : null;
+
+// Initialize Google Analytics Data API client
+const analyticsDataClient = new google.analyticsdata({
+  version: 'v1beta',
+  auth: new google.auth.GoogleAuth({
+    credentials: SERVICE_ACCOUNT_KEY,
+    scopes: ['https://www.googleapis.com/auth/analytics.readonly']
+  })
+});
 
 app.use(cors());
 app.use(express.json());
@@ -503,6 +519,234 @@ app.delete('/api/users', async (req, res) => {
   } catch (error) {
     console.error('Delete all users error:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Google Analytics endpoint
+app.get('/api/analytics/ga4', async (req, res) => {
+  try {
+    const { propertyId } = req.query;
+    
+    if (!propertyId) {
+      return res.status(400).json({ error: 'Property ID is required' });
+    }
+
+    if (!SERVICE_ACCOUNT_KEY) {
+      return res.status(500).json({ error: 'Google Analytics credentials not configured' });
+    }
+
+    console.log('Fetching GA4 data for property:', propertyId);
+
+    // Get today's comprehensive data
+    const todayResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: 'today',
+          endDate: 'today'
+        }],
+        metrics: [
+          { name: 'screenPageViews' },
+          { name: 'sessions' },
+          { name: 'totalUsers' },
+          { name: 'averageSessionDuration' },
+          { name: 'bounceRate' }
+        ]
+      }
+    });
+
+    // Get this month's comprehensive data
+    const monthResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '30daysAgo',
+          endDate: 'today'
+        }],
+        metrics: [
+          { name: 'screenPageViews' },
+          { name: 'sessions' },
+          { name: 'totalUsers' },
+          { name: 'averageSessionDuration' },
+          { name: 'bounceRate' }
+        ]
+      }
+    });
+
+    // Get this year's comprehensive data
+    const yearResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '365daysAgo',
+          endDate: 'today'
+        }],
+        metrics: [
+          { name: 'screenPageViews' },
+          { name: 'sessions' },
+          { name: 'totalUsers' },
+          { name: 'averageSessionDuration' },
+          { name: 'bounceRate' }
+        ]
+      }
+    });
+
+    // Get total data (all time)
+    const totalResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '2020-01-01',
+          endDate: 'today'
+        }],
+        metrics: [
+          { name: 'screenPageViews' }
+        ]
+      }
+    });
+
+    // Get traffic sources data
+    const trafficSourcesResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '30daysAgo',
+          endDate: 'today'
+        }],
+        dimensions: [{ name: 'sessionDefaultChannelGrouping' }],
+        metrics: [{ name: 'sessions' }],
+        limit: 10
+      }
+    });
+
+    // Get top pages data
+    const topPagesResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '30daysAgo',
+          endDate: 'today'
+        }],
+        dimensions: [{ name: 'pagePath' }],
+        metrics: [{ name: 'screenPageViews' }],
+        limit: 10
+      }
+    });
+
+    // Process today's data
+    const todayData = todayResponse.data.rows?.[0] || {};
+    const today = parseInt(todayData.metricValues?.[0]?.value || '0');
+    const todaySessions = parseInt(todayData.metricValues?.[1]?.value || '0');
+    const todayUsers = parseInt(todayData.metricValues?.[2]?.value || '0');
+    const todayDuration = parseFloat(todayData.metricValues?.[3]?.value || '0') / 60; // Convert to minutes
+    const todayBounceRate = parseFloat(todayData.metricValues?.[4]?.value || '0');
+
+    // Process month's data
+    const monthData = monthResponse.data.rows?.[0] || {};
+    const thisMonth = parseInt(monthData.metricValues?.[0]?.value || '0');
+    const monthSessions = parseInt(monthData.metricValues?.[1]?.value || '0');
+    const monthUsers = parseInt(monthData.metricValues?.[2]?.value || '0');
+    const monthDuration = parseFloat(monthData.metricValues?.[3]?.value || '0') / 60; // Convert to minutes
+    const monthBounceRate = parseFloat(monthData.metricValues?.[4]?.value || '0');
+
+    // Process year's data
+    const yearData = yearResponse.data.rows?.[0] || {};
+    const thisYear = parseInt(yearData.metricValues?.[0]?.value || '0');
+
+    // Process total data
+    const totalData = totalResponse.data.rows?.[0] || {};
+    const total = parseInt(totalData.metricValues?.[0]?.value || '0');
+
+    // Process traffic sources
+    let trafficSources = [];
+    try {
+      trafficSources = trafficSourcesResponse.data.rows?.map(row => {
+        const channel = row.dimensionValues[0].value;
+        const sessions = parseInt(row.metricValues[0].value || '0');
+        
+        console.log('Processing row:', { channel, sessions });
+        
+        // Create a more descriptive source name based on channel
+        let displayName = channel;
+        let iconType = 'default';
+        
+        // Enhance social media detection based on channel
+        if (channel.toLowerCase().includes('social')) {
+          displayName = 'Social Media';
+          iconType = 'social';
+        } else if (channel.toLowerCase().includes('organic')) {
+          displayName = 'Organic Search';
+          iconType = 'search';
+        } else if (channel.toLowerCase().includes('direct')) {
+          displayName = 'Direct Traffic';
+          iconType = 'direct';
+        } else if (channel.toLowerCase().includes('referral')) {
+          displayName = 'Referral Traffic';
+          iconType = 'referral';
+        } else if (channel.toLowerCase().includes('email')) {
+          displayName = 'Email';
+          iconType = 'email';
+        } else if (channel.toLowerCase().includes('paid')) {
+          displayName = 'Paid Search';
+          iconType = 'paid';
+        }
+        
+        return {
+          source: displayName,
+          sessions: sessions,
+          originalSource: channel,
+          medium: channel,
+          channel: channel,
+          iconType: iconType
+        };
+      }) || [];
+      
+      console.log('Enhanced traffic sources processed:', trafficSources);
+    } catch (error) {
+      console.log('Enhanced traffic sources failed, falling back to basic method:', error);
+      // Fallback to basic traffic sources
+      trafficSources = trafficSourcesResponse.data.rows?.map(row => ({
+        source: row.dimensionValues[0].value,
+        sessions: parseInt(row.metricValues[0].value || '0'),
+        originalSource: row.dimensionValues[0].value,
+        medium: row.dimensionValues[0].value,
+        channel: row.dimensionValues[0].value,
+        iconType: 'default'
+      })) || [];
+    }
+
+    // Process top pages
+    const topPages = topPagesResponse.data.rows?.map(row => ({
+      page: row.dimensionValues[0].value,
+      views: parseInt(row.metricValues[0].value || '0')
+    })) || [];
+
+    const analyticsData = {
+      today,
+      thisMonth,
+      thisYear,
+      total,
+      todaySessions,
+      monthSessions,
+      todayUsers,
+      monthUsers,
+      todayDuration,
+      monthDuration,
+      todayBounceRate,
+      monthBounceRate,
+      trafficSources,
+      topPages
+    };
+
+    console.log('Analytics data prepared:', analyticsData);
+    res.json(analyticsData);
+
+  } catch (error) {
+    console.error('Error fetching analytics data:', error);
+    res.status(500).json({ 
+      error: 'Failed to fetch analytics data',
+      details: error.message 
+    });
   }
 });
 
