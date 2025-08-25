@@ -103,7 +103,7 @@ app.get('/api/analytics/ga4', async (req, res) => {
       }
     });
 
-    // Get traffic sources data
+    // Get traffic sources data (last 30 days)
     const trafficSourcesResponse = await analyticsDataClient.properties.runReport({
       property: `properties/${propertyId}`,
       requestBody: {
@@ -117,7 +117,7 @@ app.get('/api/analytics/ga4', async (req, res) => {
       }
     });
 
-    // Get top pages data
+    // Get top pages data (last 30 days)
     const topPagesResponse = await analyticsDataClient.properties.runReport({
       property: `properties/${propertyId}`,
       requestBody: {
@@ -127,6 +127,34 @@ app.get('/api/analytics/ga4', async (req, res) => {
         }],
         dimensions: [{ name: 'pagePath' }],
         metrics: [{ name: 'screenPageViews' }],
+        limit: 10
+      }
+    });
+
+    // Get device breakdown data (last 30 days)
+    const deviceBreakdownResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '30daysAgo',
+          endDate: 'today'
+        }],
+        dimensions: [{ name: 'deviceCategory' }],
+        metrics: [{ name: 'sessions' }],
+        limit: 10
+      }
+    });
+
+    // Get geographic data (last 30 days)
+    const geographicResponse = await analyticsDataClient.properties.runReport({
+      property: `properties/${propertyId}`,
+      requestBody: {
+        dateRanges: [{
+          startDate: '30daysAgo',
+          endDate: 'today'
+        }],
+        dimensions: [{ name: 'country' }],
+        metrics: [{ name: 'sessions' }],
         limit: 10
       }
     });
@@ -155,14 +183,14 @@ app.get('/api/analytics/ga4', async (req, res) => {
     const totalData = totalResponse.data.rows?.[0] || {};
     const total = parseInt(totalData.metricValues?.[0]?.value || '0');
 
-    // Process traffic sources
+    // Process traffic sources (last 30 days)
     let trafficSources = [];
     try {
       trafficSources = trafficSourcesResponse.data.rows?.map(row => {
         const channel = row.dimensionValues[0].value;
         const sessions = parseInt(row.metricValues[0].value || '0');
         
-        console.log('Processing row:', { channel, sessions });
+        console.log('Processing traffic source row:', { channel, sessions });
         
         // Create a more descriptive source name based on channel
         let displayName = channel;
@@ -213,11 +241,69 @@ app.get('/api/analytics/ga4', async (req, res) => {
       })) || [];
     }
 
-    // Process top pages
+    // Process top pages (last 30 days)
     const topPages = topPagesResponse.data.rows?.map(row => ({
       page: row.dimensionValues[0].value,
       views: parseInt(row.metricValues[0].value || '0')
     })) || [];
+
+    // Process device breakdown (last 30 days)
+    let deviceBreakdown = [];
+    try {
+      deviceBreakdown = deviceBreakdownResponse.data.rows?.map(row => {
+        const device = row.dimensionValues[0].value;
+        const sessions = parseInt(row.metricValues[0].value || '0');
+        
+        return {
+          device: device,
+          sessions: sessions,
+          percentage: 0 // Will be calculated below
+        };
+      }) || [];
+      
+      // Calculate percentages
+      const totalDeviceSessions = deviceBreakdown.reduce((sum, device) => sum + device.sessions, 0);
+      if (totalDeviceSessions > 0) {
+        deviceBreakdown = deviceBreakdown.map(device => ({
+          ...device,
+          percentage: Math.round((device.sessions / totalDeviceSessions) * 100)
+        }));
+      }
+      
+      console.log('Device breakdown processed:', deviceBreakdown);
+    } catch (error) {
+      console.log('Device breakdown processing failed:', error);
+      deviceBreakdown = [];
+    }
+
+    // Process geographic data (last 30 days)
+    let geographicData = [];
+    try {
+      geographicData = geographicResponse.data.rows?.map(row => {
+        const country = row.dimensionValues[0].value;
+        const sessions = parseInt(row.metricValues[0].value || '0');
+        
+        return {
+          country: country,
+          sessions: sessions,
+          percentage: 0 // Will be calculated below
+        };
+      }) || [];
+      
+      // Calculate percentages
+      const totalGeoSessions = geographicData.reduce((sum, geo) => sum + geo.sessions, 0);
+      if (totalGeoSessions > 0) {
+        geographicData = geographicData.map(geo => ({
+          ...geo,
+          percentage: Math.round((geo.sessions / totalGeoSessions) * 100)
+        }));
+      }
+      
+      console.log('Geographic data processed:', geographicData);
+    } catch (error) {
+      console.log('Geographic data processing failed:', error);
+      geographicData = [];
+    }
 
     const analyticsData = {
       today,
@@ -233,7 +319,9 @@ app.get('/api/analytics/ga4', async (req, res) => {
       todayBounceRate,
       monthBounceRate,
       trafficSources,
-      topPages
+      topPages,
+      deviceBreakdown,
+      geographicData
     };
 
     console.log('Analytics data prepared:', analyticsData);

@@ -97,6 +97,29 @@ const Tooltip: React.FC<TooltipProps> = ({ children, definition, position = 'bot
   );
 };
 
+// Helper function to format numbers
+const formatNumber = (num: number) => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+  if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+  return num.toString();
+};
+
+// Helper function to format duration
+const formatDuration = (minutes: number) => {
+  const roundedMinutes = Math.round(minutes * 10) / 10;
+  
+  if (roundedMinutes < 1) return '< 1 min';
+  if (roundedMinutes < 60) return `${roundedMinutes} min`;
+  const hours = Math.floor(roundedMinutes / 60);
+  const mins = Math.round(roundedMinutes % 60);
+  return `${hours}h ${mins}m`;
+};
+
+// Helper function to format percentage
+const formatPercentage = (num: number) => {
+  return (num * 100).toFixed(1) + '%';
+};
+
 // Helper function to calculate percentage change with proper fallback
 const calculatePercentageChange = (current: number, previous: number): { 
   value: number; 
@@ -136,42 +159,18 @@ const getChangeIcon = (change: { hasComparison: boolean; isPositive: boolean }) 
     <ArrowDownRight className="h-4 w-4 text-red-600" />;
 };
 
-// Mock data for demonstration - in real implementation, fetch from GA API
-const generateMockTrendData = () => {
-  const days = [];
-  const pageViews = [];
-  const sessions = [];
-  const users = [];
-  
-  for (let i = 29; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    days.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-    
-    // Generate realistic daily data with some variation
-    const baseViews = 20 + Math.random() * 15;
-    const baseSessions = baseViews * 0.7 + Math.random() * 5;
-    const baseUsers = baseSessions * 0.8 + Math.random() * 3;
-    
-    pageViews.push(Math.round(baseViews));
-    sessions.push(Math.round(baseSessions));
-    users.push(Math.round(baseUsers));
-  }
-  
-  return { days, pageViews, sessions, users };
-};
-
 const AnalyticsDashboard: React.FC = () => {
   const [analyticsData, setAnalyticsData] = useState<WebsiteViews | null>(null);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-  const [trendData] = useState(generateMockTrendData());
+  const [error, setError] = useState<string | null>(null);
 
   const fetchAnalyticsData = async () => {
     try {
       setLoading(true);
+      setError(null);
       
-      console.log('fetchAnalyticsData called');
+      console.log('Fetching analytics data...');
       console.log('Service initialized status:', googleAnalyticsService.isInitialized());
       
       // Add a small delay to ensure Google Analytics service is fully initialized
@@ -181,16 +180,17 @@ const AnalyticsDashboard: React.FC = () => {
       
       const data = await googleAnalyticsService.getWebsiteViews();
       console.log('Frontend received analytics data:', data);
-      setAnalyticsData(data);
-      setLastUpdated(new Date());
+      
+      // Validate that we have real data (not mock data)
+      if (data.today === 0 && data.thisMonth === 0 && data.thisYear === 0) {
+        setError('No analytics data available. Please check your Google Analytics configuration.');
+      } else {
+        setAnalyticsData(data);
+        setLastUpdated(new Date());
+      }
     } catch (error) {
       console.error('Failed to fetch analytics data:', error);
-      
-      // If it fails, try again after a longer delay
-      setTimeout(() => {
-        console.log('Retrying analytics data fetch...');
-        fetchAnalyticsData();
-      }, 3000);
+      setError('Failed to fetch analytics data. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -200,32 +200,29 @@ const AnalyticsDashboard: React.FC = () => {
     fetchAnalyticsData();
   }, []);
 
-  const formatNumber = (num: number) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-  };
-
-  const formatDuration = (minutes: number) => {
-    const roundedMinutes = Math.round(minutes * 10) / 10;
-    
-    if (roundedMinutes < 1) return '< 1 min';
-    if (roundedMinutes < 60) return `${roundedMinutes} min`;
-    const hours = Math.floor(roundedMinutes / 60);
-    const mins = Math.round(roundedMinutes % 60);
-    return `${hours}h ${mins}m`;
-  };
-
-  const formatPercentage = (num: number) => {
-    return (num * 100).toFixed(1) + '%';
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading analytics data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="h-8 w-8 text-red-600 mx-auto mb-4" />
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={fetchAnalyticsData}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Retry Connection
+          </button>
         </div>
       </div>
     );
@@ -253,65 +250,55 @@ const AnalyticsDashboard: React.FC = () => {
     );
   }
 
-  // In real implementation, fetch these from GA API with date ranges
-  // For now, using realistic mock data for demonstration
-  const lastMonthData = {
-    users: Math.round(analyticsData.monthUsers * 0.85),
-    sessions: Math.round(analyticsData.monthSessions * 0.82),
-    pageViews: Math.round(analyticsData.thisMonth * 0.88),
-    duration: analyticsData.monthDuration * 0.92,
-    bounceRate: analyticsData.monthBounceRate * 1.08
-  };
-
-  const lastYearData = {
-    users: Math.round(analyticsData.monthUsers * 0.65),
-    sessions: Math.round(analyticsData.monthSessions * 0.62),
-    pageViews: Math.round(analyticsData.thisMonth * 0.68),
-    duration: analyticsData.monthDuration * 0.85,
-    bounceRate: analyticsData.monthBounceRate * 1.15
-  };
-
-  // Calculate changes with proper fallbacks
+  // Since we only have 1 month of data, we can't calculate month-over-month or year-over-year changes
+  // All comparison metrics will show N/A
   const monthChanges = {
-    users: calculatePercentageChange(analyticsData.monthUsers, lastMonthData.users),
-    sessions: calculatePercentageChange(analyticsData.monthSessions, lastMonthData.sessions),
-    pageViews: calculatePercentageChange(analyticsData.thisMonth, lastMonthData.pageViews),
-    duration: calculatePercentageChange(analyticsData.monthDuration, lastMonthData.duration),
-    bounceRate: calculatePercentageChange(analyticsData.monthBounceRate, lastMonthData.bounceRate)
+    users: calculatePercentageChange(analyticsData.monthUsers, 0), // No previous month data
+    sessions: calculatePercentageChange(analyticsData.monthSessions, 0), // No previous month data
+    pageViews: calculatePercentageChange(analyticsData.thisMonth, 0), // No previous month data
+    duration: calculatePercentageChange(analyticsData.monthDuration, 0), // No previous month data
+    bounceRate: calculatePercentageChange(analyticsData.monthBounceRate, 0) // No previous month data
   };
 
   const yearChanges = {
-    users: calculatePercentageChange(analyticsData.monthUsers, lastYearData.users),
-    sessions: calculatePercentageChange(analyticsData.monthSessions, lastYearData.sessions),
-    pageViews: calculatePercentageChange(analyticsData.thisMonth, lastYearData.pageViews),
-    duration: calculatePercentageChange(analyticsData.monthDuration, lastYearData.duration),
-    bounceRate: calculatePercentageChange(analyticsData.monthBounceRate, lastYearData.bounceRate)
+    users: calculatePercentageChange(analyticsData.monthUsers, 0), // No previous year data
+    sessions: calculatePercentageChange(analyticsData.monthSessions, 0), // No previous year data
+    pageViews: calculatePercentageChange(analyticsData.thisYear, 0), // No previous year data
+    duration: calculatePercentageChange(analyticsData.monthDuration, 0), // No previous year data
+    bounceRate: calculatePercentageChange(analyticsData.monthBounceRate, 0) // No previous year data
   };
 
-  // Generate key insights dynamically
+  // Generate key insights based on available data only
   const generateKeyInsights = () => {
     const insights = [];
     
-    if (monthChanges.pageViews.hasComparison) {
-      insights.push(
-        `Traffic ${monthChanges.pageViews.isPositive ? 'increased' : 'decreased'} by ${Math.abs(monthChanges.pageViews.value).toFixed(1)}% month-over-month`
-      );
+    if (analyticsData.thisMonth > 0) {
+      insights.push(`Your website has generated ${formatNumber(analyticsData.thisMonth)} page views this month`);
     }
     
-    if (monthChanges.bounceRate.hasComparison) {
-      insights.push(
-        `Bounce rate ${monthChanges.bounceRate.isPositive ? 'increased' : 'improved'} by ${Math.abs(monthChanges.bounceRate.value).toFixed(1)}%`
-      );
+    if (analyticsData.monthUsers > 0) {
+      insights.push(`You've reached ${formatNumber(analyticsData.monthUsers)} unique users this month`);
     }
     
-    if (monthChanges.duration.hasComparison) {
-      insights.push(
-        `Session duration ${monthChanges.duration.isPositive ? 'grew' : 'declined'} by ${Math.abs(monthChanges.duration.value).toFixed(1)}%`
-      );
+    if (analyticsData.monthBounceRate > 0) {
+      insights.push(`Current bounce rate is ${formatPercentage(analyticsData.monthBounceRate)}`);
     }
     
-    return insights.length > 0 ? insights.join('. ') + '.' : 'No comparison data available for this period.';
+    return insights.length > 0 ? insights.join('. ') + '.' : 'Analytics data is being collected. Check back soon for insights.';
   };
+
+  // Generate real trend data for the last 30 days (if we had it)
+  // For now, we'll show a message that data is being collected
+  const generateTrendData = () => {
+    // This would ideally come from GA4 API with date ranges
+    // For now, show that data is being collected
+    return {
+      hasData: false,
+      message: 'Trend data will be available after collecting 30+ days of analytics'
+    };
+  };
+
+  const trendData = generateTrendData();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -402,9 +389,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthUsers}</span>
-                  <span className={`text-xs ${getChangeColor(monthChanges.users)}`}>
-                    {monthChanges.users.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -413,9 +398,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthSessions}</span>
-                  <span className={`text-xs ${getChangeColor(monthChanges.sessions)}`}>
-                    {monthChanges.sessions.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -424,9 +407,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.thisMonth}</span>
-                  <span className={`text-xs ${getChangeColor(monthChanges.pageViews)}`}>
-                    {monthChanges.pageViews.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -435,9 +416,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatDuration(analyticsData.monthDuration)}</span>
-                  <span className={`text-xs ${getChangeColor(monthChanges.duration)}`}>
-                    {monthChanges.duration.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -446,9 +425,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatPercentage(analyticsData.monthBounceRate)}</span>
-                  <span className={`text-xs ${getChangeColor(monthChanges.bounceRate)}`}>
-                    {monthChanges.bounceRate.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
             </div>
@@ -467,9 +444,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthUsers}</span>
-                  <span className={`text-xs ${getChangeColor(yearChanges.users)}`}>
-                    {yearChanges.users.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -478,9 +453,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.monthSessions}</span>
-                  <span className={`text-xs ${getChangeColor(yearChanges.sessions)}`}>
-                    {yearChanges.sessions.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -489,9 +462,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{analyticsData.thisYear}</span>
-                  <span className={`text-xs ${getChangeColor(yearChanges.pageViews)}`}>
-                    {yearChanges.pageViews.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -500,9 +471,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatDuration(analyticsData.monthDuration)}</span>
-                  <span className={`text-xs ${getChangeColor(yearChanges.duration)}`}>
-                    {yearChanges.duration.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
               <div className="flex justify-between items-center">
@@ -511,9 +480,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </Tooltip>
                 <div className="flex items-center gap-2">
                   <span className="text-lg font-bold text-gray-900">{formatPercentage(analyticsData.monthBounceRate)}</span>
-                  <span className={`text-xs ${getChangeColor(yearChanges.bounceRate)}`}>
-                    {yearChanges.bounceRate.displayValue}
-                  </span>
+                  <span className="text-xs text-gray-500">N/A</span>
                 </div>
               </div>
             </div>
@@ -531,25 +498,18 @@ const AnalyticsDashboard: React.FC = () => {
               </Tooltip>
               <TrendingUp className="h-5 w-5 text-gray-600" />
             </div>
-            <div className="h-64">
-              {/* Simple line chart using CSS - replace with Chart.js or Google Charts */}
-              <div className="relative h-full">
-                <div className="absolute inset-0 flex items-end justify-between px-2 pb-2">
-                  {trendData.pageViews.map((value, index) => (
-                    <div key={index} className="flex flex-col items-center">
-                      <div 
-                        className="w-1 bg-blue-500 rounded-full transition-all duration-300 hover:bg-blue-600"
-                        style={{ height: `${(value / Math.max(...trendData.pageViews)) * 100}%` }}
-                      ></div>
-                      <span className="text-xs text-gray-500 mt-1 transform rotate-45 origin-left">
-                        {trendData.days[index]}
-                      </span>
-                    </div>
-                  ))}
+            <div className="h-64 flex items-center justify-center">
+              {trendData.hasData ? (
+                <div className="text-center">
+                  {/* Chart would go here when we have real trend data */}
                 </div>
-                <div className="absolute top-0 left-0 right-0 h-px bg-gray-200"></div>
-                <div className="absolute top-0 bottom-0 left-0 w-px bg-gray-200"></div>
-              </div>
+              ) : (
+                <div className="text-center text-gray-500">
+                  <BarChart3 className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                  <p className="text-sm">{trendData.message}</p>
+                  <p className="text-xs mt-1">Check back after collecting more data</p>
+                </div>
+              )}
             </div>
           </div>
 
@@ -561,25 +521,11 @@ const AnalyticsDashboard: React.FC = () => {
               </Tooltip>
               <Calendar className="h-5 w-5 text-gray-600" />
             </div>
-            <div className="h-64">
-              {/* Simple bar chart using CSS - replace with Chart.js or Google Charts */}
-              <div className="relative h-full">
-                <div className="absolute inset-0 flex items-end justify-between px-4 pb-2">
-                  {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, index) => {
-                    const value = Math.random() * 100 + 50; // Mock data
-                    return (
-                      <div key={month} className="flex flex-col items-center">
-                        <div 
-                          className="w-4 bg-green-500 rounded-t transition-all duration-300 hover:bg-green-600"
-                          style={{ height: `${(value / 150) * 100}%` }}
-                        ></div>
-                        <span className="text-xs text-gray-500 mt-1">{month}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-                <div className="absolute top-0 left-0 right-0 h-px bg-gray-200"></div>
-                <div className="absolute top-0 bottom-0 left-0 w-px bg-gray-200"></div>
+            <div className="h-64 flex items-center justify-center">
+              <div className="text-center text-gray-500">
+                <BarChart3 className="h-12 w-12 mx-auto mb-2 text-gray-300" />
+                <p className="text-sm">Monthly trends will be available after collecting 12+ months of data</p>
+                <p className="text-xs mt-1">Currently collecting: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
               </div>
             </div>
           </div>
@@ -624,6 +570,7 @@ const AnalyticsDashboard: React.FC = () => {
               <div className="text-center py-8">
                 <Globe className="h-12 w-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500">No traffic source data available</p>
+                <p className="text-xs text-gray-400 mt-1">Data will appear as traffic sources are identified</p>
               </div>
             )}
           </div>
@@ -640,46 +587,31 @@ const AnalyticsDashboard: React.FC = () => {
                 <Tablet className="h-4 w-4 text-gray-600" />
               </div>
             </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <Monitor className="h-4 w-4 text-gray-600 mr-2" />
-                  <Tooltip definition="Website visitors using desktop or laptop computers. These users typically have larger screens and may engage differently with your content compared to mobile users.">
-                    <span className="text-sm text-gray-600">Desktop</span>
-                  </Tooltip>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">65%</div>
-                  <Tooltip definition="The portion of your total website visitors that come from this specific source or device type. Traffic distribution helps understand your audience composition.">
-                    <div className="text-xs text-gray-500">of traffic</div>
-                  </Tooltip>
-                </div>
+            {analyticsData.deviceBreakdown && analyticsData.deviceBreakdown.length > 0 ? (
+              <div className="space-y-4">
+                {analyticsData.deviceBreakdown.map((device, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      {device.device.toLowerCase() === 'desktop' && <Monitor className="h-4 w-4 text-gray-600 mr-2" />}
+                      {device.device.toLowerCase() === 'mobile' && <Smartphone className="h-4 w-4 text-gray-600 mr-2" />}
+                      {device.device.toLowerCase() === 'tablet' && <Tablet className="h-4 w-4 text-gray-600 mr-2" />}
+                      {!['desktop', 'mobile', 'tablet'].includes(device.device.toLowerCase()) && <Monitor className="h-4 w-4 text-gray-600 mr-2" />}
+                      <span className="text-sm text-gray-600">{device.device}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-gray-900">{device.percentage}%</div>
+                      <div className="text-xs text-gray-500">of traffic</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <Smartphone className="h-4 w-4 text-gray-600 mr-2" />
-                  <Tooltip definition="Website visitors using mobile phones. Mobile users often have different browsing patterns and may prefer different content formats than desktop users.">
-                    <span className="text-sm text-gray-600">Mobile</span>
-                  </Tooltip>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">30%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
+            ) : (
+              <div className="text-center py-8">
+                <Monitor className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-500">Device breakdown data not available</p>
+                <p className="text-xs text-gray-400 mt-1">This metric requires additional GA4 configuration</p>
               </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center">
-                  <Tablet className="h-4 w-4 text-gray-600 mr-2" />
-                  <Tooltip definition="Website visitors using tablet devices. Tablets offer a middle ground between mobile and desktop experiences, with touch interfaces but larger screens than phones.">
-                    <span className="text-sm text-gray-600">Tablet</span>
-                  </Tooltip>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">5%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Geography */}
@@ -690,53 +622,25 @@ const AnalyticsDashboard: React.FC = () => {
               </Tooltip>
               <MapPin className="h-5 w-5 text-gray-600" />
             </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <Tooltip definition="Visitors from the United States. This represents your largest geographic audience segment, indicating strong local market presence.">
-                  <span className="text-sm text-gray-600">United States</span>
-                </Tooltip>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">45%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
+            {analyticsData.geographicData && analyticsData.geographicData.length > 0 ? (
+              <div className="space-y-4">
+                {analyticsData.geographicData.slice(0, 5).map((geo, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">{geo.country}</span>
+                    <div className="text-right">
+                      <div className="text-sm font-bold text-gray-900">{geo.percentage}%</div>
+                      <div className="text-xs text-gray-500">of traffic</div>
+                    </div>
+                  </div>
+                ))}
               </div>
-              <div className="flex justify-between items-center">
-                <Tooltip definition="Visitors from the United Kingdom. This represents your second-largest geographic audience, showing international reach beyond your primary market.">
-                  <span className="text-sm text-gray-600">United Kingdom</span>
-                </Tooltip>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">25%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
+            ) : (
+              <div className="text-center py-8">
+                <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-500">Geographic data not available</p>
+                <p className="text-xs text-gray-400 mt-1">This metric requires additional GA4 configuration</p>
               </div>
-              <div className="flex justify-between items-center">
-                <Tooltip definition="Visitors from Canada. This represents a significant portion of your North American audience, indicating strong regional presence.">
-                  <span className="text-sm text-gray-600">Canada</span>
-                </Tooltip>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">15%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <Tooltip definition="Visitors from Australia. This represents your Pacific region audience, showing global reach and potential for international expansion.">
-                  <span className="text-sm text-gray-600">Australia</span>
-                </Tooltip>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">10%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <Tooltip definition="Visitors from all other countries not individually listed. This category represents your global reach and diverse international audience.">
-                  <span className="text-sm text-gray-600">Other</span>
-                </Tooltip>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-gray-900">5%</div>
-                  <div className="text-xs text-gray-500">of traffic</div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -779,6 +683,7 @@ const AnalyticsDashboard: React.FC = () => {
               <div className="text-center py-8">
                 <FileText className="h-12 w-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500">No page data available</p>
+                <p className="text-xs text-gray-400 mt-1">Page data will appear as users visit your pages</p>
               </div>
             )}
           </div>
@@ -790,6 +695,11 @@ const AnalyticsDashboard: React.FC = () => {
                 <h3 className="text-lg font-semibold text-gray-900">Engagement Metrics</h3>
               </Tooltip>
               <Activity className="h-5 w-5 text-gray-600" />
+            </div>
+            <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+              <p className="text-xs text-gray-600">
+                <strong>Note:</strong> All metrics below represent data from the last 30 days
+              </p>
             </div>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
