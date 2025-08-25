@@ -88,10 +88,13 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const formatDuration = (minutes: number) => {
-    if (minutes < 1) return '< 1 min';
-    if (minutes < 60) return `${minutes} min`;
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
+    // Round to 1 decimal place for cleaner display
+    const roundedMinutes = Math.round(minutes * 10) / 10;
+    
+    if (roundedMinutes < 1) return '< 1 min';
+    if (roundedMinutes < 60) return `${roundedMinutes} min`;
+    const hours = Math.floor(roundedMinutes / 60);
+    const mins = Math.round(roundedMinutes % 60);
     return `${hours}h ${mins}m`;
   };
 
