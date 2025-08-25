@@ -45,12 +45,22 @@ const AnalyticsDashboard: React.FC = () => {
   const fetchAnalyticsData = async () => {
     try {
       setLoading(true);
+      
+      // Add a small delay to ensure Google Analytics service is fully initialized
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       const data = await googleAnalyticsService.getWebsiteViews();
       console.log('Frontend received analytics data:', data);
       setAnalyticsData(data);
       setLastUpdated(new Date());
     } catch (error) {
       console.error('Failed to fetch analytics data:', error);
+      
+      // If it fails, try again after a longer delay
+      setTimeout(() => {
+        console.log('Retrying analytics data fetch...');
+        fetchAnalyticsData();
+      }, 3000);
     } finally {
       setLoading(false);
     }
@@ -95,9 +105,19 @@ const AnalyticsDashboard: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600">
-            No analytics data available. Please check your Google Analytics configuration.
+          <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600 mb-4">
+            Connecting to Google Analytics...
           </p>
+          <p className="text-sm text-gray-500">
+            This may take a few moments on first load
+          </p>
+          <button
+            onClick={fetchAnalyticsData}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Retry Connection
+          </button>
         </div>
       </div>
     );
