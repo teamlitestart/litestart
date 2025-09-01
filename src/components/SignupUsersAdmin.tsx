@@ -100,7 +100,7 @@ const SignupUsersAdmin: React.FC = () => {
       try {
         if (backendStatus === 'online') {
           // Call the backend API to delete all users
-          const response = await fetch(`${API_BASE_URL}/api/users`, {
+          const response = await fetch('https://litestart-backend.onrender.com/api/users', {
             method: 'DELETE',
           });
           

@@ -229,7 +229,7 @@ const StartupOnboarding: React.FC<StartupOnboardingProps> = ({ isOpen = true, on
     
     // Final submission
     try {
-      const response = await fetch('/api/signup', {
+      const response = await fetch('https://litestart-backend.onrender.com/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

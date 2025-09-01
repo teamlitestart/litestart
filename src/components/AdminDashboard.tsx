@@ -95,7 +95,7 @@ const AdminDashboard: React.FC = () => {
   const fetchWebsiteViews = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/analytics/ga4?propertyId=123456789');
+      const response = await fetch('https://litestart-backend.onrender.com/api/analytics/ga4?propertyId=123456789');
       if (response.ok) {
         const views = await response.json();
         setWebsiteViews(views);
