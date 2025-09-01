@@ -37,13 +37,16 @@ const SignupUsersAdmin: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      const health = await apiCall.checkHealth();
-      const status = health.status as 'online' | 'offline' | 'waking' | 'checking';
-      setBackendStatus(status);
-      
-      // If backend is online but MongoDB is not connected, show a special status
-      if (status === 'online' && !health.mongoConnected) {
-        setBackendStatus('waking'); // New status for when backend is up but MongoDB is connecting
+      const response = await fetch('https://litestart-backend.onrender.com/health');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.mongoConnected) {
+          setBackendStatus('online');
+        } else {
+          setBackendStatus('waking'); // Backend is up but MongoDB is connecting
+        }
+      } else {
+        setBackendStatus('offline');
       }
     } catch (err) {
       setBackendStatus('offline');
@@ -53,7 +56,14 @@ const SignupUsersAdmin: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const data = await apiCall.getUsers();
+      console.log('🔍 SignupUsersAdmin fetchUsers called');
+      const response = await fetch('https://litestart-backend.onrender.com/api/users');
+      console.log('🔍 Response status:', response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      console.log('🔍 Fetched users:', data.length);
       setUsers(data);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -68,7 +78,12 @@ const SignupUsersAdmin: React.FC = () => {
 
   const deleteUser = async (id: string) => {
     try {
-      await apiCall.deleteUser(id);
+      const response = await fetch(`https://litestart-backend.onrender.com/api/users/${id}`, {
+        method: 'DELETE'
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       setUsers(users.filter(user => user._id !== id));
     } catch (error) {
       console.error('Error deleting user:', error);
