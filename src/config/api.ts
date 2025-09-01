@@ -4,10 +4,13 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ||
 
 // Debug logging for production
 if (import.meta.env.MODE === 'production') {
+  console.log('=== API CONFIG DEBUG ===');
   console.log('Production mode detected');
   console.log('API_BASE_URL:', API_BASE_URL);
   console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
   console.log('MODE:', import.meta.env.MODE);
+  console.log('API_ENDPOINTS.USERS:', API_ENDPOINTS.USERS);
+  console.log('========================');
 }
 
 // Fallback function for when backend is not available
