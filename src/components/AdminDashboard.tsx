@@ -82,14 +82,11 @@ const AdminDashboard: React.FC = () => {
   const fetchSignupUsers = async () => {
     try {
       setLoading(true);
-      console.log('🔍 AdminDashboard fetchSignupUsers called');
       const response = await fetch('https://litestart-backend.onrender.com/api/users');
-      console.log('🔍 Response status:', response.status);
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
       const data = await response.json();
-      console.log('🔍 Fetched users:', data.length);
       setSignupUsers(data);
     } catch (err) {
       console.error('Failed to fetch signup users:', err);

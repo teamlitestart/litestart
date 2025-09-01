@@ -2,20 +2,6 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://litestart-backend.onrender.com');
 
-// Force log to see if this file is being loaded
-console.log('🚀 API CONFIG FILE LOADED - API_BASE_URL:', API_BASE_URL);
-
-// Debug logging for production
-if (import.meta.env.MODE === 'production') {
-  console.log('=== API CONFIG DEBUG ===');
-  console.log('Production mode detected');
-  console.log('API_BASE_URL:', API_BASE_URL);
-  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-  console.log('MODE:', import.meta.env.MODE);
-  console.log('API_ENDPOINTS.USERS:', API_ENDPOINTS.USERS);
-  console.log('========================');
-}
-
 // Fallback function for when backend is not available
 const fallbackSignup = async (userData: any) => {
   // Simulate API delay
