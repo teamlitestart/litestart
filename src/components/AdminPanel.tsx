@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiCall } from '../config/api';
+
 import API_BASE_URL from '../config/api';
 
 interface User {
@@ -104,7 +104,13 @@ const AdminPanel: React.FC = () => {
     }
 
     try {
-      const result = await apiCall.deleteUser(id);
+      const response = await fetch(`https://litestart-backend.onrender.com/api/users/${id}`, {
+        method: 'DELETE'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
       
       // Refresh the data to ensure consistency
       await fetchUsers();

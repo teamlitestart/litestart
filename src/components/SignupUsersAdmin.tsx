@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { apiCall } from '../config/api';
+
 import API_BASE_URL from '../config/api';
 
 interface SignupUser {

@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
-import { apiCall } from '../config/api';
+
 import { WebsiteViews } from '../services/googleAnalytics';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
@@ -72,8 +72,13 @@ const AdminDashboard: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      const health = await apiCall.checkHealth();
-      setBackendStatus(health.status as 'online' | 'offline' | 'checking');
+      const response = await fetch('https://litestart-backend.onrender.com/health');
+      if (response.ok) {
+        const data = await response.json();
+        setBackendStatus(data.mongoConnected ? 'online' : 'checking');
+      } else {
+        setBackendStatus('offline');
+      }
     } catch (err) {
       setBackendStatus('offline');
     }
