@@ -2,6 +2,14 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://litestart-backend.onrender.com');
 
+// Debug logging for production
+if (import.meta.env.MODE === 'production') {
+  console.log('Production mode detected');
+  console.log('API_BASE_URL:', API_BASE_URL);
+  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+  console.log('MODE:', import.meta.env.MODE);
+}
+
 // Fallback function for when backend is not available
 const fallbackSignup = async (userData: any) => {
   // Simulate API delay
@@ -90,11 +98,18 @@ export const apiCall = {
   },
   
   getUsers: async () => {
+    console.log('getUsers called - API_BASE_URL:', API_BASE_URL);
+    console.log('getUsers called - API_ENDPOINTS.USERS:', API_ENDPOINTS.USERS);
+    
     if (API_BASE_URL) {
       try {
+        console.log('Making request to:', API_ENDPOINTS.USERS);
         const response = await fetch(API_ENDPOINTS.USERS!, {
           signal: AbortSignal.timeout(10000) // 10 second timeout
         });
+        
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
         
         if (response.status === 503) {
           // Backend is waking up, use fallback
@@ -106,12 +121,16 @@ export const apiCall = {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
         
-        return response.json();
+        const data = await response.json();
+        console.log('Successfully fetched users:', data.length);
+        return data;
       } catch (error) {
+        console.error('Error in getUsers:', error);
         console.log('Backend unavailable, using fallback getUsers');
         return fallbackGetUsers();
       }
     } else {
+      console.log('No API_BASE_URL, using fallback getUsers');
       return fallbackGetUsers();
     }
   },
