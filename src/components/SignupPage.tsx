@@ -4,7 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Hero from './Hero';
 import MouseTracker from './MouseTracker';
-import { apiCall } from '../config/api';
+
 
 // Intersection Observer hook for scroll animations
 const useIntersectionObserver = (options = {}) => {
@@ -103,12 +103,23 @@ const SignupPage: React.FC = () => {
     setError('');
     
     try {
-      const data = await apiCall.signup({
-        name: form.name,
-        email: form.email,
-        userType: userType
+      const response = await fetch('https://litestart-backend.onrender.com/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          userType: userType
+        }),
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
       setSubmitted(true);
       setForm({ name: '', email: '' });
     } catch (err) {
