@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import API_BASE_URL from '../config/api';
+
 
 interface User {
   _id: string;
