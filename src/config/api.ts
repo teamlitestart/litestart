@@ -2,6 +2,9 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || 
   (import.meta.env.MODE === 'development' ? 'http://localhost:3001' : 'https://litestart-backend.onrender.com');
 
+// Force log to see if this file is being loaded
+console.log('🚀 API CONFIG FILE LOADED - API_BASE_URL:', API_BASE_URL);
+
 // Debug logging for production
 if (import.meta.env.MODE === 'production') {
   console.log('=== API CONFIG DEBUG ===');
