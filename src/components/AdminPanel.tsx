@@ -74,7 +74,7 @@ const AdminPanel: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`);
+      const response = await fetch('https://litestart-backend.onrender.com/api/users');
       setBackendStatus(response.ok ? 'online' : 'offline');
     } catch (err) {
       setBackendStatus('offline');
@@ -85,7 +85,11 @@ const AdminPanel: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      const data = await apiCall.getUsers();
+      const response = await fetch('https://litestart-backend.onrender.com/api/users');
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
       setUsers(data);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch users');
@@ -112,7 +116,7 @@ const AdminPanel: React.FC = () => {
 
   const verifyEmail = async (email: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/verify-email/${encodeURIComponent(email)}`, {
+      const response = await fetch(`https://litestart-backend.onrender.com/api/verify-email/${encodeURIComponent(email)}`, {
         method: 'POST',
       });
       
@@ -138,7 +142,7 @@ const AdminPanel: React.FC = () => {
     try {
       if (backendStatus === 'online') {
         // Call the backend API to delete all users
-        const response = await fetch(`${API_BASE_URL}/api/users`, {
+        const response = await fetch('https://litestart-backend.onrender.com/api/users', {
           method: 'DELETE',
         });
         

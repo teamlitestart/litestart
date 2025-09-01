@@ -35,7 +35,7 @@ const EmailDeliveryMonitor: React.FC = () => {
 
   const fetchEmailStats = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/email-stats`);
+      const response = await fetch('https://litestart-backend.onrender.com/api/email-stats');
       if (!response.ok) {
         throw new Error('Failed to fetch email stats');
       }
@@ -49,7 +49,7 @@ const EmailDeliveryMonitor: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`);
+      const response = await fetch('https://litestart-backend.onrender.com/api/users');
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
@@ -65,7 +65,7 @@ const EmailDeliveryMonitor: React.FC = () => {
 
   const simulateBounce = async (email: string, reason: string) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/simulate-bounce/${encodeURIComponent(email)}`, {
+      const response = await fetch(`https://litestart-backend.onrender.com/api/simulate-bounce/${encodeURIComponent(email)}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
