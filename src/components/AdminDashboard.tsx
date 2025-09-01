@@ -15,7 +15,7 @@ import {
 import SignupUsersAdmin from './SignupUsersAdmin';
 import PlatformUsersAdmin from './PlatformUsersAdmin';
 import { apiCall } from '../config/api';
-import { googleAnalyticsService, WebsiteViews } from '../services/googleAnalytics';
+import { WebsiteViews } from '../services/googleAnalytics';
 
 type AdminView = 'dashboard' | 'signup-users' | 'platform-users';
 
@@ -72,8 +72,8 @@ const AdminDashboard: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      const response = await fetch('https://litestart-backend.onrender.com/api/users');
-      setBackendStatus(response.ok ? 'online' : 'offline');
+      const health = await apiCall.checkHealth();
+      setBackendStatus(health.status as 'online' | 'offline' | 'checking');
     } catch (err) {
       setBackendStatus('offline');
     }
@@ -95,8 +95,13 @@ const AdminDashboard: React.FC = () => {
   const fetchWebsiteViews = async () => {
     try {
       setLoading(true);
-      const views = await fetch('/api/analytics/ga4?propertyId=123456789').then(res => res.json());
-      setWebsiteViews(views);
+      const response = await fetch('/api/analytics/ga4?propertyId=123456789');
+      if (response.ok) {
+        const views = await response.json();
+        setWebsiteViews(views);
+      } else {
+        console.error('Failed to fetch analytics data');
+      }
     } catch (error) {
       console.error('Failed to fetch website views:', error);
       // Set to zeros instead of random data

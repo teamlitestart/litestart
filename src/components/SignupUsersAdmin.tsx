@@ -53,16 +53,11 @@ const SignupUsersAdmin: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/users');
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data);
-      } else {
-        // Fallback to local storage
-        const localUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]');
-        setUsers(localUsers);
-      }
+      const data = await apiCall.getUsers();
+      setUsers(data);
     } catch (error) {
+      console.error('Error fetching users:', error);
+      setError('Failed to fetch users');
       // Fallback to local storage
       const localUsers = JSON.parse(localStorage.getItem('signupUsers') || '[]');
       setUsers(localUsers);
@@ -73,13 +68,10 @@ const SignupUsersAdmin: React.FC = () => {
 
   const deleteUser = async (id: string) => {
     try {
-      const response = await fetch(`/api/users/${id}`, { method: 'DELETE' });
-      if (response.ok) {
-        setUsers(users.filter(user => user._id !== id));
-      } else {
-        setError('Failed to delete user');
-      }
+      await apiCall.deleteUser(id);
+      setUsers(users.filter(user => user._id !== id));
     } catch (error) {
+      console.error('Error deleting user:', error);
       setError('Failed to delete user');
     }
   };
