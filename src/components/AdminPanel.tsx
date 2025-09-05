@@ -74,7 +74,7 @@ const AdminPanel: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      console.log('Checking backend status... (Production v2)');
+      console.log('Checking backend status... (Production v3 - FORCE DEPLOY)');
       const response = await fetch('https://litestart-backend.onrender.com/health');
       console.log('Health check response status:', response.status);
       if (response.ok) {
@@ -95,7 +95,7 @@ const AdminPanel: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      console.log('Fetching users from backend... (Production v2)');
+      console.log('Fetching users from backend... (Production v3 - FORCE DEPLOY)');
       const response = await fetch('https://litestart-backend.onrender.com/api/users');
       console.log('Response status:', response.status);
       console.log('Response ok:', response.ok);
