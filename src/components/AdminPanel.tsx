@@ -74,11 +74,15 @@ const AdminPanel: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
+      console.log('Checking backend status... (Production v2)');
       const response = await fetch('https://litestart-backend.onrender.com/health');
+      console.log('Health check response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Health check data:', data);
         setBackendStatus(data.mongoConnected ? 'online' : 'offline');
       } else {
+        console.log('Health check failed with status:', response.status);
         setBackendStatus('offline');
       }
     } catch (err) {
@@ -91,7 +95,7 @@ const AdminPanel: React.FC = () => {
     try {
       setLoading(true);
       setError('');
-      console.log('Fetching users from backend...');
+      console.log('Fetching users from backend... (Production v2)');
       const response = await fetch('https://litestart-backend.onrender.com/api/users');
       console.log('Response status:', response.status);
       console.log('Response ok:', response.ok);
