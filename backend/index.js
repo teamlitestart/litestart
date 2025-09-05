@@ -2,10 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const crypto = require('crypto');
+const multer = require('multer');
 require('dotenv').config();
 
 const User = require('./models/User');
 const { sendThankYouEmail } = require('./services/emailService');
+const { upload, uploadFile } = require('./services/cloudinaryService');
 
 // Google Analytics setup
 const { google } = require('googleapis');
@@ -381,10 +383,10 @@ app.get('/', (req, res) => {
   res.send('API is running');
 });
 
-// Signup endpoint
-app.post('/api/signup', async (req, res) => {
+// Signup endpoint with file upload support
+app.post('/api/signup', upload.single('cv'), async (req, res) => {
   try {
-    const { name, email, userType } = req.body;
+    const { name, email, userType, companyDescription, companyWebsite } = req.body;
     
     // Force a fresh connection attempt
     if (!mongoConnected || mongoose.connection.readyState !== 1) {
@@ -398,11 +400,33 @@ app.post('/api/signup', async (req, res) => {
       }
     }
     
+    // Handle CV upload for students
+    let cvData = null;
+    if (userType === 'student' && req.file) {
+      // When using multer-storage-cloudinary, the file is already uploaded
+      // and the Cloudinary URL is in req.file.path
+      if (req.file.path && req.file.path.includes('cloudinary.com')) {
+        cvData = {
+          cvUrl: req.file.path,
+          cvFilename: req.file.originalname,
+          cvSize: req.file.size,
+          cvUploadDate: new Date()
+        };
+        console.log('CV uploaded to Cloudinary:', req.file.path);
+      } else {
+        console.error('CV upload failed - no Cloudinary URL found');
+        return res.status(400).json({ 
+          message: 'CV upload failed. Please try again.',
+          error: 'File upload failed'
+        });
+      }
+    }
+    
     // Send thank you email first to validate email existence
     const emailResult = await sendThankYouEmail({ name, email, userType });
     
     // Create user in database with enhanced email verification tracking
-    const user = new User({
+    const userData = {
       name,
       email,
       userType,
@@ -410,7 +434,20 @@ app.post('/api/signup', async (req, res) => {
       emailDeliveryStatus: emailResult.deliveryStatus || 'failed',
       emailSentDate: emailResult.sentDate || null,
       emailVerifiedDate: emailResult.success ? new Date() : null
-    });
+    };
+    
+    // Add CV data for students
+    if (cvData) {
+      Object.assign(userData, cvData);
+    }
+    
+    // Add company data for startups
+    if (userType === 'startup') {
+      if (companyDescription) userData.companyDescription = companyDescription;
+      if (companyWebsite) userData.companyWebsite = companyWebsite;
+    }
+    
+    const user = new User(userData);
     await user.save().catch(() => {}); // Ignore duplicate errors
     
     // Provide appropriate response based on email result
@@ -422,7 +459,12 @@ app.post('/api/signup', async (req, res) => {
           email,
           userType,
           isEmailVerified: true,
-          emailDeliveryStatus: 'sent'
+          emailDeliveryStatus: 'sent',
+          ...(cvData && { cvUrl: cvData.cvUrl }),
+          ...(userType === 'startup' && { 
+            companyDescription: companyDescription || null,
+            companyWebsite: companyWebsite || null
+          })
         },
         emailSent: true
       });
@@ -434,7 +476,12 @@ app.post('/api/signup', async (req, res) => {
           email,
           userType,
           isEmailVerified: false,
-          emailDeliveryStatus: emailResult.deliveryStatus || 'failed'
+          emailDeliveryStatus: emailResult.deliveryStatus || 'failed',
+          ...(cvData && { cvUrl: cvData.cvUrl }),
+          ...(userType === 'startup' && { 
+            companyDescription: companyDescription || null,
+            companyWebsite: companyWebsite || null
+          })
         },
         emailSent: false,
         emailError: emailResult.error || emailResult.reason
