@@ -74,9 +74,15 @@ const AdminPanel: React.FC = () => {
 
   const checkBackendStatus = async () => {
     try {
-      const response = await fetch('https://litestart-backend.onrender.com/api/users');
-      setBackendStatus(response.ok ? 'online' : 'offline');
+      const response = await fetch('https://litestart-backend.onrender.com/health');
+      if (response.ok) {
+        const data = await response.json();
+        setBackendStatus(data.mongoConnected ? 'online' : 'offline');
+      } else {
+        setBackendStatus('offline');
+      }
     } catch (err) {
+      console.error('Backend status check failed:', err);
       setBackendStatus('offline');
     }
   };
@@ -85,13 +91,21 @@ const AdminPanel: React.FC = () => {
     try {
       setLoading(true);
       setError('');
+      console.log('Fetching users from backend...');
       const response = await fetch('https://litestart-backend.onrender.com/api/users');
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+      
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
+      
       const data = await response.json();
+      console.log('Fetched users data:', data);
+      console.log('Number of users:', data.length);
       setUsers(data);
     } catch (err) {
+      console.error('Error fetching users:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch users');
     } finally {
       setLoading(false);
@@ -130,7 +144,7 @@ const AdminPanel: React.FC = () => {
         throw new Error('Failed to verify email');
       }
       
-      const result = await response.json();
+              await response.json();
       
       // Refresh the data to show updated status
       await fetchUsers();
@@ -407,7 +421,7 @@ const AdminPanel: React.FC = () => {
 
           {filteredUsers.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              No users found
+              {users.length === 0 ? 'No signup users found' : 'No users match the current filters'}
             </div>
           ) : (
             <div className="overflow-x-auto">
