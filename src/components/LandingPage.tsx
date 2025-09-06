@@ -106,10 +106,8 @@ const LandingPage: React.FC = () => {
   };
 
   const scrollToSignup = () => {
-    const signupSection = document.getElementById('signup');
-    if (signupSection) {
-      signupSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Redirect to signup page
+    window.location.href = '/signup';
   };
 
   const testimonials = [

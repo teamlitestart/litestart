@@ -480,7 +480,7 @@ function MainSite() {
 
   const handleJoinWaitlist = () => {
     // Navigate to signup page
-    window.location.href = '/';
+    window.location.href = '/signup';
   };
   const handleCloseStudentOnboarding = () => setIsStudentOnboardingOpen(false);
   const handleCloseStartupOnboarding = () => setIsStartupOnboardingOpen(false);

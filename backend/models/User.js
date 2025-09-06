@@ -46,6 +46,32 @@ const userSchema = new mongoose.Schema({
   signupDate: {
     type: Date,
     default: Date.now
+  },
+  // Student-specific fields
+  cvUrl: {
+    type: String,
+    default: null
+  },
+  cvFilename: {
+    type: String,
+    default: null
+  },
+  cvSize: {
+    type: Number,
+    default: null
+  },
+  cvUploadDate: {
+    type: Date,
+    default: null
+  },
+  // Startup-specific fields
+  companyDescription: {
+    type: String,
+    default: null
+  },
+  companyWebsite: {
+    type: String,
+    default: null
   }
 });
 

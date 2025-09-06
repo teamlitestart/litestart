@@ -135,7 +135,8 @@ const SignupPage: React.FC = () => {
   };
 
   const handleJoinWaitlist = () => {
-    scrollToSignup();
+    // Redirect to signup page
+    window.location.href = '/signup';
   };
 
   const handleLearnMore = () => {

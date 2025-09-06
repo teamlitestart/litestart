@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, Building, ArrowRight, Upload, FileText, Globe } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import { useAuth } from '../contexts/AuthContext';
@@ -12,8 +12,12 @@ const SignupForm: React.FC = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    userType: 'student'
+    userType: 'student',
+    companyDescription: '',
+    companyWebsite: ''
   });
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [cvPreview, setCvPreview] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -27,6 +31,28 @@ const SignupForm: React.FC = () => {
       [e.target.name]: e.target.value
     });
     setError(''); // Clear error when user starts typing
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Please upload a PDF, DOC, DOCX, JPG, or PNG file');
+        return;
+      }
+      
+      // Validate file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('File size must be less than 10MB');
+        return;
+      }
+      
+      setCvFile(file);
+      setCvPreview(file.name);
+      setError('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,19 +73,51 @@ const SignupForm: React.FC = () => {
       return;
     }
 
+    // Validate CV upload for students
+    if (formData.userType === 'student' && !cvFile) {
+      setError('Please upload your CV');
+      setLoading(false);
+      return;
+    }
+
     try {
-      // Simulate API call for registration
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Prepare form data for API call
+      const submitData = new FormData();
+      submitData.append('name', `${formData.firstName} ${formData.lastName}`);
+      submitData.append('email', formData.email);
+      submitData.append('userType', formData.userType);
       
-      // For demo purposes, accept any valid form data
-      if (formData.firstName && formData.lastName && formData.email && formData.password) {
+      // Add CV file for students
+      if (formData.userType === 'student' && cvFile) {
+        submitData.append('cv', cvFile);
+      }
+      
+      // Add company info for startups
+      if (formData.userType === 'startup') {
+        if (formData.companyDescription) {
+          submitData.append('companyDescription', formData.companyDescription);
+        }
+        if (formData.companyWebsite) {
+          submitData.append('companyWebsite', formData.companyWebsite);
+        }
+      }
+
+      // Make API call
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        body: submitData
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
         // Use the auth context to login
         login(formData.email, formData.userType);
         
         // Redirect to dashboard
         navigate('/dashboard');
       } else {
-        setError('Please fill in all required fields');
+        setError(result.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
       setError('Registration failed. Please try again.');
@@ -257,6 +315,85 @@ const SignupForm: React.FC = () => {
                   </button>
                 </div>
               </div>
+
+              {/* CV Upload for Students */}
+              {formData.userType === 'student' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Your CV <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="cv"
+                      name="cv"
+                      onChange={handleFileChange}
+                      accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                      className="hidden"
+                      required
+                    />
+                    <label
+                      htmlFor="cv"
+                      className="flex items-center justify-center w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors"
+                    >
+                      <div className="flex flex-col items-center space-y-2">
+                        <Upload className="h-8 w-8 text-gray-400" />
+                        <div className="text-sm text-gray-600">
+                          {cvPreview ? (
+                            <div className="flex items-center space-x-2">
+                              <FileText className="h-4 w-4 text-green-500" />
+                              <span className="text-green-600 font-medium">{cvPreview}</span>
+                            </div>
+                          ) : (
+                            <span>Click to upload CV (PDF, DOC, DOCX, JPG, PNG)</span>
+                          )}
+                        </div>
+                        <div className="text-xs text-gray-500">Max 10MB</div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
+
+              {/* Company Information for Startups */}
+              {formData.userType === 'startup' && (
+                <>
+                  <div>
+                    <label htmlFor="companyDescription" className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Description
+                    </label>
+                    <textarea
+                      id="companyDescription"
+                      name="companyDescription"
+                      value={formData.companyDescription}
+                      onChange={handleChange}
+                      rows={4}
+                      className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      placeholder="Tell us about your company and what you do..."
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="companyWebsite" className="block text-sm font-medium text-gray-700 mb-2">
+                      Company Website (Optional)
+                    </label>
+                    <div className="relative">
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Globe className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type="url"
+                        id="companyWebsite"
+                        name="companyWebsite"
+                        value={formData.companyWebsite}
+                        onChange={handleChange}
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="https://yourcompany.com"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* Error Message */}
               {error && (

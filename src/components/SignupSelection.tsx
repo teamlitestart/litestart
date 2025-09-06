@@ -111,15 +111,6 @@ const SignupSelection: React.FC<SignupSelectionProps> = ({ onSelectStudent, onSe
               </div>
             </div>
 
-            {/* Footer */}
-            <div className="text-center mt-12">
-              <p className="text-gray-600">
-                Already have an account?{' '}
-                <a href="/login" className="text-blue-600 hover:text-blue-700 font-semibold">
-                  Sign in
-                </a>
-              </p>
-            </div>
           </div>
         </div>
       </div>

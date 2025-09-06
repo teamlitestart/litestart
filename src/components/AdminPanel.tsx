@@ -14,6 +14,14 @@ interface User {
   emailSentDate?: string;
   emailVerifiedDate?: string;
   signupDate: string;
+  // Student-specific fields
+  cvUrl?: string;
+  cvFilename?: string;
+  cvSize?: number;
+  cvUploadDate?: string;
+  // Startup-specific fields
+  companyDescription?: string;
+  companyWebsite?: string;
 }
 
 const AdminPanel: React.FC = () => {
@@ -27,6 +35,8 @@ const AdminPanel: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [showUserDetails, setShowUserDetails] = useState(false);
 
   // Admin password - in production, this should be more secure
   const ADMIN_PASSWORD = 'BES25';
@@ -42,6 +52,24 @@ const AdminPanel: React.FC = () => {
       setLoginError('Incorrect password');
       setPassword('');
     }
+  };
+
+  const handleViewUserDetails = (user: User) => {
+    setSelectedUser(user);
+    setShowUserDetails(true);
+  };
+
+  const handleCloseUserDetails = () => {
+    setSelectedUser(null);
+    setShowUserDetails(false);
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   // Check if already authenticated
@@ -451,6 +479,9 @@ const AdminPanel: React.FC = () => {
                       Delivery Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      CV/Company Info
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -500,7 +531,55 @@ const AdminPanel: React.FC = () => {
                             )}
                           </div>
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {user.userType === 'student' ? (
+                            user.cvUrl ? (
+                              <div className="space-y-1">
+                                <div className="text-xs text-green-600 font-medium">
+                                  ✓ CV Uploaded
+                                </div>
+                                <div className="text-xs text-gray-500">
+                                  {user.cvFilename}
+                                </div>
+                                {user.cvSize && (
+                                  <div className="text-xs text-gray-400">
+                                    {formatFileSize(user.cvSize)}
+                                  </div>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="text-xs text-red-600">
+                                ✗ No CV
+                              </div>
+                            )
+                          ) : (
+                            <div className="space-y-1">
+                              {user.companyDescription && (
+                                <div className="text-xs text-green-600">
+                                  ✓ Description
+                                </div>
+                              )}
+                              {user.companyWebsite && (
+                                <div className="text-xs text-blue-600">
+                                  ✓ Website
+                                </div>
+                              )}
+                              {!user.companyDescription && !user.companyWebsite && (
+                                <div className="text-xs text-gray-500">
+                                  No info
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                          <button
+                            onClick={() => handleViewUserDetails(user)}
+                            className="text-green-600 hover:text-green-900"
+                            title="View details"
+                          >
+                            📋 Details
+                          </button>
                           <button
                             onClick={() => verifyEmail(user.email)}
                             className="text-blue-600 hover:text-blue-900"
@@ -525,6 +604,163 @@ const AdminPanel: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* User Details Modal */}
+      {showUserDetails && selectedUser && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  User Details - {selectedUser.name}
+                </h2>
+                <button
+                  onClick={handleCloseUserDetails}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Basic Information */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Basic Information</h3>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="font-medium text-gray-700">Name:</span>
+                      <span className="ml-2 text-gray-900">{selectedUser.name}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Email:</span>
+                      <span className="ml-2 text-gray-900">{selectedUser.email}</span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Type:</span>
+                      <span className={`ml-2 inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                        selectedUser.userType === 'startup' 
+                          ? 'bg-blue-100 text-blue-800' 
+                          : 'bg-green-100 text-green-800'
+                      }`}>
+                        {selectedUser.userType}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Signup Date:</span>
+                      <span className="ml-2 text-gray-900">
+                        {new Date(selectedUser.signupDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Email Status */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Email Status</h3>
+                  <div className="space-y-2">
+                    <div>
+                      <span className="font-medium text-gray-700">Verified:</span>
+                      <span className={`ml-2 ${selectedUser.isEmailVerified ? 'text-green-600' : 'text-red-600'}`}>
+                        {selectedUser.isEmailVerified ? 'Yes' : 'No'}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-medium text-gray-700">Delivery Status:</span>
+                      <span className="ml-2 text-gray-900">{selectedUser.emailDeliveryStatus || 'pending'}</span>
+                    </div>
+                    {selectedUser.emailBounceReason && (
+                      <div>
+                        <span className="font-medium text-gray-700">Bounce Reason:</span>
+                        <span className="ml-2 text-red-600">{selectedUser.emailBounceReason}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Student CV Information */}
+                {selectedUser.userType === 'student' && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">CV Information</h3>
+                    {selectedUser.cvUrl ? (
+                      <div className="space-y-2">
+                        <div>
+                          <span className="font-medium text-gray-700">Status:</span>
+                          <span className="ml-2 text-green-600">✓ Uploaded</span>
+                        </div>
+                        <div>
+                          <span className="font-medium text-gray-700">Filename:</span>
+                          <span className="ml-2 text-gray-900">{selectedUser.cvFilename}</span>
+                        </div>
+                        {selectedUser.cvSize && (
+                          <div>
+                            <span className="font-medium text-gray-700">File Size:</span>
+                            <span className="ml-2 text-gray-900">{formatFileSize(selectedUser.cvSize)}</span>
+                          </div>
+                        )}
+                        {selectedUser.cvUploadDate && (
+                          <div>
+                            <span className="font-medium text-gray-700">Upload Date:</span>
+                            <span className="ml-2 text-gray-900">
+                              {new Date(selectedUser.cvUploadDate).toLocaleDateString()}
+                            </span>
+                          </div>
+                        )}
+                        <div className="pt-2">
+                          <a
+                            href={selectedUser.cvUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            📄 View CV
+                          </a>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-red-600">No CV uploaded</div>
+                    )}
+                  </div>
+                )}
+
+                {/* Startup Company Information */}
+                {selectedUser.userType === 'startup' && (
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold text-gray-900">Company Information</h3>
+                    <div className="space-y-2">
+                      {selectedUser.companyDescription ? (
+                        <div>
+                          <span className="font-medium text-gray-700">Description:</span>
+                          <div className="mt-1 p-3 bg-gray-50 rounded-lg text-sm text-gray-900">
+                            {selectedUser.companyDescription}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="text-gray-500">No company description provided</div>
+                      )}
+                      
+                      {selectedUser.companyWebsite && (
+                        <div>
+                          <span className="font-medium text-gray-700">Website:</span>
+                          <div className="mt-1">
+                            <a
+                              href={selectedUser.companyWebsite}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:text-blue-800 underline"
+                            >
+                              {selectedUser.companyWebsite}
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

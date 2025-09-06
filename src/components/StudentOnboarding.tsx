@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowLeft, X, Upload, Check, User, GraduationCap, Code, Briefcase } from 'lucide-react';
+import { ArrowRight, ArrowLeft, X, Upload, Check, User, GraduationCap, Code, Briefcase, FileText } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface StudentOnboardingProps {
@@ -25,6 +25,8 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
     portfolio: '',
     availability: ''
   });
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const [cvPreview, setCvPreview] = useState<string>('');
 
   const totalSteps = 4;
 
@@ -232,6 +234,27 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
     }));
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('Please upload a PDF, DOC, DOCX, JPG, or PNG file');
+        return;
+      }
+      
+      // Validate file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+      }
+      
+      setCvFile(file);
+      setCvPreview(file.name);
+    }
+  };
+
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
@@ -248,8 +271,7 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
                  formData.major && formData.major.trim() &&
                  formData.graduationYear);
       case 3:
-        return !!(formData.skills.length > 0 &&
-                 formData.experience && formData.experience.trim());
+        return !!(formData.skills.length > 0 && cvFile);
       case 4:
         return !!(formData.availability);
       default:
@@ -280,17 +302,44 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Handle form submission
-    
-    // Store user data for login system
-    localStorage.setItem('userEmail', formData.email);
-    localStorage.setItem('userType', 'student');
-    localStorage.setItem('authToken', 'demo-token');
-    
-    alert('Registration successful! Welcome to LiteStart!');
-    // Redirect to student dashboard
-    window.location.href = '/dashboard/student';
+    try {
+      // Prepare form data for API call
+      const submitData = new FormData();
+      submitData.append('name', `${formData.firstName} ${formData.lastName}`);
+      submitData.append('email', formData.email);
+      submitData.append('userType', 'student');
+      
+      // Add CV file
+      if (cvFile) {
+        submitData.append('cv', cvFile);
+      }
+
+      // Make API call
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://litestart-backend.onrender.com'}/api/signup`, {
+        method: 'POST',
+        body: submitData
+      });
+
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Store user data for login system
+        localStorage.setItem('userEmail', formData.email);
+        localStorage.setItem('userType', 'student');
+        localStorage.setItem('authToken', 'demo-token');
+        
+        alert('Successfully added to waitlist! We\'ll contact you directly about available internships.');
+        // Redirect to landing page
+        window.location.href = '/';
+      } else {
+        alert(result.message || 'Registration failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Registration error:', error);
+      alert('Registration failed. Please try again.');
+    }
   };
 
   const renderStep = () => {
@@ -469,16 +518,41 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
               )}
             </div>
             
+            {/* CV Upload Section */}
             <div>
-              <label className="block text-sm font-semibold text-gray-800 mb-2">Brief Experience Summary <span className="text-red-500">*</span></label>
-              <textarea
-                value={formData.experience}
-                onChange={(e) => handleInputChange('experience', e.target.value)}
-                rows={3}
-                className="w-full px-4 py-3 bg-white border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 placeholder-gray-400 font-medium resize-none"
-                placeholder="Tell us about your relevant experience, projects, or achievements..."
-                required
-              />
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
+                Upload Your CV <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  id="cv"
+                  name="cv"
+                  onChange={handleFileChange}
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  className="hidden"
+                  required
+                />
+                <label
+                  htmlFor="cv"
+                  className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-colors"
+                >
+                  <div className="flex flex-col items-center space-y-3">
+                    <Upload className="h-8 w-8 text-gray-400" />
+                    <div className="text-sm text-gray-600">
+                      {cvPreview ? (
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4 text-green-500" />
+                          <span className="text-green-600 font-medium">{cvPreview}</span>
+                        </div>
+                      ) : (
+                        <span>Click to upload CV (PDF, DOC, DOCX, JPG, PNG)</span>
+                      )}
+                    </div>
+                    <div className="text-xs text-gray-500">Max 10MB</div>
+                  </div>
+                </label>
+              </div>
             </div>
           </div>
         );
@@ -524,10 +598,10 @@ const StudentOnboarding: React.FC<StudentOnboardingProps> = ({ isOpen = true, on
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <h4 className="text-gray-900 font-semibold mb-2">What happens next?</h4>
               <ul className="text-gray-700 text-sm space-y-1">
-                <li>• You'll get access to our platform with all available opportunities</li>
-                <li>• Browse and apply for jobs that match your skills and interests</li>
-                <li>• Start working on real projects with innovative startups</li>
-                <li>• Build your portfolio and earn while you learn</li>
+                <li>• You'll be added to our student waitlist</li>
+                <li>• We'll contact you directly about available internships</li>
+                <li>• We'll match you with startups based on your skills</li>
+                <li>• You'll get early access when the platform launches</li>
               </ul>
             </div>
           </div>
