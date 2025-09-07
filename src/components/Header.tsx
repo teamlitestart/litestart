@@ -66,24 +66,28 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
               <Link 
                 to={homePath} 
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 Home
               </Link>
               <Link 
                 to={`${homePath === "/" ? "/faqs" : "/preview/faqs"}`}
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 FAQs
               </Link>
               <Link 
                 to={`${homePath === "/" ? "/about" : "/preview/about"}`}
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 About Us
               </Link>
               <Link 
                 to={`${homePath === "/" ? "/contact" : "/preview/contact"}`}
                 className="text-gray-700 hover:text-blue-600 px-4 py-2 text-lg font-medium transition-colors"
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 Contact
               </Link>
@@ -98,6 +102,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                   <Link 
                     to="/dashboard" 
                     className="text-gray-700 hover:text-blue-600 px-6 py-3 text-xl font-medium transition-colors"
+                    style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                   >
                     Dashboard
                   </Link>
@@ -106,6 +111,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                     <button
                       onClick={handleLogout}
                       className="text-gray-700 hover:text-red-600 px-6 py-3 text-xl font-medium transition-colors"
+                      style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                     >
                       Logout
                     </button>
@@ -116,12 +122,14 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                   <Link 
                     to="/login" 
                     className="text-gray-700 hover:text-blue-600 px-6 py-3 text-xl font-medium transition-colors"
+                    style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                   >
                     Login
                   </Link>
                   <Link 
                     to="/signup" 
                     className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-xl font-medium transition-colors"
+                    style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                   >
                     Sign Up
                   </Link>
@@ -156,6 +164,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 to={homePath} 
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 Home
               </Link>
@@ -163,6 +172,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 to={`${homePath === "/" ? "/faqs" : "/preview/faqs"}`}
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 FAQs
               </Link>
@@ -170,6 +180,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 to={`${homePath === "/" ? "/about" : "/preview/about"}`}
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 About Us
               </Link>
@@ -177,6 +188,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                 to={`${homePath === "/" ? "/contact" : "/preview/contact"}`}
                 className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                 onClick={closeMobileMenu}
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 Contact
               </Link>
@@ -190,6 +202,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                         to="/dashboard" 
                         className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                         onClick={closeMobileMenu}
+                        style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                       >
                         Dashboard
                       </Link>
@@ -199,6 +212,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                       <button
                         onClick={handleLogout}
                         className="block w-full text-left text-gray-700 hover:text-red-600 px-6 py-4 text-xl font-medium transition-colors"
+                        style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                       >
                         Logout
                       </button>
@@ -209,6 +223,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                         to="/login" 
                         className="block text-gray-700 hover:text-blue-600 px-6 py-4 text-xl font-medium transition-colors"
                         onClick={closeMobileMenu}
+                        style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                       >
                         Login
                       </Link>
@@ -216,6 +231,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = "/pr
                         to="/signup" 
                         className="block bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 text-xl font-medium transition-colors rounded-lg mx-6 mt-2"
                         onClick={closeMobileMenu}
+                        style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
                       >
                         Sign Up
                       </Link>

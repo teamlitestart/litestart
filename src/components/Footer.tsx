@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-2 mb-4">
               <img src="/litestart-logo.png" alt="LiteStart logo" className="w-8 h-8" />
-              <span className="text-xl font-bold">LiteStart</span>
+              <span className="text-xl font-bold" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>LiteStart</span>
             </div>
             <div className="flex space-x-4">
               <a href="https://www.linkedin.com/company/lite-start" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
@@ -24,20 +24,20 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>Quick Links</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/" className="text-gray-300 hover:text-white transition-colors" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   Home
                 </Link>
               </li>
               <li>
-                <Link to="/about" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/about" className="text-gray-300 hover:text-white transition-colors" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">
+                <Link to="/contact" className="text-gray-300 hover:text-white transition-colors" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   Contact
                 </Link>
               </li>
@@ -46,17 +46,17 @@ const Footer: React.FC = () => {
 
           {/* Partnership */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">In Partnership</h3>
+            <h3 className="text-lg font-semibold mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>In Partnership</h3>
             <div className="space-y-4">
               <div className="bg-gray-800 rounded-lg p-4">
-                <h4 className="font-medium text-blue-400 mb-2">University of Bristol</h4>
-                <p className="text-sm text-gray-300">
+                <h4 className="font-medium text-blue-400 mb-2" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>University of Bristol</h4>
+                <p className="text-sm text-gray-300" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   Proudly partnered with the University of Bristol to connect students with real-world opportunities.
                 </p>
               </div>
               <div className="bg-gray-800 rounded-lg p-4">
-                <h4 className="font-medium text-teal-400 mb-2">Bristol Entrepreneurs Society</h4>
-                <p className="text-sm text-gray-300">
+                <h4 className="font-medium text-teal-400 mb-2" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>Bristol Entrepreneurs Society</h4>
+                <p className="text-sm text-gray-300" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   Working with the Bristol Entrepreneurs Society to foster innovation and student entrepreneurship.
                 </p>
               </div>
@@ -67,17 +67,17 @@ const Footer: React.FC = () => {
         {/* Bottom section */}
         <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-sm" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
               © 2025 LiteStart. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link to="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link to="/terms" className="text-gray-400 hover:text-white text-sm transition-colors" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Terms of Service
               </Link>
-              <Link to="/cookie" className="text-gray-400 hover:text-white text-sm transition-colors">
+              <Link to="/cookie" className="text-gray-400 hover:text-white text-sm transition-colors" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Cookie Policy
               </Link>
             </div>

@@ -263,13 +263,13 @@ const LandingPage: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <AnimatedSection>
             <div className="mb-4">
-              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm font-medium">
+              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm font-medium" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                 <span>Your Journey Begins Here</span>
               </div>
             </div>
-            <blockquote className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
-              "LiteStart connects innovative startups with talented students for short, impactful projects — fast, affordable, and mutually beneficial."
+            <blockquote className="text-2xl md:text-3xl font-medium text-white leading-relaxed" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
+              "Litestart eliminates all of your admin work whilst finding you the most relevant candidates for your business"
             </blockquote>
           </AnimatedSection>
         </div>
@@ -283,14 +283,14 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 text-blue-600 text-sm font-medium mb-4">
+              <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 text-blue-600 text-sm font-medium mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                 <span>Step 1: Discover the Opportunity</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Built for Success Together
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Startups get skilled talent fast. Students gain career-defining experience. Everyone wins when we work together.
               </p>
             </div>
@@ -305,10 +305,10 @@ const LandingPage: React.FC = () => {
                       <feature.icon className="w-8 h-8" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-3 leading-tight">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-3 leading-tight" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                         {feature.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed">
+                      <p className="text-gray-600 leading-relaxed" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                         {feature.description}
                       </p>
                     </div>
@@ -329,14 +329,14 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 text-gray-700 text-sm font-medium mb-4 shadow-sm">
+              <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 text-gray-700 text-sm font-medium mb-4 shadow-sm" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
                 <span>Step 2: Navigate Your Journey</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Your Success Starts Here
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Follow this proven path to unlock opportunities, drive results, and build your future together.
               </p>
             </div>
@@ -352,7 +352,7 @@ const LandingPage: React.FC = () => {
                     </div>
                     
                     {/* Step Number */}
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-sm font-bold text-gray-700 border-2 border-gray-200 group-hover:scale-110 transition-transform duration-300">
+                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-sm font-bold text-gray-700 border-2 border-gray-200 group-hover:scale-110 transition-transform duration-300" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                       {index + 1}
                     </div>
 
@@ -361,10 +361,10 @@ const LandingPage: React.FC = () => {
                       <div className="hidden lg:block absolute top-10 left-full w-12 h-0.5 bg-gradient-to-r from-gray-300 to-transparent transform -translate-y-1/2 animate-pulse"></div>
                     )}
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                     {step.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                     {step.description}
                   </p>
                   
@@ -385,14 +385,14 @@ const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
             <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-green-50 rounded-full px-4 py-2 text-green-600 text-sm font-medium mb-4">
+              <div className="inline-flex items-center space-x-2 bg-green-50 rounded-full px-4 py-2 text-green-600 text-sm font-medium mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 <span className="w-2 h-2 bg-green-600 rounded-full"></span>
                 <span>Step 3: See Real Results</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Success Stories We're Proud Of
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 Others have walked this path and achieved amazing results. Your success story is next.
               </p>
             </div>
@@ -410,15 +410,15 @@ const LandingPage: React.FC = () => {
                 ))}
               </div>
               
-              <blockquote className="text-xl md:text-2xl text-gray-700 mb-8 italic text-center leading-relaxed">
+              <blockquote className="text-xl md:text-2xl text-gray-700 mb-8 italic text-center leading-relaxed" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 "{testimonials[currentTestimonial].quote}"
               </blockquote>
               
               <div className="text-center">
-                <div className="font-semibold text-gray-900 text-lg">
+                <div className="font-semibold text-gray-900 text-lg" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   {testimonials[currentTestimonial].author}
                 </div>
-                <div className="text-gray-600">
+                <div className="text-gray-600" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                   {testimonials[currentTestimonial].role}
                   {testimonials[currentTestimonial].university && (
                     <span> • {testimonials[currentTestimonial].university}</span>
@@ -477,15 +477,15 @@ const LandingPage: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <AnimatedSection>
             <div className="mb-6">
-              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm font-medium">
+              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm font-medium" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
                 <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                 <span>Final Step: Join the Journey</span>
               </div>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
               Let's Build Success Together
             </h2>
-            <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
+            <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
               Your journey to success starts with a single step. Students: Launch your career with real experience. Startups: Access fresh talent fast.
             </p>
           </AnimatedSection>
@@ -495,6 +495,7 @@ const LandingPage: React.FC = () => {
               <Link 
                 to="/signup"
                 className="group bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3 shadow-lg w-full sm:w-auto justify-center"
+                style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 <Users className="w-6 h-6" />
                 <span>Sign Up Now</span>
@@ -502,7 +503,7 @@ const LandingPage: React.FC = () => {
               </Link>
             </div>
             
-            <div className="mt-8 text-blue-100 text-sm">
+            <div className="mt-8 text-blue-100 text-sm" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
               <p>Already have an account? <Link to="/login" className="underline hover:text-white transition-colors">Login here</Link></p>
             </div>
           </AnimatedSection>

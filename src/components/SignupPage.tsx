@@ -299,7 +299,7 @@ const SignupPage: React.FC = () => {
               {/* Center Quote */}
               <div className="flex-1 text-center">
                 <blockquote className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
-                  "LiteStart connects innovative startups with talented students for short, impactful projects — fast, affordable, and mutually beneficial."
+                  "Litestart eliminates all of your admin work whilst finding you the most relevant candidates for your business"
                 </blockquote>
               </div>
             </div>
