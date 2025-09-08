@@ -43,11 +43,15 @@ const SignupSelectionPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSelectStudent = () => {
-    navigate('/signup/student');
+    // For now, just show the simple form
+    // In dev, this could navigate to the complex onboarding
+    console.log('Student selected - using simple form');
   };
 
   const handleSelectStartup = () => {
-    navigate('/signup/startup');
+    // For now, just show the simple form
+    // In dev, this could navigate to the complex onboarding
+    console.log('Startup selected - using simple form');
   };
 
   return (
