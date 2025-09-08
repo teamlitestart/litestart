@@ -53,6 +53,11 @@ const LandingPage: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [waitlistForm, setWaitlistForm] = useState({
+    name: '',
+    email: '',
+    userType: ''
+  });
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -105,9 +110,46 @@ const LandingPage: React.FC = () => {
     }
   };
 
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://litestart-backend.onrender.com'}/api/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(waitlistForm),
+      });
+
+      if (response.ok) {
+        alert('Successfully added to waitlist! We\'ll contact you directly about available opportunities.');
+        // Close modal
+        const modal = document.getElementById('waitlist-modal');
+        if (modal) {
+          modal.classList.add('hidden');
+        }
+        // Reset form
+        setWaitlistForm({ name: '', email: '', userType: '' });
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const scrollToSignup = () => {
-    // Redirect to signup page
-    window.location.href = '/signup';
+    // Show the waitlist modal
+    const modal = document.getElementById('waitlist-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
   };
 
   const testimonials = [
@@ -509,6 +551,81 @@ const LandingPage: React.FC = () => {
           </AnimatedSection>
         </div>
       </section>
+
+      {/* Waitlist Modal */}
+      <div id="waitlist-modal" className="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 relative">
+          <button
+            onClick={() => {
+              const modal = document.getElementById('waitlist-modal');
+              if (modal) {
+                modal.classList.add('hidden');
+              }
+            }}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Join Our Waitlist</h2>
+            <p className="text-gray-600">Be the first to know when we launch</p>
+          </div>
+
+          <form onSubmit={handleWaitlistSubmit} className="space-y-4">
+            <div>
+              <input
+                type="text"
+                placeholder="Full Name"
+                value={waitlistForm.name}
+                onChange={(e) => setWaitlistForm({ ...waitlistForm, name: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={waitlistForm.email}
+                onChange={(e) => setWaitlistForm({ ...waitlistForm, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              />
+            </div>
+            <div>
+              <select
+                value={waitlistForm.userType}
+                onChange={(e) => setWaitlistForm({ ...waitlistForm, userType: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
+              >
+                <option value="">I am a...</option>
+                <option value="student">Student</option>
+                <option value="startup">Startup</option>
+              </select>
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-xl font-medium hover:from-blue-600 hover:to-blue-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Adding to Waitlist...' : 'Join Waitlist'}
+            </button>
+          </form>
+
+          <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+            <h3 className="font-medium text-blue-900 mb-2">What happens next?</h3>
+            <ul className="text-sm text-blue-700 space-y-1">
+              <li>• You'll be added to our waitlist</li>
+              <li>• We'll contact you directly about opportunities</li>
+              <li>• You'll get early access when we launch</li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
       <Footer />
     </div>

@@ -483,8 +483,11 @@ function MainSite() {
   }, []);
 
   const handleJoinWaitlist = () => {
-    // Navigate to signup page
-    window.location.href = '/signup';
+    // Show the waitlist modal
+    const modal = document.getElementById('waitlist-modal');
+    if (modal) {
+      modal.classList.remove('hidden');
+    }
   };
   const handleCloseStudentOnboarding = () => setIsStudentOnboardingOpen(false);
   const handleCloseStartupOnboarding = () => setIsStartupOnboardingOpen(false);
