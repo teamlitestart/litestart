@@ -13,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'litestart-cvs', // Folder in Cloudinary
+    // folder: 'litestart-cvs', // Removed folder to fix permissions issue
     allowed_formats: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
     resource_type: 'auto',
     transformation: [
@@ -60,7 +60,7 @@ const uploadFile = async (file) => {
     } else {
       // Fallback: upload manually if multer-storage-cloudinary didn't work
       const result = await cloudinary.uploader.upload(file.path, {
-        folder: 'litestart-cvs',
+        // folder: 'litestart-cvs', // Removed folder to fix permissions issue
         resource_type: 'auto',
         quality: 'auto',
         fetch_format: 'auto'
