@@ -145,7 +145,7 @@ const SignupPage: React.FC = () => {
       <section className="relative bg-[#f7f6f0] py-24 sm:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
-            <div className="mb-16 sm:mb-20">
+            <div className="mb-16 sm:mb-20 text-center">
               <h2 className="font-serif text-4xl leading-[1.1] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
                 From conversation
                 <span className="block">to introduction.</span>
@@ -178,7 +178,7 @@ const SignupPage: React.FC = () => {
             ].map((step, index) => (
               <AnimatedSection key={index} delay={index * 150}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#e7ebf4]/70 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-500 hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1">
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-gray-200/40 to-gray-300/30">
+                  <div className="relative aspect-[2/1] w-full overflow-hidden bg-gradient-to-br from-gray-200/40 to-gray-300/30">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="h-10 w-10 rounded-full border-2 border-gray-400/30" />
                     </div>

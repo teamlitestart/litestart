@@ -54,11 +54,11 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
             : '0 0 0 0px rgba(0,0,0,0)',
         }}
       >
-        <div className="flex h-14 items-center justify-between px-6 py-2 sm:h-16 sm:px-8">
+        <div className="relative flex h-14 items-center justify-between px-6 py-2 sm:h-16 sm:px-8">
           {/* Logo — slides in from left */}
           <Link
             to={homePath}
-            className="flex shrink-0 items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            className="relative z-10 flex shrink-0 items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
             onClick={closeMobileMenu}
             style={{
               opacity: isHeaderVisible ? 1 : 0,
@@ -68,8 +68,8 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
             <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-[6.8rem] w-[11.9rem] object-contain object-left sm:h-[8.5rem] sm:w-[17rem]" />
           </Link>
 
-          {/* Nav links — slide in from top */}
-          <nav className="hidden items-center gap-2 md:flex">
+          {/* Nav links — centered, slide in from top */}
+          <nav className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 md:flex">
             {navLinks.map((link, i) => (
               <Link
                 key={link.label}
@@ -91,7 +91,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
 
           {/* Right side — slides in from right */}
           <div
-            className="hidden items-center gap-3 md:flex transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            className="relative z-10 hidden items-center gap-3 md:flex transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
             style={{
               opacity: isHeaderVisible ? 1 : 0,
               transform: isHeaderVisible ? 'translateX(0)' : 'translateX(80px)',
