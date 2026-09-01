@@ -42,13 +42,13 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
       style={{
         clipPath: isHeaderVisible
           ? 'inset(0 0 0 0)'
-          : 'inset(100% 50% 0 50%)',
+          : 'inset(0 50% 100% 50%)',
       }}
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/20 shadow-2xl shadow-black/10 backdrop-blur-xl">
-        <div className="flex h-36 items-center justify-between px-4 sm:h-44 sm:px-6">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-full border border-white/10 bg-[#e7ebf4]/70 shadow-2xl shadow-black/10 backdrop-blur-xl">
+        <div className="flex h-14 items-center justify-between px-6 py-2 sm:h-16 sm:px-8">
           <Link to={homePath} className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-32 w-56 object-contain object-left sm:h-40 sm:w-80" />
+            <img src="/assets/images/2.png" alt="LiteStart" className="h-10 w-auto object-contain sm:h-12" />
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex">
@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               <Link
                 key={link.label}
                 to={link.to}
-                className="rounded-full px-4 py-2 text-sm font-medium text-gray-950/65 transition-colors hover:bg-black/5 hover:text-gray-950"
+                className="px-4 py-2 text-sm font-medium text-gray-950/65 transition-all hover:font-bold hover:text-gray-950"
               >
                 {link.label}
               </Link>
