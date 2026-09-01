@@ -28,17 +28,17 @@ const Hero: React.FC<HeroProps> = (_props) => {
             We hire interns for you end-to-end — faster and cheaper than traditional agencies. You only pay when you hire.
           </p>
 
-          <div className="flex max-w-xl items-center rounded-full border border-gray-900/20 bg-gray-950/75 p-2 shadow-xl backdrop-blur-sm">
+          <div className="flex max-w-xl items-center rounded-full border border-gray-300/40 bg-white/30 p-2 shadow-xl backdrop-blur-md">
             <input
               type="text"
               placeholder="What role are you hiring for?"
               aria-label="What role are you hiring for?"
-              className="min-w-0 flex-1 bg-transparent px-5 py-3 text-left text-sm text-white outline-none placeholder:text-white/65 sm:text-base"
+              className="min-w-0 flex-1 bg-transparent px-5 py-3 text-left text-sm text-gray-900 outline-none placeholder:text-gray-500 sm:text-base"
             />
             <button
               type="button"
               aria-label="Submit hiring role"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-gray-950 transition-transform hover:scale-105"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-950 text-white transition-transform hover:scale-105"
             >
               <ArrowRight className="h-5 w-5" />
             </button>
