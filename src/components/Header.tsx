@@ -90,8 +90,8 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               alt="LiteStart"
               className={`object-contain object-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isHeaderVisible
-                  ? 'h-[6.8rem] w-[11.9rem] sm:h-[8.5rem] sm:w-[17rem]'
-                  : 'h-[9.5rem] w-[16.7rem] sm:h-[11.9rem] sm:w-[23.8rem]'
+                  ? 'h-[18.8px] w-[81px] sm:h-[23.5px] sm:w-[101px]'
+                  : 'h-[26.2px] w-[113px] sm:h-[32.8px] sm:w-[142px]'
               }`}
             />
           </Link>
