@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Clock, FileSearch, AlertTriangle, Repeat, Phone, CheckCircle2, UserCheck, Infinity as InfinityIcon } from 'lucide-react';
+import { Clock, FileSearch, AlertTriangle, Repeat, Phone, CheckCircle2, UserCheck, Infinity as InfinityIcon, ArrowRight } from 'lucide-react';
 
 interface ComparisonItem {
   number: string;
@@ -62,11 +62,8 @@ const ComparisonSection: React.FC = () => {
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-24">
         <div>
           <div className="mb-10 max-w-xl">
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Why Litestart, why now</p>
-            <h2 className="font-serif text-4xl leading-[1.05] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
-              The shortcut to your next great hire.
-            </h2>
-            <div className="mt-4 w-48">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Why Litestart, why now</p>
+            <div className="mb-4 w-48">
               <svg viewBox="0 0 200 12" className="w-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M2 6 Q 12 1, 22 6 T 42 6 T 62 6 T 82 6 T 102 6 T 122 6 T 142 6 T 162 6 T 182 6 T 198 6"
@@ -77,24 +74,27 @@ const ComparisonSection: React.FC = () => {
                 />
               </svg>
             </div>
+            <h2 className="font-serif text-4xl leading-[1.05] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
+              The shortcut to your next great hire.
+            </h2>
             <p className="mt-6 max-w-lg text-base leading-relaxed text-gray-600 sm:text-lg">
               Stop losing weeks to hiring admin. Litestart helps you move from role to ready-to-start intern with less risk and more momentum.
             </p>
           </div>
 
           <div className="grid max-w-xl grid-cols-2 gap-3 sm:gap-4">
-            <div className="rounded-2xl border border-gray-200/80 bg-white/75 p-5 shadow-sm sm:p-6">
+            <div className="rounded-2xl border border-white/10 bg-[#e7ebf4]/70 p-5 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-6">
               <div className="font-serif text-3xl tracking-tight text-gray-950 sm:text-4xl">1000+</div>
               <p className="mt-3 text-xs font-medium leading-relaxed text-gray-500 sm:text-sm">Students represented</p>
             </div>
-            <div className="rounded-2xl border border-gray-200/80 bg-white/75 p-5 shadow-sm sm:p-6">
+            <div className="rounded-2xl border border-white/10 bg-[#e7ebf4]/70 p-5 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-6">
               <div className="font-serif text-3xl tracking-tight text-gray-950 sm:text-4xl">&lt;8 days</div>
               <p className="mt-3 text-xs font-medium leading-relaxed text-gray-500 sm:text-sm">Average time to a matched candidate</p>
             </div>
           </div>
         </div>
 
-        <div className="rounded-[2rem] border border-gray-200/80 bg-white/80 p-4 shadow-[0_24px_70px_rgba(26,47,66,0.10)] backdrop-blur-xl sm:p-6">
+        <div className="rounded-[2rem] border border-white/10 bg-[#e7ebf4]/70 p-4 shadow-[0_24px_70px_rgba(26,47,66,0.10)] backdrop-blur-xl sm:p-6">
           <div className="relative grid grid-cols-2 rounded-full border border-gray-200 bg-gray-100/80 p-1">
             <button
               type="button"

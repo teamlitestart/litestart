@@ -7,6 +7,7 @@ import MouseTracker from './MouseTracker';
 import TrustedBySection from './TrustedBySection';
 import FAQ from './FAQ';
 import ComparisonSection from './ComparisonSection';
+import StartHiringCTA from './StartHiringCTA';
 
 
 // Intersection Observer hook for scroll animations
@@ -202,70 +203,9 @@ const SignupPage: React.FC = () => {
 
       <ComparisonSection />
 
-      {/* FAQ Section */}
-      <FAQ />
+      <StartHiringCTA onJoinWaitlist={handleJoinWaitlist} />
 
-      {/* Journey Destination: Take Action */}
-      <section id="signup" className="relative overflow-hidden bg-[#f7f6f0] py-24">
-        {/* Journey connector line */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-white to-blue-500"></div>
-        
-        {/* Celebration elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-3 h-3 bg-white/30 rounded-full animate-ping" style={{ animationDelay: '0s' }}></div>
-          <div className="absolute top-20 right-20 w-2 h-2 bg-white/40 rounded-full animate-ping" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-20 left-20 w-4 h-4 bg-white/20 rounded-full animate-ping" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute bottom-32 right-16 w-2 h-2 bg-white/35 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
-        </div>
-        
-                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <AnimatedSection>
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center space-x-2 rounded-full border border-gray-900/15 bg-white/50 px-4 py-2 text-sm font-medium text-gray-700">
-                <span className="h-2 w-2 rounded-full bg-gray-950 animate-pulse"></span>
-                <span>Final Step: Join the Journey</span>
-              </div>
-            </div>
-          </AnimatedSection>
-          
-          <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
-            {/* Left Content */}
-            <div className="flex-1 text-center lg:text-left">
-          <AnimatedSection>
-            <h2 className="mb-6 text-3xl font-bold text-gray-950 md:text-4xl">
-                  Let's Build Success Together
-            </h2>
-                <p className="mb-12 max-w-2xl text-xl text-gray-700 lg:max-w-none">
-                  Your journey to success starts with a single step. Students: Launch your career with real experience. Startups: Access fresh talent fast.
-            </p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={200}>
-                <div className="flex justify-center lg:justify-start">
-            <button
-              onClick={handleJoinWaitlist}
-                    className="group bg-gray-950 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3 shadow-lg"
-            >
-              <span>Join the Waitlist</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </button>
-                </div>
-              </AnimatedSection>
-            </div>
-            
-            {/* Right Chameleon Image */}
-            <div className="flex-shrink-0">
-              <AnimatedSection delay={300}>
-                <img 
-                  src="/Chameleon avatar/litestart_chameleon_cartoon_2.png" 
-                  alt="LiteStart Chameleon" 
-                  className="w-60 h-60 lg:w-80 lg:h-80 object-contain drop-shadow-lg"
-                />
-          </AnimatedSection>
-            </div>
-          </div>
-        </div>
-      </section>
+      <FAQ />
 
 
 
