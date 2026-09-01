@@ -65,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               transform: isHeaderVisible ? 'translateX(0)' : 'translateX(-80px)',
             }}
           >
-            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-32 w-56 object-contain object-left sm:h-40 sm:w-80" />
+            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-[6.8rem] w-[11.9rem] object-contain object-left sm:h-[8.5rem] sm:w-[17rem]" />
           </Link>
 
           {/* Nav links — slide in from top */}
