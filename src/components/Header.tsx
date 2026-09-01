@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
@@ -11,6 +11,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,10 +29,23 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
     closeMobileMenu();
   };
 
+  const handleFAQsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    closeMobileMenu();
+    const faq = document.getElementById('faq');
+    if (faq) {
+      faq.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      navigate(homePath);
+      setTimeout(() => {
+        document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    }
+  };
+
   const navLinks = [
     { label: 'Home', to: homePath },
-    { label: 'FAQs', to: `${homePath}#faq` },
-    { label: 'About Us', to: homePath === '/' ? '/about' : '/preview/about' },
+    { label: 'About', to: homePath === '/' ? '/about' : '/preview/about' },
   ];
 
   return (
@@ -74,11 +88,12 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               <Link
                 key={link.label}
                 to={link.to}
-                className="px-4 py-2 text-sm font-medium text-gray-950/65 transition-all hover:font-bold hover:text-gray-950"
+                onClick={closeMobileMenu}
+                className="px-4 py-2 text-sm font-medium text-gray-950/65 transition-all hover:text-gray-950"
                 style={{
                   opacity: isHeaderVisible ? 1 : 0,
                   transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-20px)',
-                  transitionProperty: 'opacity, transform, font-weight, color',
+                  transitionProperty: 'opacity, transform, color',
                   transitionDuration: '700ms',
                   transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
                   transitionDelay: isHeaderVisible ? `${i * 50}ms` : '0ms',
@@ -87,6 +102,21 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                 {link.label}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={handleFAQsClick}
+              className="px-4 py-2 text-sm font-medium text-gray-950/65 transition-all hover:text-gray-950"
+              style={{
+                opacity: isHeaderVisible ? 1 : 0,
+                transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-20px)',
+                transitionProperty: 'opacity, transform, color',
+                transitionDuration: '700ms',
+                transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                transitionDelay: isHeaderVisible ? `${navLinks.length * 50}ms` : '0ms',
+              }}
+            >
+              FAQs
+            </button>
           </nav>
 
           {/* Right side — slides in from right */}
@@ -113,7 +143,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                     Login
                   </Link>
                 )}
-                <Link to="/signup" className="rounded-full bg-gray-950 px-5 py-2.5 font-serif text-sm font-semibold text-white transition-transform hover:scale-105">
+                <Link to="/signup" className="rounded-full bg-gray-950 px-5 py-2.5 font-serif text-sm font-normal text-white transition-transform hover:scale-105">
                   Start hiring
                 </Link>
               </>
@@ -153,6 +183,13 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                 {link.label}
               </Link>
             ))}
+            <button
+              type="button"
+              onClick={handleFAQsClick}
+              className="block w-full rounded-2xl px-4 py-3 text-left text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
+            >
+              FAQs
+            </button>
             <div className="mt-2 border-t border-black/5 pt-3">
               {showAuthButtons && isAuthenticated ? (
                 <>
@@ -170,7 +207,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                       Login
                     </Link>
                   )}
-                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center font-serif text-base font-semibold text-white">
+                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center font-serif text-base font-normal text-white">
                     Start hiring
                   </Link>
                 </>
