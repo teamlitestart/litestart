@@ -261,7 +261,7 @@ const LandingPage: React.FC = () => {
             <div className="max-w-xl text-left">
               <h1 className="mb-6 font-serif text-5xl leading-[0.98] tracking-tight text-gray-950 sm:text-6xl lg:text-7xl">
                 Fill critical positions,
-                <span className="block italic text-[#76962a]">a lot faster.</span>
+                <span className="block bg-gradient-to-b from-[#6f91b5] via-[#153b63] to-[#091d34] bg-clip-text italic text-transparent">a lot faster.</span>
               </h1>
               <p className="mb-8 max-w-lg text-base font-medium leading-relaxed text-gray-800 sm:text-lg">
                 We hire interns for you end-to-end — faster and cheaper than traditional agencies. You only pay when you hire.
@@ -285,7 +285,7 @@ const LandingPage: React.FC = () => {
       <TrustedBySection />
 
       {/* Journey Stage 1: Why Choose This Path */}
-      <section className="py-24 bg-white relative">
+      <section className="relative bg-[#f7f6f0] py-24">
         {/* Journey connector line */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-teal-600 to-transparent"></div>
         
@@ -308,7 +308,7 @@ const LandingPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
             {features.map((feature, index) => (
               <AnimatedSection key={index} delay={index * 200}>
-                <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group">
+                <div className="rounded-2xl border border-gray-900/10 bg-white/40 p-8 shadow-sm transition-all duration-300 hover:shadow-xl group">
                   <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0 p-3 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl text-white group-hover:scale-110 transition-transform duration-300">
                       <feature.icon className="w-8 h-8" />
@@ -330,7 +330,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Journey Stage 2: The Path Forward */}
-      <section id="how-it-works" className="py-24 bg-gray-50 relative">
+      <section id="how-it-works" className="relative bg-[#f7f6f0] py-24">
         {/* Journey connector line */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-white to-gray-300"></div>
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-gray-300 to-white"></div>
@@ -387,7 +387,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Journey Stage 3: Proof of Success */}
-      <section className="py-24 bg-white relative">
+      <section className="relative bg-[#f7f6f0] py-24">
         {/* Journey connector line */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-gray-300 to-transparent"></div>
         
@@ -409,7 +409,7 @@ const LandingPage: React.FC = () => {
           
           <div className="relative max-w-4xl mx-auto">
             <div 
-              className="bg-gradient-to-br from-blue-50 to-teal-50 rounded-2xl p-8 md:p-12"
+              className="rounded-2xl border border-gray-900/10 bg-gradient-to-br from-gray-900/[0.02] to-gray-900/[0.04] p-8 md:p-12"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -471,7 +471,7 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Journey Destination: Take Action */}
-      <section id="signup" className="py-24 bg-gradient-to-br from-blue-600 to-teal-600 relative overflow-hidden">
+      <section id="signup" className="relative overflow-hidden bg-[#f7f6f0] py-24">
         {/* Journey connector line */}
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-white to-blue-500"></div>
         
@@ -486,15 +486,15 @@ const LandingPage: React.FC = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
           <AnimatedSection>
             <div className="mb-6">
-              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 text-white/90 text-sm font-medium" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+              <div className="inline-flex items-center space-x-2 rounded-full border border-gray-900/15 bg-white/50 px-4 py-2 text-sm font-medium text-gray-700" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
+                <span className="h-2 w-2 rounded-full bg-gray-950 animate-pulse"></span>
                 <span>Final Step: Join the Journey</span>
               </div>
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
+            <h2 className="mb-6 text-3xl font-bold text-gray-950 md:text-4xl" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
               Let's Build Success Together
             </h2>
-            <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
+            <p className="mb-12 max-w-2xl mx-auto text-xl text-gray-700" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
               Your journey to success starts with a single step. Students: Launch your career with real experience. Startups: Access fresh talent fast.
             </p>
           </AnimatedSection>
@@ -503,7 +503,7 @@ const LandingPage: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center max-w-3xl mx-auto">
               <Link 
                 to="/signup"
-                className="group bg-white hover:bg-gray-50 text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3 shadow-lg w-full sm:w-auto justify-center"
+                className="group bg-gray-950 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-3 shadow-lg w-full sm:w-auto justify-center"
                 style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}
               >
                 <Users className="w-6 h-6" />
@@ -512,8 +512,8 @@ const LandingPage: React.FC = () => {
               </Link>
             </div>
             
-            <div className="mt-8 text-blue-100 text-sm" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
-              <p>Already have an account? <Link to="/login" className="underline hover:text-white transition-colors">Login here</Link></p>
+            <div className="mt-8 text-gray-600 text-sm" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
+              <p>Already have an account? <Link to="/login" className="underline hover:text-gray-950 transition-colors">Login here</Link></p>
             </div>
           </AnimatedSection>
         </div>

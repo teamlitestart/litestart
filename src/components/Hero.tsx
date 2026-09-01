@@ -22,7 +22,7 @@ const Hero: React.FC<HeroProps> = (_props) => {
         <div className="max-w-xl text-left">
           <h1 className="mb-6 font-serif text-5xl leading-[0.98] tracking-tight text-gray-950 sm:text-6xl lg:text-7xl">
             Fill critical positions,
-            <span className="block italic text-[#76962a]">a lot faster.</span>
+            <span className="block bg-gradient-to-b from-[#6f91b5] via-[#153b63] to-[#091d34] bg-clip-text italic text-transparent">a lot faster.</span>
           </h1>
           <p className="mb-8 max-w-lg text-base font-medium leading-relaxed text-gray-800 sm:text-lg">
             We hire interns for you end-to-end — faster and cheaper than traditional agencies. You only pay when you hire.

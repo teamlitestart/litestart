@@ -39,14 +39,14 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
     <header
       className={`fixed inset-x-4 top-4 z-50 transition-all duration-500 ease-out lg:inset-x-8 ${
         isHeaderVisible
-          ? 'translate-y-0 opacity-100'
-          : '-translate-y-8 pointer-events-none opacity-0'
+          ? 'translate-x-0 opacity-100'
+          : '-translate-x-16 pointer-events-none opacity-0'
       }`}
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/15 bg-gray-950/45 shadow-2xl shadow-black/20 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/15 bg-white/40 shadow-2xl shadow-black/10 backdrop-blur-xl">
         <div className="flex h-16 items-center justify-between px-4 sm:px-6">
           <Link to={homePath} className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-            <span className="text-lg font-semibold tracking-tight text-white sm:text-xl">LiteStart</span>
+            <img src="/assets/images/image.png" alt="LiteStart" className="h-7 w-auto max-w-[140px] object-contain sm:h-8 sm:max-w-[160px]" />
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex">
@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               <Link
                 key={link.label}
                 to={link.to}
-                className="rounded-full px-4 py-2 text-sm font-medium text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                className="rounded-full px-4 py-2 text-sm font-medium text-gray-950/65 transition-colors hover:bg-black/5 hover:text-gray-950"
               >
                 {link.label}
               </Link>
@@ -64,21 +64,21 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           <div className="hidden items-center gap-3 md:flex">
             {showAuthButtons && isAuthenticated ? (
               <>
-                <Link to="/dashboard" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                <Link to="/dashboard" className="text-sm font-medium text-gray-950/65 transition-colors hover:text-gray-950">
                   Dashboard
                 </Link>
-                <button onClick={handleLogout} className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-gray-950 transition-transform hover:scale-105">
+                <button onClick={handleLogout} className="rounded-full bg-gray-950 px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105">
                   Logout
                 </button>
               </>
             ) : (
               <>
                 {showAuthButtons && (
-                  <Link to="/login" className="text-sm font-medium text-white/70 transition-colors hover:text-white">
+                  <Link to="/login" className="text-sm font-medium text-gray-950/65 transition-colors hover:text-gray-950">
                     Login
                   </Link>
                 )}
-                <Link to="/signup" className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-gray-950 transition-transform hover:scale-105">
+                <Link to="/signup" className="rounded-full bg-gray-950 px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105">
                   Get started
                 </Link>
               </>
@@ -86,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           </div>
 
           <button
-            className="p-2 text-white/80 transition-colors hover:text-white md:hidden"
+            className="p-2 text-gray-950/70 transition-colors hover:text-gray-950 md:hidden"
             onClick={() => setIsMobileMenuOpen((open) => !open)}
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
@@ -102,35 +102,35 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
         </div>
 
         {isMobileMenuOpen && (
-          <div className="border-t border-white/10 bg-gray-950/95 px-3 pb-4 pt-2 md:hidden">
+          <div className="border-t border-black/5 bg-white/60 px-3 pb-4 pt-2 md:hidden">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
                 onClick={closeMobileMenu}
-                className="block rounded-2xl px-4 py-3 text-base font-medium text-white/75 transition-colors hover:bg-white/10 hover:text-white"
+                className="block rounded-2xl px-4 py-3 text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
               >
                 {link.label}
               </Link>
             ))}
-            <div className="mt-2 border-t border-white/10 pt-3">
+            <div className="mt-2 border-t border-black/5 pt-3">
               {showAuthButtons && isAuthenticated ? (
                 <>
-                  <Link to="/dashboard" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-white/75">
+                  <Link to="/dashboard" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-gray-950/75">
                     Dashboard
                   </Link>
-                  <button onClick={handleLogout} className="mt-2 w-full rounded-full bg-white px-4 py-3 text-base font-semibold text-gray-950">
+                  <button onClick={handleLogout} className="mt-2 w-full rounded-full bg-gray-950 px-4 py-3 text-base font-semibold text-white">
                     Logout
                   </button>
                 </>
               ) : (
                 <>
                   {showAuthButtons && (
-                    <Link to="/login" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-white/75">
+                    <Link to="/login" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-gray-950/75">
                       Login
                     </Link>
                   )}
-                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-white px-4 py-3 text-center text-base font-semibold text-gray-950">
+                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center text-base font-semibold text-white">
                     Get started
                   </Link>
                 </>
