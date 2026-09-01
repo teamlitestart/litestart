@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface HeaderProps {
@@ -14,6 +14,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +26,13 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
   }, []);
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
+  const handleNavLinkClick = (to: string) => {
+    closeMobileMenu();
+    if (location.pathname === to) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   const handleLogout = () => {
     logout();
@@ -75,7 +83,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           <Link
             to={homePath}
             className="relative z-10 flex shrink-0 items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
-            onClick={closeMobileMenu}
+            onClick={() => handleNavLinkClick(homePath)}
             style={{
               opacity: isHeaderVisible ? 1 : 0,
               transform: isHeaderVisible ? 'translateX(0)' : 'translateX(-80px)',
@@ -90,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               <Link
                 key={link.label}
                 to={link.to}
-                onClick={closeMobileMenu}
+                onClick={() => handleNavLinkClick(link.to)}
                 className="px-4 py-2 text-sm font-medium text-gray-950/65 transition-all hover:text-gray-950"
                 style={{
                   opacity: isHeaderVisible ? 1 : 0,
@@ -189,7 +197,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                 <Link
                   key={link.label}
                   to={link.to}
-                  onClick={closeMobileMenu}
+                  onClick={() => handleNavLinkClick(link.to)}
                   className="block rounded-2xl px-4 py-3 text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
                 >
                   {link.label}
