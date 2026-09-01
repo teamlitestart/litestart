@@ -147,12 +147,13 @@ const SignupPage: React.FC = () => {
           <AnimatedSection>
             <div className="mb-16 sm:mb-20">
               <h2 className="font-serif text-4xl leading-[1.1] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
-                From conversation to introduction.
+                From conversation
+                <span className="block">to introduction.</span>
               </h2>
             </div>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-6">
             {[
               {
                 num: "01",
