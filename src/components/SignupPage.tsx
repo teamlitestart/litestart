@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Hero from './Hero';
 import MouseTracker from './MouseTracker';
+import TrustedBySection from './TrustedBySection';
 
 
 // Intersection Observer hook for scroll animations
@@ -269,43 +270,7 @@ const SignupPage: React.FC = () => {
       {/* Hero Section */}
       <Hero onJoinWaitlist={handleJoinWaitlist} />
       
-      {/* Journey Introduction - Quote Section */}
-      <section id="journey-begins" className="py-16 bg-gradient-to-r from-blue-600 to-teal-600 relative overflow-hidden">
-        {/* Flowing background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-        </div>
-        
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <AnimatedSection>
-            <div className="mb-6 text-center">
-              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm font-medium">
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                <span>Your Journey Begins Here</span>
-              </div>
-            </div>
-            
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
-              {/* Left Chameleon Image */}
-              <div className="flex-shrink-0">
-                <img 
-                  src="/Chameleon avatar/litestart_chameleon_cartoon_1.png" 
-                  alt="LiteStart Chameleon" 
-                  className="w-48 h-48 lg:w-56 lg:h-56 object-contain drop-shadow-lg"
-                />
-              </div>
-              
-              {/* Center Quote */}
-              <div className="flex-1 text-center">
-                <blockquote className="text-2xl md:text-3xl font-medium text-white leading-relaxed">
-                  "Litestart eliminates all of your admin work whilst finding you the most relevant candidates for your business"
-                </blockquote>
-              </div>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
+      <TrustedBySection />
 
       {/* Journey Stage 1: Why Choose This Path */}
       <section className="py-24 bg-white relative">

@@ -4,6 +4,7 @@ import { ArrowRight, Users, Clock, Target, Briefcase, Star, Quote, CheckCircle, 
 import Header from './Header';
 import Footer from './Footer';
 import MouseTracker from './MouseTracker';
+import TrustedBySection from './TrustedBySection';
 
 // Intersection Observer hook for scroll animations
 const useIntersectionObserver = (options = {}) => {
@@ -245,77 +246,43 @@ const LandingPage: React.FC = () => {
       <Header homePath="/preview" />
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 overflow-hidden">
-        {/* Background Image */}
+      <section className="relative flex min-h-screen items-end overflow-hidden bg-[#f7f6f0] px-6 pb-20 pt-32 sm:px-10 lg:px-16 lg:pb-24">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop" 
-            alt="Modern workspace with laptops and collaboration" 
-            className="w-full h-full object-cover"
+          <img
+            src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&fit=crop"
+            alt="Modern workspace with laptops and collaboration"
+            className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#f7f6f0]/90 via-[#f7f6f0]/85 to-blue-50/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#f7f6f0]/95 via-[#f7f6f0]/75 to-[#f7f6f0]/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#f7f6f0]/90 via-transparent to-transparent" />
         </div>
-        
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="relative z-10">
-            <AnimatedSection>
-              <div className="max-w-4xl mx-auto flex flex-col items-center justify-center gap-12">
-                {/* Hero Content */}
-                <div className="w-full">
-                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight drop-shadow-sm">
-                    Build Your Future.<br />
-                    <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent block">
-                      Real Projects. Real Startups. Real Impact.
-                    </span>
-                  </h1>
-                  <p className="text-xl md:text-2xl text-gray-800 mb-12 max-w-3xl mx-auto leading-relaxed font-medium drop-shadow-sm">
-                    The AI-powered platform connecting university students with startups and SMEs for high-impact microinternships.
-                  </p>
-                  
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                    <button 
-                      onClick={scrollToSignup}
-                      className="group bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 flex items-center space-x-2 shadow-lg"
-                    >
-                      <span>Get Started Free</span>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                    <button 
-                      onClick={() => document.getElementById('journey-begins')?.scrollIntoView({ behavior: 'smooth' })}
-                      className="border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center space-x-2"
-                    >
-                      <span>Learn How It Works</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
-
-      {/* Journey Introduction - Quote Section */}
-      <section id="journey-begins" className="py-16 bg-gradient-to-r from-blue-600 to-teal-600 relative overflow-hidden">
-        {/* Flowing background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
-        </div>
-        
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <div className="relative z-10 w-full max-w-7xl">
           <AnimatedSection>
-            <div className="mb-4">
-              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-white/80 text-sm font-medium" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                <span>Your Journey Begins Here</span>
+            <div className="max-w-xl text-left">
+              <h1 className="mb-6 font-serif text-5xl leading-[0.98] tracking-tight text-gray-950 sm:text-6xl lg:text-7xl">
+                Fill critical positions,
+                <span className="block italic text-[#76962a]">a lot faster.</span>
+              </h1>
+              <p className="mb-8 max-w-lg text-base font-medium leading-relaxed text-gray-800 sm:text-lg">
+                We hire interns for you end-to-end — faster and cheaper than traditional agencies. You only pay when you hire.
+              </p>
+              <div className="flex max-w-xl items-center rounded-full border border-gray-900/20 bg-gray-950/75 p-2 shadow-xl backdrop-blur-sm">
+                <input
+                  type="text"
+                  placeholder="What role are you hiring for?"
+                  aria-label="What role are you hiring for?"
+                  className="min-w-0 flex-1 bg-transparent px-5 py-3 text-left text-sm text-white outline-none placeholder:text-white/65 sm:text-base"
+                />
+                <button type="button" aria-label="Submit hiring role" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-gray-950 transition-transform hover:scale-105">
+                  <ArrowRight className="h-5 w-5" />
+                </button>
               </div>
             </div>
-            <blockquote className="text-2xl md:text-3xl font-medium text-white leading-relaxed" style={{ fontFamily: "'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif" }}>
-              "Litestart eliminates all of your admin work whilst finding you the most relevant candidates for your business"
-            </blockquote>
           </AnimatedSection>
         </div>
       </section>
+
+      <TrustedBySection />
 
       {/* Journey Stage 1: Why Choose This Path */}
       <section className="py-24 bg-white relative">

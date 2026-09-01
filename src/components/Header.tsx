@@ -43,10 +43,10 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           : '-translate-y-8 pointer-events-none opacity-0'
       }`}
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/15 bg-gray-950/85 shadow-2xl shadow-black/20 backdrop-blur-xl">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/15 bg-gray-950/45 shadow-2xl shadow-black/20 backdrop-blur-xl">
         <div className="flex h-16 items-center justify-between px-4 sm:px-6">
           <Link to={homePath} className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-            <img src="/image.png" alt="LiteStart" className="h-7 w-auto object-contain sm:h-8" />
+            <span className="text-lg font-semibold tracking-tight text-white sm:text-xl">LiteStart</span>
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex">
