@@ -79,22 +79,16 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
         }}
       >
         <div className="relative flex min-h-14 items-center justify-between px-6 py-2 sm:min-h-16 sm:px-8">
-          {/* Logo — always visible, independent of the scroll-triggered pill; shrinks into the pill on scroll */}
+          {/* Logo — always visible, independent of the scroll-triggered pill; constant size */}
           <Link
             to={homePath}
-            className={`relative z-10 flex shrink-0 items-center pointer-events-auto transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-              isHeaderVisible ? 'translate-y-0' : 'translate-y-6'
-            }`}
+            className="relative z-10 flex shrink-0 items-center pointer-events-auto"
             onClick={() => handleNavLinkClick(homePath)}
           >
             <img
               src="/assets/images/footer-logo-trimmed.png"
               alt="LiteStart"
-              className={`object-contain object-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                isHeaderVisible
-                  ? 'h-[6.8rem] w-[11.9rem] sm:h-[8.5rem] sm:w-[17rem]'
-                  : 'h-[2.8rem] w-[12.1rem] sm:h-[4.2rem] sm:w-[18.1rem]'
-              }`}
+              className="h-[6.8rem] w-[11.9rem] object-contain object-left sm:h-[8.5rem] sm:w-[17rem]"
             />
           </Link>
 
