@@ -59,12 +59,33 @@ body {
 }
 
 .text-shimmer {
-  background-image: linear-gradient(110deg, #0765ad 30%, #7fc7f2 45%, #ffffff 50%, #7fc7f2 55%, #0765ad 70%);
-  background-size: 250% auto;
+  background-image: linear-gradient(110deg, #0765ad 40%, #5fa8d8 48%, #c7e3f5 50%, #5fa8d8 52%, #0765ad 60%);
+  background-size: 300% auto;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: text-shimmer 4s linear infinite;
+  animation: text-shimmer 8s linear infinite;
+}
+
+@keyframes pill-shimmer {
+  0% {
+    background-position: -150% center;
+  }
+  100% {
+    background-position: 250% center;
+  }
+}
+
+.pill-shimmer-red {
+  background-image: linear-gradient(110deg, #f6d9d6 0%, #f6d9d6 35%, #fcecea 48%, #ffffff 50%, #fcecea 52%, #f6d9d6 65%, #f6d9d6 100%);
+  background-size: 250% auto;
+  animation: pill-shimmer 5s linear infinite;
+}
+
+.pill-shimmer-blue {
+  background-image: linear-gradient(110deg, #0765ad 0%, #0765ad 35%, #3a8bcc 48%, #7fc7f2 50%, #3a8bcc 52%, #0765ad 65%, #0765ad 100%);
+  background-size: 250% auto;
+  animation: pill-shimmer 5s linear infinite;
 }
 
 .animate-slide-left {
