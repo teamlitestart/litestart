@@ -82,7 +82,7 @@ const StudentSignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 overflow-hidden">
+    <div className="min-h-screen bg-[#f7f6f0] overflow-hidden">
       {currentStep === 0 ? (
         <div className={`min-h-screen flex items-center justify-center p-4 animate-fade-in`}>
           <div className="max-w-2xl w-full text-center space-y-8">
@@ -155,7 +155,7 @@ const StartupSignupPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 overflow-hidden">
+    <div className="min-h-screen bg-[#f7f6f0] overflow-hidden">
       {currentStep === 0 ? (
         <div className={`min-h-screen flex items-center justify-center p-4 animate-fade-in`}>
           <div className="max-w-2xl w-full text-center space-y-8">
@@ -235,7 +235,7 @@ const AboutPage: React.FC = () => {
       <Header showAuthButtons={isPreviewRoute} homePath={isPreviewRoute ? "/preview" : "/"} />
       
       {/* Header Section */}
-      <section className="relative pt-32 pb-20 bg-gradient-to-br from-blue-50 via-white to-teal-50 overflow-hidden">
+      <section className="relative pt-32 pb-20 bg-gradient-to-br from-[#f7f6f0] via-white to-[#f7f6f0] overflow-hidden">
         {/* Background Graphics */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-32 h-32 bg-blue-200 rounded-full blur-xl"></div>

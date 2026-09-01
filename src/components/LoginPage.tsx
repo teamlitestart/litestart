@@ -67,7 +67,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-teal-50">
+    <div className="min-h-screen bg-[#f7f6f0]">
       <Header />
       
       <div className="flex items-center justify-center min-h-screen px-4 py-12 pt-32">

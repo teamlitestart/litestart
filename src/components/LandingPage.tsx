@@ -240,7 +240,7 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-white to-blue-50/30 w-full">
+    <div className="min-h-screen bg-[#f7f6f0] w-full">
       <MouseTracker />
       <Header homePath="/preview" />
       
@@ -253,7 +253,7 @@ const LandingPage: React.FC = () => {
             alt="Modern workspace with laptops and collaboration" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/85 to-blue-50/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-[#f7f6f0]/90 via-[#f7f6f0]/85 to-blue-50/80"></div>
         </div>
         
         <div className="max-w-7xl mx-auto text-center">
