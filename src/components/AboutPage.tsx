@@ -10,23 +10,32 @@ const AboutPage: React.FC = () => {
     <div className="min-h-screen bg-[#f7f6f0] text-white">
       <Header showAuthButtons={isPreviewRoute} homePath={homePath} />
 
-      <main className="px-4 pb-8 pt-28 sm:px-6 sm:pt-36 lg:px-8">
-        <section className="mx-auto max-w-7xl rounded-[2rem] bg-[#171817] p-5 shadow-[0_30px_90px_rgba(23,24,23,0.18)] sm:p-8 lg:p-12">
-          <div className="grid items-start gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
-            <div className="overflow-hidden rounded-[1.5rem] bg-[#2a2b29]">
-              <img
-                src="/assets/images/image copy 2.png"
-                alt="The Litestart founders"
-                className="aspect-[4/5] w-full object-cover"
-              />
+      <main className="px-4 pb-40 pt-28 sm:px-6 sm:pb-52 sm:pt-36 lg:px-8">
+        <section className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-[#e7ebf4]/70 p-5 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-8 lg:p-12">
+          <div className="flex flex-col items-center">
+            <div className="grid w-full max-w-2xl grid-cols-2 gap-4">
+              <div className="overflow-hidden rounded-[2rem] bg-white/40">
+                <img
+                  src="/assets/images/founder-1.jpg"
+                  alt="Scott, Litestart co-founder"
+                  className="aspect-square w-full object-cover"
+                />
+              </div>
+              <div className="overflow-hidden rounded-[2rem] bg-white/40">
+                <img
+                  src="/assets/images/founder-2.png"
+                  alt="Reece, Litestart co-founder"
+                  className="aspect-square w-full object-cover"
+                />
+              </div>
             </div>
 
-            <div className="flex flex-col justify-center py-2 lg:py-6">
-              <p className="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-white/55">A letter from the founders</p>
-              <h1 className="max-w-xl font-serif text-4xl leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
+            <div className="mt-10 max-w-2xl py-2">
+              <p className="mb-6 text-sm font-semibold uppercase tracking-[0.2em] text-gray-950/55">A letter from the founders</p>
+              <h1 className="font-serif text-5xl leading-[1.02] tracking-tight text-gray-950 sm:text-6xl lg:text-7xl">
                 Built from both sides of the hiring table.
               </h1>
-              <div className="mt-8 space-y-6 text-base leading-relaxed text-white/78 sm:text-lg">
+              <div className="mt-8 space-y-8 text-lg leading-relaxed text-gray-800 sm:text-xl">
                 <p>
                   We&apos;re Reece and Scott. We&apos;ve been on both sides of hiring — screening hundreds of applicants, and sending hundreds of applications ourselves. We saw a process that felt stuck in the past, so we started Litestart to make it work better.
                 </p>
@@ -40,7 +49,7 @@ const AboutPage: React.FC = () => {
                   We handle the sourcing, screening, and matching so businesses don&apos;t have to. But we don&apos;t think technology should replace the human side of hiring. It should clear the way for it — the judgement, the relationships, and the context that only people can bring.
                 </p>
                 <p>Thanks for being here.</p>
-                <p className="font-serif text-xl italic text-white">Reece &amp; Scott</p>
+                <p className="font-serif text-2xl italic text-gray-950">Reece &amp; Scott</p>
               </div>
             </div>
           </div>

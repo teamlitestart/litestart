@@ -7,6 +7,8 @@ interface HeaderProps {
   homePath?: string;
 }
 
+const BOOKING_URL = 'https://calendly.com/reecebforbes/30min';
+
 const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/preview' }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
@@ -60,7 +62,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
       <div
         className="mx-auto max-w-7xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{
-          borderRadius: isHeaderVisible ? '9999px' : '0px',
+          borderRadius: isHeaderVisible ? (isMobileMenuOpen ? '28px' : '9999px') : '0px',
           background: isHeaderVisible ? 'rgba(231, 235, 244, 0.7)' : 'rgba(231, 235, 244, 0)',
           backdropFilter: isHeaderVisible ? 'blur(24px)' : 'blur(0px)',
           boxShadow: isHeaderVisible
@@ -143,9 +145,14 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                     Login
                   </Link>
                 )}
-                <Link to="/signup" className="rounded-full bg-gray-950 px-5 py-2.5 font-serif text-sm font-normal text-white transition-transform hover:scale-105">
+                <a
+                  href={BOOKING_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-gray-950 px-5 py-2.5 font-serif text-sm font-normal text-white transition-transform hover:scale-105"
+                >
                   Start hiring
-                </Link>
+                </a>
               </>
             )}
           </div>
@@ -171,50 +178,62 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           </button>
         </div>
 
-        {isMobileMenuOpen && isHeaderVisible && (
-          <div className="border-t border-black/5 bg-white/60 px-3 pb-4 pt-2 md:hidden">
-            {navLinks.map((link) => (
-              <Link
-                key={link.label}
-                to={link.to}
-                onClick={closeMobileMenu}
-                className="block rounded-2xl px-4 py-3 text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
+        <div
+          className={`grid md:hidden transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isMobileMenuOpen && isHeaderVisible ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="border-t border-black/5 px-3 pb-4 pt-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
+                  onClick={closeMobileMenu}
+                  className="block rounded-2xl px-4 py-3 text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <button
+                type="button"
+                onClick={handleFAQsClick}
+                className="block w-full rounded-2xl px-4 py-3 text-left text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
               >
-                {link.label}
-              </Link>
-            ))}
-            <button
-              type="button"
-              onClick={handleFAQsClick}
-              className="block w-full rounded-2xl px-4 py-3 text-left text-base font-medium text-gray-950/75 transition-colors hover:bg-black/5 hover:text-gray-950"
-            >
-              FAQs
-            </button>
-            <div className="mt-2 border-t border-black/5 pt-3">
-              {showAuthButtons && isAuthenticated ? (
-                <>
-                  <Link to="/dashboard" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-gray-950/75">
-                    Dashboard
-                  </Link>
-                  <button onClick={handleLogout} className="mt-2 w-full rounded-full bg-gray-950 px-4 py-3 text-base font-semibold text-white">
-                    Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  {showAuthButtons && (
-                    <Link to="/login" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-gray-950/75">
-                      Login
+                FAQs
+              </button>
+              <div className="mt-2 border-t border-black/5 pt-3">
+                {showAuthButtons && isAuthenticated ? (
+                  <>
+                    <Link to="/dashboard" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-gray-950/75">
+                      Dashboard
                     </Link>
-                  )}
-                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center font-serif text-base font-normal text-white">
-                    Start hiring
-                  </Link>
-                </>
-              )}
+                    <button onClick={handleLogout} className="mt-2 w-full rounded-full bg-gray-950 px-4 py-3 text-base font-semibold text-white">
+                      Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    {showAuthButtons && (
+                      <Link to="/login" onClick={closeMobileMenu} className="block px-4 py-3 text-base font-medium text-gray-950/75">
+                        Login
+                      </Link>
+                    )}
+                    <a
+                      href={BOOKING_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={closeMobileMenu}
+                      className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center font-serif text-base font-normal text-white"
+                    >
+                      Start hiring
+                    </a>
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </header>
   );

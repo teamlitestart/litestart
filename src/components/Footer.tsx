@@ -5,13 +5,13 @@ import { Mail, MapPin } from 'lucide-react';
 const Footer: React.FC = () => {
   return (
     <footer className="bg-[#f7f6f0] px-4 pt-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl rounded-t-[2rem] border border-white/10 border-b-0 bg-[#e7ebf4]/70 p-8 pb-12 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-10 sm:pb-14 lg:p-12 lg:pb-16">
+      <div className="mx-auto max-w-7xl rounded-t-[2rem] border border-white/10 border-b-0 bg-[#e7ebf4]/70 p-8 pb-0 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-10 sm:pb-0 lg:p-12 lg:pb-0">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <div>
             <img
-              src="/assets/images/1 copy.png"
+              src="/assets/images/footer-logo-trimmed.png"
               alt="Litestart"
-              className="mb-0 h-24 w-60 object-contain object-left sm:h-28 sm:w-72"
+              className="mb-0 h-[4.5rem] max-w-[12rem] object-contain object-left sm:h-[5.25rem] sm:max-w-[14rem]"
             />
             <p className="max-w-xs text-sm leading-relaxed text-gray-700">
               We match your business with the best candidates.

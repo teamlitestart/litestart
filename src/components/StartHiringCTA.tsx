@@ -5,17 +5,15 @@ interface StartHiringCTAProps {
   onJoinWaitlist?: () => void;
 }
 
-const StartHiringCTA: React.FC<StartHiringCTAProps> = ({ onJoinWaitlist }) => {
+const BOOKING_URL = 'https://calendly.com/reecebforbes/30min';
+
+const StartHiringCTA: React.FC<StartHiringCTAProps> = () => {
   const [pressed, setPressed] = useState(false);
 
   const handleClick = () => {
     setPressed(true);
     setTimeout(() => setPressed(false), 200);
-    if (onJoinWaitlist) {
-      onJoinWaitlist();
-    } else {
-      window.location.href = '/signup';
-    }
+    window.open(BOOKING_URL, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -29,7 +27,7 @@ const StartHiringCTA: React.FC<StartHiringCTAProps> = ({ onJoinWaitlist }) => {
           <button
             type="button"
             onClick={handleClick}
-            className={`text-shimmer group flex items-center gap-3 rounded-full bg-gray-950 px-8 py-4 font-serif text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-gray-800 hover:shadow-xl hover:shadow-black/20 sm:text-lg ${pressed ? 'scale-95' : 'hover:scale-105'}`}
+            className={`group flex items-center gap-3 rounded-full bg-gray-950 px-8 py-4 font-serif text-base font-semibold text-white shadow-lg transition-all duration-300 hover:bg-gray-800 hover:shadow-xl hover:shadow-black/20 sm:text-lg ${pressed ? 'scale-95' : 'hover:scale-105'}`}
           >
             <span>Start hiring</span>
             <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

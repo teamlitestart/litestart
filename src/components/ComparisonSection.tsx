@@ -61,9 +61,9 @@ const ComparisonSection: React.FC = () => {
     <section className="relative overflow-hidden bg-[#f7f6f0] px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
       <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_0.9fr] lg:gap-24">
         <div>
-          <div className="mb-10 max-w-xl">
+          <div className="mb-10 max-w-xl text-center lg:mx-0 lg:text-left mx-auto">
             <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-gray-500">Why Litestart, why now</p>
-            <div className="mb-4 w-48">
+            <div className="mb-4 w-48 mx-auto lg:mx-0">
               <svg viewBox="0 0 200 12" className="w-full" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M2 6 Q 12 1, 22 6 T 42 6 T 62 6 T 82 6 T 102 6 T 122 6 T 142 6 T 162 6 T 182 6 T 198 6"
@@ -77,12 +77,12 @@ const ComparisonSection: React.FC = () => {
             <h2 className="font-serif text-4xl leading-[1.05] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
               The shortcut to your next great hire.
             </h2>
-            <p className="mt-6 max-w-lg text-base leading-relaxed text-gray-600 sm:text-lg">
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-gray-600 sm:text-lg mx-auto lg:mx-0">
               Stop losing weeks to hiring admin. Litestart helps you move from role to ready-to-start intern with less risk and more momentum.
             </p>
           </div>
 
-          <div className="grid max-w-xl grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid max-w-xl grid-cols-2 gap-3 sm:gap-4 mx-auto lg:mx-0">
             <div className="rounded-2xl border border-white/10 bg-[#e7ebf4]/70 p-5 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-6">
               <div className="font-serif text-3xl tracking-tight text-gray-950 sm:text-4xl">1000+</div>
               <p className="mt-3 text-xs font-medium leading-relaxed text-gray-500 sm:text-sm">Students represented</p>

@@ -161,29 +161,35 @@ const SignupPage: React.FC = () => {
                 num: "01",
                 title: "Spotting the gap",
                 desc: "You need GTM, marketing, or sales support and don't have time to hire.",
+                image: "/journey/spotting-the-gap.webp",
               },
               {
                 num: "02",
                 title: "Mapping the role",
                 desc: "One call to scope the exact role, skills, and timeline you need.",
+                image: "/journey/mapping-the-role.webp",
               },
               {
                 num: "03",
                 title: "End to End Selection",
                 desc: "We source, screen, and interview candidates from our network for you.",
+                image: "/journey/end-to-end.webp",
               },
               {
                 num: "04",
                 title: "Meet your intern",
                 desc: "You're introduced to one vetted, ready to start candidate.",
+                image: "/journey/meet-your-intern.webp",
               },
             ].map((step, index) => (
               <AnimatedSection key={index} delay={index * 150}>
                 <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#e7ebf4]/70 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-500 hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1">
-                  <div className="relative aspect-[2/1] w-full overflow-hidden bg-gradient-to-br from-gray-200/40 to-gray-300/30">
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="h-10 w-10 rounded-full border-2 border-gray-400/30" />
-                    </div>
+                  <div className="relative aspect-[2/1] w-full overflow-hidden">
+                    <img
+                      src={step.image}
+                      alt={step.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
                   </div>
                   <div className="flex flex-1 flex-col p-5 sm:p-6">
                     <span className="font-serif text-sm font-medium tracking-wide text-gray-500">{step.num}</span>
