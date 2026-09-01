@@ -42,13 +42,13 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
       style={{
         clipPath: isHeaderVisible
           ? 'inset(0 0 0 0)'
-          : 'inset(50% 50% 50% 50%)',
+          : 'inset(100% 50% 0 50%)',
       }}
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/15 bg-white/40 shadow-2xl shadow-black/10 backdrop-blur-xl">
-        <div className="flex h-20 items-center justify-between px-4 sm:h-24 sm:px-6">
+      <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/10 bg-white/20 shadow-2xl shadow-black/10 backdrop-blur-xl">
+        <div className="flex h-36 items-center justify-between px-4 sm:h-44 sm:px-6">
           <Link to={homePath} className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-16 w-28 object-contain sm:h-20 sm:w-40" />
+            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-32 w-56 object-contain object-left sm:h-40 sm:w-80" />
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex">
@@ -80,8 +80,8 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                     Login
                   </Link>
                 )}
-                <Link to="/signup" className="rounded-full bg-gray-950 px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:scale-105">
-                  Get started
+                <Link to="/signup" className="rounded-full bg-gray-950 px-5 py-2.5 font-serif text-sm font-semibold text-white transition-transform hover:scale-105">
+                  Start hiring
                 </Link>
               </>
             )}
@@ -132,8 +132,8 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
                       Login
                     </Link>
                   )}
-                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center text-base font-semibold text-white">
-                    Get started
+                  <Link to="/signup" onClick={closeMobileMenu} className="mt-2 block rounded-full bg-gray-950 px-4 py-3 text-center font-serif text-base font-semibold text-white">
+                    Start hiring
                   </Link>
                 </>
               )}

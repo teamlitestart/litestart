@@ -25,10 +25,10 @@ const Hero: React.FC<HeroProps> = (_props) => {
             <span className="block italic leading-[1.15] text-[#0765AD]">a lot faster.</span>
           </h1>
           <p className="mb-8 max-w-lg text-base font-medium leading-relaxed text-gray-800 sm:text-lg">
-            We hire interns for you end-to-end — faster and cheaper than traditional agencies. You only pay when you hire.
+            We hire interns for you end-to-end — faster and cheaper than traditional agencies.
           </p>
 
-          <div className="flex max-w-xl items-center rounded-full border border-gray-300/40 bg-white/30 p-2 shadow-xl backdrop-blur-md">
+          <div className="flex max-w-xl items-center rounded-full border border-gray-300/30 bg-white/20 p-2 shadow-xl backdrop-blur-md">
             <input
               type="text"
               placeholder="What role are you hiring for?"
