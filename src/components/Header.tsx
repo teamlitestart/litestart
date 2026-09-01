@@ -39,13 +39,13 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
       className={`fixed inset-x-4 top-4 z-50 origin-center transition-all duration-500 ease-out lg:inset-x-8 ${
         isHeaderVisible
           ? 'scale-x-100 opacity-100'
-          : 'pointer-events-none scale-x-0 opacity-0'
+          : 'pointer-events-none scale-x-[2.5] opacity-0'
       }`}
     >
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-white/15 bg-white/40 shadow-2xl shadow-black/10 backdrop-blur-xl">
         <div className="flex h-16 items-center justify-between px-4 sm:px-6">
           <Link to={homePath} className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-            <img src="/assets/images/2.png" alt="LiteStart" className="h-9 w-16 object-contain sm:h-10 sm:w-20" />
+            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-9 w-16 object-contain sm:h-10 sm:w-20" />
           </Link>
 
           <nav className="hidden items-center gap-2 md:flex">

@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
           {/* Logo + tagline */}
           <div>
             <img
-              src="/assets/images/1 copy.png"
+              src="/assets/images/2.png"
               alt="LiteStart"
               className="mb-4 h-12 w-12 object-contain"
             />
