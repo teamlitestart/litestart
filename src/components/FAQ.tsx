@@ -8,32 +8,20 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   {
-    question: 'How do you ensure the quality of student work?',
-    answer: 'We verify students through their university emails to ensure they attend reputable institutions. Additionally, we provide comprehensive training and a resource library to help students deliver quality work.',
+    question: 'How does Litestart work?',
+    answer: 'Tell us the role. We handle sourcing, screening, outreach, and scheduling end-to-end — using AI agents that work 24/7. You just show up to interviews with vetted, interested candidates.',
   },
   {
-    question: "What's the typical turnaround time for projects?",
-    answer: 'Project timelines are set by the startup based on their specific requirements and scope. Students apply to projects with clear timelines already established by the company.',
+    question: 'Where do you source from?',
+    answer: 'Our pool of pre-vetted candidates, your applicants, and global outbound across LinkedIn, email and WhatsApp. Every channel, deduped and ranked.',
   },
   {
-    question: 'How does your pricing compare to traditional freelancers?',
-    answer: 'Our pricing is competitive with premium freelance platforms, and you get access to university student talent. Our AI can help suggest potential matches, but startups should conduct their own evaluation and selection process.',
+    question: 'How are you different from a traditional agency?',
+    answer: 'Same model — pay on hire — but cheaper and faster because AI does the heavy lifting. A human recruiter is still in the loop on every role; the AI just makes them 10× more productive.',
   },
   {
-    question: 'Can I work with the same students on multiple projects?',
-    answer: 'Absolutely! Many founders build ongoing relationships with talented students. You can request specific students for future projects.',
-  },
-  {
-    question: "What if I'm not satisfied with the work delivered?",
-    answer: 'As a platform connecting students and startups, we facilitate the initial connection and matching. Any work quality discussions would be handled directly between the student and startup.',
-  },
-  {
-    question: 'How does the application process work?',
-    answer: 'Each startup determines their own application stages and selection criteria. Our AI may suggest potential student matches, but startups conduct their own due diligence and choose the best candidates for their specific needs.',
-  },
-  {
-    question: 'Do students work individually or in teams?',
-    answer: 'Both! The startup determines how many students they need based on their project requirements. You can choose to work with an individual student or a team of students with complementary skills.',
+    question: 'What roles do you hire for?',
+    answer: 'GTM, Sales and Marketing, anything GTM we can source and screen for it.',
   },
 ];
 
@@ -46,7 +34,7 @@ const FAQ: React.FC = () => {
 
   return (
     <section id="faq" className="bg-[#f7f6f0] px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-      <div className="mx-auto flex max-w-7xl flex-col gap-10 rounded-[2rem] border border-gray-200/80 bg-white/75 p-6 shadow-[0_24px_70px_rgba(26,47,66,0.08)] backdrop-blur-xl sm:p-10 lg:flex-row lg:gap-20 lg:p-14">
+      <div className="mx-auto flex max-w-7xl flex-col gap-10 rounded-[2rem] border border-white/10 bg-[#e7ebf4]/70 p-6 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-10 lg:flex-row lg:gap-20 lg:p-14">
         <div className="shrink-0 lg:w-56">
           <p className="font-serif text-3xl leading-[1.05] tracking-tight text-gray-950 sm:text-4xl">
             Common

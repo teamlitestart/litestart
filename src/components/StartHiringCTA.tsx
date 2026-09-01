@@ -20,8 +20,8 @@ const StartHiringCTA: React.FC<StartHiringCTAProps> = ({ onJoinWaitlist }) => {
 
   return (
     <section className="relative overflow-hidden bg-[#f7f6f0] px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-      <div className="mx-auto max-w-4xl">
-        <p className="text-center text-base leading-relaxed text-gray-700 sm:text-lg lg:text-xl">
+      <div className="mx-auto max-w-5xl">
+        <p className="mx-auto max-w-4xl text-center font-serif text-3xl leading-[1.08] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
           You tell us the role. We source, screen, and interview from our network of 1000+ vetted students. We introduce you to the best fits.
         </p>
         <div className="mt-10 flex justify-center">

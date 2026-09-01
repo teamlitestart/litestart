@@ -41,7 +41,7 @@ const comparisonItems: ComparisonItem[] = [
 ];
 
 const ComparisonSection: React.FC = () => {
-  const [showLitestart, setShowLitestart] = useState(true);
+  const [showLitestart, setShowLitestart] = useState(false);
   const [clickPulse, setClickPulse] = useState(false);
   const [contentPhase, setContentPhase] = useState<'stable' | 'fadeout' | 'fadein'>('stable');
 

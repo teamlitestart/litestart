@@ -4,25 +4,24 @@ import { Mail, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="bg-[#f7f6f0] px-4 pb-10 pt-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-[#e7ebf4]/70 p-8 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-10 lg:p-12">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
-          {/* Logo + tagline */}
           <div>
             <img
-              src="/assets/images/2.png"
-              alt="LiteStart"
-              className="mb-4 h-12 w-12 object-contain"
+              src="/assets/images/1 copy.png"
+              alt="Litestart"
+              className="mb-6 h-36 w-60 object-contain object-left sm:h-40 sm:w-72"
             />
-            <p className="max-w-xs text-sm leading-relaxed text-gray-400">
-              We hire interns for you end-to-end — faster and cheaper than traditional agencies.
+            <p className="max-w-xs text-sm leading-relaxed text-gray-700">
+              We match your business with the best candidates.
             </p>
             <div className="mt-5 flex space-x-4">
               <a
                 href="https://www.linkedin.com/company/lite-start"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 transition-colors hover:text-white"
+                className="text-gray-500 transition-colors hover:text-[#0765AD]"
               >
                 <span className="sr-only">LinkedIn</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -32,76 +31,61 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Product column */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-300">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">
               Product
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link
-                  to="/"
-                  className="text-gray-400 transition-colors hover:text-white"
-                >
+                <Link to="/" className="text-sm text-gray-700 transition-colors hover:text-[#0765AD]">
                   How it works
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/#faq"
-                  className="text-gray-400 transition-colors hover:text-white"
-                >
+                <Link to="/#faq" className="text-sm text-gray-700 transition-colors hover:text-[#0765AD]">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link
-                  to="/candidates"
-                  className="text-gray-400 transition-colors hover:text-white"
-                >
+                <Link to="/candidates" className="text-sm text-gray-700 transition-colors hover:text-[#0765AD]">
                   For candidates
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Contact column */}
           <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-300">
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.16em] text-gray-500">
               Contact
             </h3>
             <ul className="space-y-3">
-              <li className="flex items-center gap-2 text-gray-400">
-                <Mail className="h-4 w-4 text-gray-500" />
-                <a
-                  href="mailto:info@litestart.co.uk"
-                  className="transition-colors hover:text-white"
-                >
+              <li className="flex items-center gap-2 text-sm text-gray-700">
+                <Mail className="h-4 w-4 text-gray-400" />
+                <a href="mailto:info@litestart.co.uk" className="transition-colors hover:text-[#0765AD]">
                   info@litestart.co.uk
                 </a>
               </li>
-              <li className="flex items-center gap-2 text-gray-400">
-                <MapPin className="h-4 w-4 text-gray-500" />
+              <li className="flex items-center gap-2 text-sm text-gray-700">
+                <MapPin className="h-4 w-4 text-gray-400" />
                 <span>London, UK</span>
               </li>
             </ul>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-10 border-t border-gray-800 pt-8">
+        <div className="mt-10 border-t border-gray-900/10 pt-6">
           <div className="flex flex-col items-center justify-between md:flex-row">
-            <p className="text-sm text-gray-400">
-              &copy; 2025 LiteStart. All rights reserved.
+            <p className="text-xs text-gray-500">
+              &copy; 2025 Litestart. All rights reserved.
             </p>
             <div className="mt-4 flex space-x-6 md:mt-0">
-              <Link to="/privacy" className="text-sm text-gray-400 transition-colors hover:text-white">
+              <Link to="/privacy" className="text-xs text-gray-500 transition-colors hover:text-[#0765AD]">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-sm text-gray-400 transition-colors hover:text-white">
+              <Link to="/terms" className="text-xs text-gray-500 transition-colors hover:text-[#0765AD]">
                 Terms of Service
               </Link>
-              <Link to="/cookie" className="text-sm text-gray-400 transition-colors hover:text-white">
+              <Link to="/cookie" className="text-xs text-gray-500 transition-colors hover:text-[#0765AD]">
                 Cookie Policy
               </Link>
             </div>
