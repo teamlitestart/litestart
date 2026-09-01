@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowRight, Users, Clock, Target, Briefcase, Star, Quote, CheckCircle, Search, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { ArrowRight, CheckCircle } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import Hero from './Hero';
@@ -58,48 +58,12 @@ const SignupPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showSignupModal, setShowSignupModal] = useState(false);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Auto-advance slideshow
-  useEffect(() => {
-    if (isPaused) return; // Don't auto-advance when paused
-    
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000); // Change slide every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [isPaused]);
 
   useEffect(() => {
     if (window.location.hash === '#faq') {
       setTimeout(() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' }), 300);
     }
   }, []);
-
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsPaused(false);
-  };
-
-  const nextTestimonial = () => {
-    setIsPaused(true); // Pause when manually navigating
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const prevTestimonial = () => {
-    setIsPaused(true); // Pause when manually navigating
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const goToTestimonial = (index: number) => {
-    setIsPaused(true); // Pause when manually navigating
-    setCurrentTestimonial(index);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -161,111 +125,9 @@ const SignupPage: React.FC = () => {
     }
   };
 
-  const testimonials = [
-    {
-      quote: "I'm excited about LiteStart because most internships are either unpaid or require huge time commitments. The idea of short, paid projects that actually relate to my economics degree makes so much sense. I can work around my studies and still gain relevant experience.",
-      author: "Eshaan Walia",
-      role: "Economics Student",
-      university: "University of Bristol",
-      rating: 5
-    },
-    {
-      quote: "The physics job market is so competitive, and most opportunities want years of experience. I'm looking forward to LiteStart giving me a chance to apply my technical skills in real scenarios without the pressure of a full-time commitment.",
-      author: "Tyler Bains", 
-      role: "Physics Student",
-      university: "University of Bristol",
-      rating: 5
-    },
-    {
-      quote: "Traditional graduate schemes don't start until after graduation, but I need experience now. I'm excited that LiteStart will connect me with biotech startups where I can contribute meaningfully while still completing my degree.",
-      author: "Alfie Shores",
-      role: "Biochemistry Student",
-      university: "University of Bristol",
-      rating: 5
-    }
-  ];
 
-  const steps = [
-    {
-      icon: Search,
-      title: "Find Real Startup Projects",
-      description: "Browse and discover exciting, real-world projects from innovative startups looking for student talent.",
-      color: "blue"
-    },
-    {
-      icon: Users,
-      title: "Get Matched Instantly",
-      description: "Our AI matches you with the perfect project based on your skills, interests, and availability. No more endless searching!",
-      color: "teal"
-    },
-    {
-      icon: CheckCircle,
-      title: "Build, Launch, and Get Paid",
-      description: "Collaborate with founders, gain hands-on experience, and get paid for your work. Boost your resume and make an impact!",
-      color: "orange"
-    }
-  ];
 
-  const colorClasses: { [key: string]: string } = {
-    blue: "bg-blue-100 text-blue-600",
-    teal: "bg-teal-100 text-teal-600", 
-    orange: "bg-orange-100 text-orange-600",
-    purple: "bg-purple-100 text-purple-600"
-  };
 
-  const features = [
-    {
-      icon: Clock,
-      title: "⚡ Fast & Efficient",
-      description: "Get skilled students working on your projects in days, not months. Boost productivity while students gain real experience.",
-      color: "blue"
-    },
-    {
-      icon: Target,
-      title: "🎯 High-Impact Results",
-      description: "Outcome-focused projects deliver measurable ROI. Students build portfolios while you achieve your goals.",
-      color: "teal"
-    },
-    {
-      icon: Users,
-      title: "🚀 Grow Together",
-      description: "Access fresh talent and innovative thinking. Students gain career-defining experience. Let's build success together.",
-      color: "purple"
-    },
-    {
-      icon: Briefcase,
-      title: "💡 Smart Investment",
-      description: "Cost-effective access to university talent. Students earn while they learn. Maximum value for everyone.",
-      color: "orange"
-    }
-  ];
-
-  const journeySteps = [
-    {
-      icon: Search,
-      title: "Discover Opportunities",
-      description: "Find projects that accelerate your career growth. Real companies, real impact, real learning.",
-      color: "blue"
-    },
-    {
-      icon: Zap,
-      title: "Get Matched Smart",
-      description: "Our AI connects you with projects that build your skills and help startups achieve their goals faster.",
-      color: "teal"
-    },
-    {
-      icon: Briefcase,
-      title: "Apply & Connect",
-      description: "Join innovative teams ready to invest in your growth. Show your potential, land the opportunity.",
-      color: "purple"
-    },
-    {
-      icon: CheckCircle,
-      title: "Learn & Deliver",
-      description: "Build your portfolio while delivering results. Gain experience, earn money, launch your career.",
-      color: "orange"
-    }
-  ];
 
   return (
     <div className="min-h-screen bg-[#f7f6f0] relative">
@@ -279,194 +141,59 @@ const SignupPage: React.FC = () => {
       
       <TrustedBySection />
 
-      {/* Journey Stage 1: Why Choose This Path */}
-      <section className="relative bg-[#f7f6f0] py-24">
-        {/* Journey connector line */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-teal-600 to-transparent"></div>
-        
+      {/* How It Works — Conversation to Introduction */}
+      <section className="relative bg-[#f7f6f0] py-24 sm:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <AnimatedSection>
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-blue-50 rounded-full px-4 py-2 text-blue-600 text-sm font-medium mb-4">
-                <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
-                <span>Step 1: Discover the Opportunity</span>
-              </div>
-
-
-                
-                {/* Centered heading */}
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center">
-                Built for Success Together
+            <div className="mb-16 sm:mb-20">
+              <h2 className="font-serif text-4xl leading-[1.1] tracking-tight text-gray-950 sm:text-5xl lg:text-6xl">
+                From conversation to introduction.
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Startups get skilled talent fast. Students gain career-defining experience. Everyone wins when we work together.
-              </p>
             </div>
           </AnimatedSection>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-            {features.map((feature, index) => (
-              <AnimatedSection key={index} delay={index * 200}>
-              <div className="rounded-2xl border border-gray-900/10 bg-white/40 p-8 shadow-sm transition-all duration-300 hover:shadow-xl group">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 p-3 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl text-white group-hover:scale-110 transition-transform duration-300">
-                      <feature.icon className="w-8 h-8" />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+            {[
+              {
+                num: "01",
+                title: "Spotting the gap",
+                desc: "You need GTM, marketing, or sales support and don't have time to hire.",
+              },
+              {
+                num: "02",
+                title: "Mapping the role",
+                desc: "One call to scope the exact role, skills, and timeline you need.",
+              },
+              {
+                num: "03",
+                title: "End to End Selection",
+                desc: "We source, screen, and interview candidates from our network for you.",
+              },
+              {
+                num: "04",
+                title: "Meet your intern",
+                desc: "You're introduced to one vetted, ready to start candidate.",
+              },
+            ].map((step, index) => (
+              <AnimatedSection key={index} delay={index * 150}>
+                <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#e7ebf4]/70 shadow-lg shadow-black/5 backdrop-blur-xl transition-all duration-500 hover:shadow-xl hover:shadow-black/10 hover:-translate-y-1">
+                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-gray-200/40 to-gray-300/30">
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-full border-2 border-gray-400/30" />
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3 leading-tight">
-                        {feature.title}
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <span className="font-serif text-sm font-medium tracking-wide text-gray-500">{step.num}</span>
+                    <h3 className="mt-2 font-serif text-xl leading-tight tracking-tight text-gray-950 sm:text-2xl">
+                      {step.title}
                     </h3>
-                    <p className="text-gray-600 leading-relaxed">
-                        {feature.description}
+                    <p className="mt-3 text-sm leading-relaxed text-gray-700">
+                      {step.desc}
                     </p>
                   </div>
                 </div>
-              </div>
-            </AnimatedSection>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Journey Stage 2: The Path Forward */}
-      <section id="how-it-works" className="relative bg-[#f7f6f0] py-24">
-        {/* Journey connector line */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-white to-gray-300"></div>
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-gray-300 to-white"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <div className="text-center mb-16 relative">
-              <div className="inline-flex items-center space-x-2 bg-white rounded-full px-4 py-2 text-gray-700 text-sm font-medium mb-4 shadow-sm">
-                <span className="w-2 h-2 bg-teal-600 rounded-full"></span>
-                <span>Step 2: Navigate Your Journey</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Your Success Starts Here
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Follow this proven path to unlock opportunities, drive results, and build your future together.
-              </p>
-              
-              {/* Chameleon Image positioned absolutely on the right */}
-              <div className="absolute right-0 top-1/2 transform -translate-y-1/2 hidden lg:block">
-                <img
-                  src="/Chameleon avatar/litestart_chameleon_cartoon_sitting.png"
-                  alt="LiteStart Chameleon Sitting"
-                  className="w-48 h-48 object-contain drop-shadow-lg"
-                />
-              </div>
-            </div>
-          </AnimatedSection>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 relative">
-            {journeySteps.map((step, index) => (
-              <AnimatedSection key={index} delay={index * 300}>
-                <div className="text-center group relative">
-                  <div className="relative mb-6">
-                    <div className={`w-20 h-20 mx-auto rounded-full ${colorClasses[step.color]} flex items-center justify-center group-hover:scale-125 group-hover:-translate-y-2 transition-all duration-500 shadow-lg group-hover:shadow-xl relative z-10`}>
-                      <step.icon className="w-10 h-10 group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    
-                    {/* Step Number */}
-                    <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center text-sm font-bold text-gray-700 border-2 border-gray-200 group-hover:scale-110 transition-transform duration-300">
-                      {index + 1}
-                    </div>
-
-                    {/* Connecting Arrow (except for last item) */}
-                    {index < journeySteps.length - 1 && (
-                      <div className="hidden lg:block absolute top-10 left-full w-12 h-0.5 bg-gradient-to-r from-gray-300 to-transparent transform -translate-y-1/2 animate-pulse"></div>
-                    )}
-                  </div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors duration-300">
-                    {step.title}
-                  </h3>
-                  <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                    {step.description}
-                  </p>
-                  
-                  {/* Animated background on hover */}
-                  <div className="absolute inset-0 bg-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg -z-10 -m-4"></div>
-                </div>
               </AnimatedSection>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Journey Stage 3: Proof of Success */}
-      <section className="relative bg-[#f7f6f0] py-24">
-        {/* Journey connector line */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-16 bg-gradient-to-b from-gray-300 to-transparent"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <AnimatedSection>
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-green-50 rounded-full px-4 py-2 text-green-600 text-sm font-medium mb-4">
-                <span className="w-2 h-2 bg-green-600 rounded-full"></span>
-                <span>Step 3: See Real Results</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                What Our Students Are Looking For
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Discover the opportunities and experiences that students are excited to pursue through LiteStart.
-              </p>
-            </div>
-          </AnimatedSection>
-
-          <div className="relative max-w-4xl mx-auto">
-          <div 
-              className="rounded-2xl border border-gray-900/10 bg-gradient-to-br from-gray-900/[0.02] to-gray-900/[0.04] p-8 md:p-12"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-
-              
-              <blockquote className="text-xl md:text-2xl text-gray-700 mb-8 italic text-center leading-relaxed">
-                "{testimonials[currentTestimonial].quote}"
-              </blockquote>
-              
-              <div className="text-center">
-                <div className="font-semibold text-gray-900 text-lg">
-                  {testimonials[currentTestimonial].author}
-                </div>
-                <div className="text-gray-600">
-                  {testimonials[currentTestimonial].role}
-                  {testimonials[currentTestimonial].university && (
-                    <span> • {testimonials[currentTestimonial].university}</span>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            {/* Navigation */}
-            <button
-              onClick={prevTestimonial}
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-600" />
-            </button>
-            
-            <button
-              onClick={nextTestimonial}
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-600" />
-            </button>
-
-            {/* Dots */}
-            <div className="flex justify-center mt-6 space-x-2">
-              {testimonials.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    index === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
           </div>
         </div>
       </section>
