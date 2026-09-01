@@ -82,7 +82,9 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           {/* Logo — always visible, independent of the scroll-triggered pill; shrinks into the pill on scroll */}
           <Link
             to={homePath}
-            className="relative z-10 flex shrink-0 items-center pointer-events-auto"
+            className={`relative z-10 flex shrink-0 items-center pointer-events-auto transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+              isHeaderVisible ? 'translate-y-0' : 'translate-y-6'
+            }`}
             onClick={() => handleNavLinkClick(homePath)}
           >
             <img
@@ -90,8 +92,8 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
               alt="LiteStart"
               className={`object-contain object-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isHeaderVisible
-                  ? 'h-[2.25rem] w-[9.7rem] sm:h-[2.75rem] sm:w-[11.9rem]'
-                  : 'h-[4rem] w-[17.3rem] sm:h-[6rem] sm:w-[25.9rem]'
+                  ? 'h-[6.8rem] w-[11.9rem] sm:h-[8.5rem] sm:w-[17rem]'
+                  : 'h-[2.8rem] w-[12.1rem] sm:h-[4.2rem] sm:w-[18.1rem]'
               }`}
             />
           </Link>
