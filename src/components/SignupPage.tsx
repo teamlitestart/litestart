@@ -5,6 +5,7 @@ import Footer from './Footer';
 import Hero from './Hero';
 import MouseTracker from './MouseTracker';
 import TrustedBySection from './TrustedBySection';
+import FAQ from './FAQ';
 
 
 // Intersection Observer hook for scroll animations
@@ -70,6 +71,12 @@ const SignupPage: React.FC = () => {
 
     return () => clearInterval(interval);
   }, [isPaused]);
+
+  useEffect(() => {
+    if (window.location.hash === '#faq') {
+      setTimeout(() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' }), 300);
+    }
+  }, []);
 
   const handleMouseEnter = () => {
     setIsPaused(true);
@@ -463,6 +470,9 @@ const SignupPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <FAQ />
 
       {/* Journey Destination: Take Action */}
       <section id="signup" className="relative overflow-hidden bg-[#f7f6f0] py-24">
