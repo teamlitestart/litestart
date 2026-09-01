@@ -36,34 +36,67 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
 
   return (
     <header
-      className={`fixed inset-x-4 top-4 z-50 transition-all duration-500 ease-out lg:inset-x-8 ${
-        isHeaderVisible ? 'opacity-100' : 'pointer-events-none opacity-0'
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        isHeaderVisible ? 'pointer-events-auto' : 'pointer-events-none'
       }`}
       style={{
-        clipPath: isHeaderVisible
-          ? 'inset(0 0 0 0)'
-          : 'inset(0 50% 100% 50%)',
+        padding: isHeaderVisible ? '16px 32px' : '0px 0px',
       }}
     >
-      <div className="mx-auto max-w-7xl overflow-hidden rounded-full border border-white/10 bg-[#e7ebf4]/70 shadow-2xl shadow-black/10 backdrop-blur-xl">
+      <div
+        className="mx-auto max-w-7xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+        style={{
+          borderRadius: isHeaderVisible ? '9999px' : '0px',
+          background: isHeaderVisible ? 'rgba(231, 235, 244, 0.7)' : 'rgba(231, 235, 244, 0)',
+          backdropFilter: isHeaderVisible ? 'blur(24px)' : 'blur(0px)',
+          boxShadow: isHeaderVisible
+            ? '0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255,255,255,0.1)'
+            : '0 0 0 0px rgba(0,0,0,0)',
+        }}
+      >
         <div className="flex h-14 items-center justify-between px-6 py-2 sm:h-16 sm:px-8">
-          <Link to={homePath} className="flex shrink-0 items-center" onClick={closeMobileMenu}>
-            <img src="/assets/images/2.png" alt="LiteStart" className="h-10 w-auto object-contain sm:h-12" />
+          {/* Logo — slides in from left */}
+          <Link
+            to={homePath}
+            className="flex shrink-0 items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            onClick={closeMobileMenu}
+            style={{
+              opacity: isHeaderVisible ? 1 : 0,
+              transform: isHeaderVisible ? 'translateX(0)' : 'translateX(-80px)',
+            }}
+          >
+            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-32 w-56 object-contain object-left sm:h-40 sm:w-80" />
           </Link>
 
+          {/* Nav links — slide in from top */}
           <nav className="hidden items-center gap-2 md:flex">
-            {navLinks.map((link) => (
+            {navLinks.map((link, i) => (
               <Link
                 key={link.label}
                 to={link.to}
                 className="px-4 py-2 text-sm font-medium text-gray-950/65 transition-all hover:font-bold hover:text-gray-950"
+                style={{
+                  opacity: isHeaderVisible ? 1 : 0,
+                  transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-20px)',
+                  transitionProperty: 'opacity, transform, font-weight, color',
+                  transitionDuration: '700ms',
+                  transitionTimingFunction: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                  transitionDelay: isHeaderVisible ? `${i * 50}ms` : '0ms',
+                }}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
+          {/* Right side — slides in from right */}
+          <div
+            className="hidden items-center gap-3 md:flex transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{
+              opacity: isHeaderVisible ? 1 : 0,
+              transform: isHeaderVisible ? 'translateX(0)' : 'translateX(80px)',
+            }}
+          >
             {showAuthButtons && isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-sm font-medium text-gray-950/65 transition-colors hover:text-gray-950">
@@ -87,11 +120,16 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
             )}
           </div>
 
+          {/* Mobile hamburger */}
           <button
-            className="p-2 text-gray-950/70 transition-colors hover:text-gray-950 md:hidden"
+            className="p-2 text-gray-950/70 transition-all duration-700 md:hidden"
             onClick={() => setIsMobileMenuOpen((open) => !open)}
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
+            style={{
+              opacity: isHeaderVisible ? 1 : 0,
+              transform: isHeaderVisible ? 'translateX(0)' : 'translateX(40px)',
+            }}
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
@@ -103,7 +141,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
           </button>
         </div>
 
-        {isMobileMenuOpen && (
+        {isMobileMenuOpen && isHeaderVisible && (
           <div className="border-t border-black/5 bg-white/60 px-3 pb-4 pt-2 md:hidden">
             {navLinks.map((link) => (
               <Link

@@ -28,7 +28,7 @@ const Hero: React.FC<HeroProps> = (_props) => {
             We hire interns for you end-to-end — faster and cheaper than traditional agencies.
           </p>
 
-          <div className="flex max-w-xl items-center rounded-full border border-gray-300/30 bg-white/20 p-2 shadow-xl backdrop-blur-md">
+          <div className="flex max-w-xl items-center rounded-full border border-white/10 bg-[#e7ebf4]/70 p-2 shadow-xl backdrop-blur-md">
             <input
               type="text"
               placeholder="What role are you hiring for?"
