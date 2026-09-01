@@ -30,12 +30,23 @@ import { initializeGoogleAnalytics } from './config/googleAnalytics';
 // Page View Tracker Component
 const PageViewTracker: React.FC = () => {
   const location = useLocation();
-  
+
   useEffect(() => {
     // Track page view when location changes
     trackPageView(location.pathname, document.title);
   }, [location]);
-  
+
+  return null;
+};
+
+// Scrolls the window to the top whenever the route changes
+const ScrollToTop: React.FC = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return null;
 };
 
@@ -405,6 +416,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <PageViewTracker />
         <Routes>
           <Route path="/" element={<SignupPage />} />
