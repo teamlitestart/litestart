@@ -86,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
             onClick={() => handleNavLinkClick(homePath)}
           >
             <img
-              src="/assets/images/1 copy.png"
+              src="/assets/images/footer-logo-trimmed.png"
               alt="LiteStart"
               className={`object-contain object-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
                 isHeaderVisible
