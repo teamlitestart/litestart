@@ -6,6 +6,7 @@ import Hero from './Hero';
 import MouseTracker from './MouseTracker';
 import TrustedBySection from './TrustedBySection';
 import FAQ from './FAQ';
+import ComparisonSection from './ComparisonSection';
 
 
 // Intersection Observer hook for scroll animations
@@ -198,6 +199,8 @@ const SignupPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      <ComparisonSection />
 
       {/* FAQ Section */}
       <FAQ />
