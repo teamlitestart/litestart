@@ -78,18 +78,22 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
             : '0 0 0 0px rgba(0,0,0,0)',
         }}
       >
-        <div className="relative flex h-14 items-center justify-between px-6 py-2 sm:h-16 sm:px-8">
-          {/* Logo — slides in from left */}
+        <div className="relative flex min-h-14 items-center justify-between px-6 py-2 sm:min-h-16 sm:px-8">
+          {/* Logo — always visible, independent of the scroll-triggered pill; shrinks into the pill on scroll */}
           <Link
             to={homePath}
-            className="relative z-10 flex shrink-0 items-center transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            className="relative z-10 flex shrink-0 items-center pointer-events-auto"
             onClick={() => handleNavLinkClick(homePath)}
-            style={{
-              opacity: isHeaderVisible ? 1 : 0,
-              transform: isHeaderVisible ? 'translateX(0)' : 'translateX(-80px)',
-            }}
           >
-            <img src="/assets/images/1 copy.png" alt="LiteStart" className="h-[6.8rem] w-[11.9rem] object-contain object-left sm:h-[8.5rem] sm:w-[17rem]" />
+            <img
+              src="/assets/images/1 copy.png"
+              alt="LiteStart"
+              className={`object-contain object-left transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isHeaderVisible
+                  ? 'h-[6.8rem] w-[11.9rem] sm:h-[8.5rem] sm:w-[17rem]'
+                  : 'h-[9.5rem] w-[16.7rem] sm:h-[11.9rem] sm:w-[23.8rem]'
+              }`}
+            />
           </Link>
 
           {/* Nav links — centered, slide in from top */}
