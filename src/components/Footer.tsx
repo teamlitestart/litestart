@@ -4,14 +4,14 @@ import { Mail, MapPin } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#f7f6f0] px-4 pb-10 pt-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-[#e7ebf4]/70 p-8 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-10 lg:p-12">
+    <footer className="bg-[#f7f6f0] px-4 pt-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl rounded-t-[2rem] border border-white/10 border-b-0 bg-[#e7ebf4]/70 p-8 pb-12 shadow-lg shadow-black/5 backdrop-blur-xl sm:p-10 sm:pb-14 lg:p-12 lg:pb-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <div>
             <img
               src="/assets/images/1 copy.png"
               alt="Litestart"
-              className="mb-6 h-36 w-60 object-contain object-left sm:h-40 sm:w-72"
+              className="mb-0 h-24 w-60 object-contain object-left sm:h-28 sm:w-72"
             />
             <p className="max-w-xs text-sm leading-relaxed text-gray-700">
               We match your business with the best candidates.
@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
                 href="https://www.linkedin.com/company/lite-start"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 transition-colors hover:text-[#0765AD]"
+                className="text-[#0765AD] transition-colors hover:text-[#064d83]"
               >
                 <span className="sr-only">LinkedIn</span>
                 <svg className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@ const Footer: React.FC = () => {
         <div className="mt-10 border-t border-gray-900/10 pt-6">
           <div className="flex flex-col items-center justify-between md:flex-row">
             <p className="text-xs text-gray-500">
-              &copy; 2025 Litestart. All rights reserved.
+              &copy; 2026 Litestart. All rights reserved.
             </p>
             <div className="mt-4 flex space-x-6 md:mt-0">
               <Link to="/privacy" className="text-xs text-gray-500 transition-colors hover:text-[#0765AD]">

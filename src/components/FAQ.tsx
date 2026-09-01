@@ -9,15 +9,15 @@ interface FAQItem {
 const faqs: FAQItem[] = [
   {
     question: 'How does Litestart work?',
-    answer: 'Tell us the role. We handle sourcing, screening, outreach, and scheduling end-to-end — using AI agents that work 24/7. You just show up to interviews with vetted, interested candidates.',
+    answer: 'Tell us the role. We handle sourcing, screening, outreach, and scheduling end-to-end — you just show up to the introduction meeting.',
   },
   {
     question: 'Where do you source from?',
-    answer: 'Our pool of pre-vetted candidates, your applicants, and global outbound across LinkedIn, email and WhatsApp. Every channel, deduped and ranked.',
+    answer: 'Our pool of pre-vetted candidates, your applicants, and global outbound across LinkedIn and email.',
   },
   {
     question: 'How are you different from a traditional agency?',
-    answer: 'Same model — pay on hire — but cheaper and faster because AI does the heavy lifting. A human recruiter is still in the loop on every role; the AI just makes them 10× more productive.',
+    answer: 'AI does the heavy lifting. A human recruiter is still in the loop on every role; the AI just makes them 10× more productive.',
   },
   {
     question: 'What roles do you hire for?',
