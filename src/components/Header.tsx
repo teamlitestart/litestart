@@ -70,10 +70,10 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
       <div
         className="mx-auto max-w-7xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{
-          borderRadius: isHeaderVisible ? (isMobileMenuOpen ? '28px' : '9999px') : '0px',
-          background: isHeaderVisible ? 'rgba(231, 235, 244, 0.7)' : 'rgba(231, 235, 244, 0)',
-          backdropFilter: isHeaderVisible ? 'blur(24px)' : 'blur(0px)',
-          boxShadow: isHeaderVisible
+          borderRadius: isHeaderVisible || isMobileMenuOpen ? (isMobileMenuOpen ? '28px' : '9999px') : '0px',
+          background: isHeaderVisible || isMobileMenuOpen ? 'rgba(231, 235, 244, 0.7)' : 'rgba(231, 235, 244, 0)',
+          backdropFilter: isHeaderVisible || isMobileMenuOpen ? 'blur(24px)' : 'blur(0px)',
+          boxShadow: isHeaderVisible || isMobileMenuOpen
             ? '0 25px 50px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255,255,255,0.1)'
             : '0 0 0 0px rgba(0,0,0,0)',
         }}
@@ -171,18 +171,21 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
             )}
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile hamburger — always visible, shrinks into the header on scroll */}
           <button
-            className="p-2 text-gray-950/70 transition-all duration-700 md:hidden"
+            className="p-2 text-gray-950/70 pointer-events-auto md:hidden"
             onClick={() => setIsMobileMenuOpen((open) => !open)}
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
-            style={{
-              opacity: isHeaderVisible ? 1 : 0,
-              transform: isHeaderVisible ? 'translateX(0)' : 'translateX(40px)',
-            }}
           >
-            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              className={`transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                isHeaderVisible ? 'h-6 w-6' : 'h-8 w-8'
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
               {isMobileMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
@@ -193,8 +196,8 @@ const Header: React.FC<HeaderProps> = ({ showAuthButtons = true, homePath = '/pr
         </div>
 
         <div
-          className={`grid md:hidden transition-[grid-template-rows,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            isMobileMenuOpen && isHeaderVisible ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+          className={`grid md:hidden pointer-events-auto transition-[grid-template-rows,opacity] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            isMobileMenuOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
           }`}
         >
           <div className="overflow-hidden">
